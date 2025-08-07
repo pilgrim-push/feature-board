@@ -1,0 +1,145 @@
+@import url('https://fonts.googleapis.com/css2?family=Segoe+UI:wght@400;500;600;700&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: hsl(0 0% 100%);
+  --foreground: hsl(210 11% 20%);
+  --card: hsl(60 9% 98%);
+  --card-foreground: hsl(210 11% 20%);
+  --popover: hsl(0 0% 100%);
+  --popover-foreground: hsl(210 11% 20%);
+  --primary: hsl(207 90% 42%);
+  --primary-foreground: hsl(0 0% 100%);
+  --secondary: hsl(210 11% 20%);
+  --secondary-foreground: hsl(0 0% 100%);
+  --muted: hsl(41 9% 94%);
+  --muted-foreground: hsl(210 11% 20%);
+  --accent: hsl(208 20% 89%);
+  --accent-foreground: hsl(207 90% 42%);
+  --destructive: hsl(0 70% 50%);
+  --destructive-foreground: hsl(0 0% 100%);
+  --border: hsl(210 20% 82%);
+  --input: hsl(204 20% 97%);
+  --ring: hsl(207 90% 42%);
+  --chart-1: hsl(207 90% 42%);
+  --chart-2: hsl(142 76% 36%);
+  --chart-3: hsl(38 92% 50%);
+  --chart-4: hsl(0 70% 50%);
+  --chart-5: hsl(271 81% 56%);
+  --sidebar: hsl(60 9% 98%);
+  --sidebar-foreground: hsl(210 11% 20%);
+  --sidebar-primary: hsl(207 90% 42%);
+  --sidebar-primary-foreground: hsl(0 0% 100%);
+  --sidebar-accent: hsl(208 20% 89%);
+  --sidebar-accent-foreground: hsl(207 90% 42%);
+  --sidebar-border: hsl(210 20% 82%);
+  --sidebar-ring: hsl(207 90% 42%);
+  --font-sans: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  --font-serif: Georgia, serif;
+  --font-mono: Menlo, monospace;
+  --radius: 0.125rem;
+  
+  /* Azure specific colors */
+  --azure-blue: hsl(207 90% 42%);
+  --azure-blue-dark: hsl(210 84% 40%);
+  --neutral-10: hsl(30 22% 97%);
+  --neutral-20: hsl(21 11% 94%);
+  --neutral-30: hsl(210 20% 82%);
+  --neutral-70: hsl(210 11% 36%);
+  --neutral-90: hsl(210 11% 20%);
+  --success: hsl(142 76% 36%);
+  --warning: hsl(38 92% 50%);
+  --error: hsl(0 70% 50%);
+}
+
+.dark {
+  --background: hsl(0 0% 0%);
+  --foreground: hsl(200 7% 92%);
+  --card: hsl(228 10% 10%);
+  --card-foreground: hsl(0 0% 85%);
+  --popover: hsl(0 0% 0%);
+  --popover-foreground: hsl(200 7% 92%);
+  --primary: hsl(207 88% 53%);
+  --primary-foreground: hsl(0 0% 100%);
+  --secondary: hsl(195 15% 95%);
+  --secondary-foreground: hsl(210 11% 20%);
+  --muted: hsl(0 0% 9%);
+  --muted-foreground: hsl(210 3% 46%);
+  --accent: hsl(206 70% 8%);
+  --accent-foreground: hsl(207 88% 53%);
+  --destructive: hsl(0 70% 50%);
+  --destructive-foreground: hsl(0 0% 100%);
+  --border: hsl(210 5% 15%);
+  --input: hsl(208 28% 18%);
+  --ring: hsl(207 90% 42%);
+  --chart-1: hsl(207 90% 42%);
+  --chart-2: hsl(142 76% 36%);
+  --chart-3: hsl(38 92% 50%);
+  --chart-4: hsl(0 70% 50%);
+  --chart-5: hsl(271 81% 56%);
+  --sidebar: hsl(228 10% 10%);
+  --sidebar-foreground: hsl(0 0% 85%);
+  --sidebar-primary: hsl(207 90% 42%);
+  --sidebar-primary-foreground: hsl(0 0% 100%);
+  --sidebar-accent: hsl(206 70% 8%);
+  --sidebar-accent-foreground: hsl(207 88% 53%);
+  --sidebar-border: hsl(206 16% 26%);
+  --sidebar-ring: hsl(207 90% 42%);
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply font-sans antialiased bg-background text-foreground text-sm;
+  }
+}
+
+/* Custom Azure styles */
+.azure-blue {
+  background-color: var(--azure-blue);
+}
+
+.azure-blue-dark {
+  background-color: var(--azure-blue-dark);
+}
+
+.neutral-10 {
+  background-color: var(--neutral-10);
+}
+
+.neutral-20 {
+  background-color: var(--neutral-20);
+}
+
+.neutral-30 {
+  background-color: var(--neutral-30);
+}
+
+.text-neutral-70 {
+  color: var(--neutral-70);
+}
+
+.text-neutral-90 {
+  color: var(--neutral-90);
+}
+
+.bg-success {
+  background-color: var(--success);
+}
+
+.bg-warning {
+  background-color: var(--warning);
+}
+
+.bg-error {
+  background-color: var(--error);
+}
+
+.text-error {
+  color: var(--error);
+}
