@@ -65,32 +65,32 @@ export default function DateRangePicker({ startDate, numberOfDays, onDateRangeCh
             {format(new Date(startDate), 'MMM dd')} - {format(addDays(new Date(startDate), numberOfDays - 1), 'MMM dd')} ({numberOfDays} days)
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-80 p-4 bg-spotify-card border-spotify-border">
+        <PopoverContent className="w-80 p-4 bg-white border border-wrike-border shadow-lg">
           <div className="space-y-4">
             <div>
-              <Label className="text-sm font-medium text-spotify-text">Start Date</Label>
+              <Label className="text-sm font-medium text-wrike-text">Start Date</Label>
               <Input
                 type="date"
                 value={tempStartDate}
                 onChange={(e) => setTempStartDate(e.target.value)}
-                className="mt-1 bg-spotify-sidebar border-spotify-border text-spotify-text"
+                className="mt-1 bg-white border-wrike-border text-wrike-text focus:border-wrike-blue focus:ring-1 focus:ring-wrike-blue/20"
               />
             </div>
             <div>
-              <Label className="text-sm font-medium text-spotify-text">Number of Days</Label>
+              <Label className="text-sm font-medium text-wrike-text">Number of Days</Label>
               <Input
                 type="number"
                 min="1"
                 max="90"
                 value={tempNumberOfDays}
                 onChange={(e) => setTempNumberOfDays(parseInt(e.target.value) || 1)}
-                className="mt-1 bg-spotify-sidebar border-spotify-border text-spotify-text"
+                className="mt-1 bg-white border-wrike-border text-wrike-text focus:border-wrike-blue focus:ring-1 focus:ring-wrike-blue/20"
               />
             </div>
             <div className="flex justify-end space-x-2">
               <Button
                 onClick={handleApply}
-                className="px-4 py-2 bg-spotify-green text-black rounded-full hover:bg-spotify-dark-green text-sm font-bold"
+                className="px-4 py-2 bg-wrike-blue text-white rounded hover:bg-wrike-blue-dark text-sm font-medium"
               >
                 Apply
               </Button>
