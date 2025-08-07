@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
+import { calculateEndDate, formatDateForInput } from '@/utils/workingDays';
 
 interface TaskTableProps {
   tasks: Task[];
@@ -20,6 +21,18 @@ export default function TaskTable({
   onSelectAllTasks,
   allTasksSelected 
 }: TaskTableProps) {
+  
+  const handleStartDateChange = (taskId: number, newStartDate: string) => {
+    const task = tasks.find(t => t.id === taskId);
+    if (task) {
+      // Обновляем дату начала
+      onUpdateTask(taskId, 'startDate', newStartDate);
+    }
+  };
+
+  const handleDurationChange = (taskId: number, newDuration: number) => {
+    onUpdateTask(taskId, 'duration', newDuration);
+  };
   return (
     <div className="w-[800px] border-r border-wrike-border bg-white">
       {/* Table Header */}
@@ -65,7 +78,7 @@ export default function TaskTable({
             <Input
               type="date"
               value={task.startDate}
-              onChange={(e) => onUpdateTask(task.id, 'startDate', e.target.value)}
+              onChange={(e) => handleStartDateChange(task.id, e.target.value)}
               className="w-full border border-wrike-border bg-white text-wrike-text rounded px-2 py-1 text-sm focus:border-wrike-blue focus:ring-1 focus:ring-wrike-blue/20 transition-colors"
             />
           </div>
@@ -73,7 +86,7 @@ export default function TaskTable({
             <Input
               type="number"
               value={task.duration}
-              onChange={(e) => onUpdateTask(task.id, 'duration', parseInt(e.target.value) || 1)}
+              onChange={(e) => handleDurationChange(task.id, parseInt(e.target.value) || 1)}
               min="1"
               className="w-full border border-wrike-border bg-white text-wrike-text rounded px-2 py-1 text-sm focus:border-wrike-blue focus:ring-1 focus:ring-wrike-blue/20 transition-colors"
             />

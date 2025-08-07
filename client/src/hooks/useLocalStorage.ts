@@ -20,10 +20,31 @@ export function useLocalStorage() {
 
   useEffect(() => {
     try {
+      // Очищаем старые данные при обновлении логики рабочих дней
+      localStorage.removeItem(STORAGE_KEY);
+      
       const saved = localStorage.getItem(STORAGE_KEY);
       if (saved) {
         const parsedState = JSON.parse(saved);
         setState({ ...defaultState, ...parsedState });
+      } else {
+        // Создаем тестовую задачу
+        const testState = {
+          ...defaultState,
+          tasks: [
+            {
+              id: 1,
+              name: 'Test Task',
+              startDate: '2025-08-07',
+              duration: 5, // 5 рабочих дней
+              priority: 'medium' as const,
+              description: 'Test task for working days',
+              selected: false
+            }
+          ]
+        };
+        setState(testState);
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(testState));
       }
     } catch (error) {
       console.error('Failed to load data from localStorage:', error);

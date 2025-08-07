@@ -1,5 +1,6 @@
 import { Task } from '@/types/gantt';
 import { generateDateRange, formatDate, getTaskPosition, getTaskBarColor } from '@/utils/dateUtils';
+import { calculateEndDate, getDaysInRange, isWeekendDay } from '@/utils/workingDays';
 
 interface TimelineProps {
   tasks: Task[];
@@ -47,22 +48,42 @@ export default function Timeline({ tasks, startDate, numberOfDays = 10 }: Timeli
         {tasks.map((task, index) => {
           const position = getTaskPosition(task.startDate, startDate);
           const barColor = getTaskBarColor(task.priority);
-          const leftOffset = position * dayWidth + 12; // 12px padding
-          const width = task.duration * dayWidth - 24; // 24px for padding on both sides
-
+          
+          // Рассчитываем конечную дату с учетом рабочих дней
+          const endDate = calculateEndDate(task.startDate, task.duration);
+          const taskDaysRange = getDaysInRange(new Date(task.startDate), endDate);
+          
           return (
             <div key={task.id} className="h-12 border-b border-wrike-border relative hover:bg-wrike-hover/30 transition-colors duration-200">
               {position >= 0 && position < numberOfDays && (
-                <div 
-                  className={`absolute top-2 h-8 ${barColor} rounded flex items-center px-4 text-white text-sm font-medium shadow-sm hover:shadow-md transition-all duration-200 cursor-pointer`}
-                  style={{
-                    left: `${leftOffset}px`,
-                    width: `${Math.max(width, dayWidth - 24)}px`
-                  }}
-                >
-                  <span className="truncate">
-                    {task.name} ({task.duration}d)
-                  </span>
+                <div className="absolute top-2 bottom-2">
+                  {taskDaysRange.map((day, dayIndex) => {
+                    const dayPosition = getTaskPosition(day.date.toISOString().split('T')[0], startDate);
+                    if (dayPosition < 0 || dayPosition >= numberOfDays) return null;
+                    
+                    const dayLeftOffset = dayPosition * dayWidth + 12;
+                    const dayWidthPx = dayWidth - 24; // width - padding
+                    
+                    return (
+                      <div
+                        key={dayIndex}
+                        className={`absolute h-8 ${barColor} rounded flex items-center px-3 shadow-sm hover:shadow-md transition-shadow duration-200 ${
+                          day.isWeekend ? 'opacity-30' : 'opacity-100'
+                        }`}
+                        style={{
+                          left: `${dayLeftOffset}px`,
+                          width: `${dayWidthPx}px`,
+                          top: 0,
+                        }}
+                      >
+                        {dayIndex === 0 && (
+                          <span className="text-white text-xs font-medium truncate">
+                            {task.name} ({task.duration}d)
+                          </span>
+                        )}
+                      </div>
+                    );
+                  })}
                 </div>
               )}
             </div>
