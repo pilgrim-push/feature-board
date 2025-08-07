@@ -65,10 +65,10 @@ export function getTaskBarColor(priority: string): string {
     case 'high':
       return 'bg-gradient-to-r from-red-500 to-red-600';
     case 'medium':
-      return 'bg-gradient-to-r from-blue-500 to-blue-600';
+      return 'bg-gradient-to-r from-purple-500 to-purple-600';
     case 'low':
-      return 'bg-gradient-to-r from-green-500 to-green-600';
+      return 'bg-gradient-to-r from-emerald-500 to-emerald-600';
     default:
-      return 'bg-gradient-to-r from-blue-500 to-blue-600';
+      return 'bg-gradient-to-r from-purple-500 to-purple-600';
   }
 }

@@ -41,7 +41,7 @@ export default function DateRangePicker({ startDate, numberOfDays, onDateRangeCh
         onClick={handlePreviousWeek}
         variant="outline"
         size="sm"
-        className="px-2 py-1 border-gray-300 text-gray-600 hover:bg-gray-50 rounded-md"
+        className="px-2 py-1 border-spotify-border text-spotify-text hover:bg-spotify-hover rounded-lg"
       >
         <ChevronLeft size={16} />
       </Button>
@@ -50,7 +50,7 @@ export default function DateRangePicker({ startDate, numberOfDays, onDateRangeCh
         onClick={handleToday}
         variant="outline"
         size="sm"
-        className="px-3 py-1 border-gray-300 text-gray-600 hover:bg-gray-50 rounded-md text-xs"
+        className="px-3 py-1 border-spotify-border text-spotify-text hover:bg-spotify-hover rounded-lg text-xs font-medium"
       >
         Today
       </Button>
@@ -59,38 +59,38 @@ export default function DateRangePicker({ startDate, numberOfDays, onDateRangeCh
         <PopoverTrigger asChild>
           <Button
             variant="outline"
-            className="px-3 py-1 border-gray-300 text-gray-600 hover:bg-gray-50 rounded-md text-xs"
+            className="px-3 py-1 border-spotify-border text-spotify-text hover:bg-spotify-hover rounded-lg text-xs font-medium"
           >
             <Calendar className="mr-2" size={14} />
             {format(new Date(startDate), 'MMM dd')} - {format(addDays(new Date(startDate), numberOfDays - 1), 'MMM dd')} ({numberOfDays} days)
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-80 p-4">
+        <PopoverContent className="w-80 p-4 bg-spotify-card border-spotify-border">
           <div className="space-y-4">
             <div>
-              <Label className="text-sm font-medium text-gray-700">Start Date</Label>
+              <Label className="text-sm font-medium text-spotify-text">Start Date</Label>
               <Input
                 type="date"
                 value={tempStartDate}
                 onChange={(e) => setTempStartDate(e.target.value)}
-                className="mt-1"
+                className="mt-1 bg-spotify-sidebar border-spotify-border text-spotify-text"
               />
             </div>
             <div>
-              <Label className="text-sm font-medium text-gray-700">Number of Days</Label>
+              <Label className="text-sm font-medium text-spotify-text">Number of Days</Label>
               <Input
                 type="number"
                 min="1"
                 max="90"
                 value={tempNumberOfDays}
                 onChange={(e) => setTempNumberOfDays(parseInt(e.target.value) || 1)}
-                className="mt-1"
+                className="mt-1 bg-spotify-sidebar border-spotify-border text-spotify-text"
               />
             </div>
             <div className="flex justify-end space-x-2">
               <Button
                 onClick={handleApply}
-                className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 text-sm"
+                className="px-4 py-2 bg-spotify-green text-black rounded-full hover:bg-spotify-dark-green text-sm font-bold"
               >
                 Apply
               </Button>
@@ -103,7 +103,7 @@ export default function DateRangePicker({ startDate, numberOfDays, onDateRangeCh
         onClick={handleNextWeek}
         variant="outline"
         size="sm"
-        className="px-2 py-1 border-gray-300 text-gray-600 hover:bg-gray-50 rounded-md"
+        className="px-2 py-1 border-spotify-border text-spotify-text hover:bg-spotify-hover rounded-lg"
       >
         <ChevronRight size={16} />
       </Button>

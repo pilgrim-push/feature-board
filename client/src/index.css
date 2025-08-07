@@ -4,54 +4,53 @@
 @tailwind utilities;
 
 :root {
-  --background: hsl(0 0% 100%);
-  --foreground: hsl(210 11% 20%);
-  --card: hsl(60 9% 98%);
-  --card-foreground: hsl(210 11% 20%);
-  --popover: hsl(0 0% 100%);
-  --popover-foreground: hsl(210 11% 20%);
-  --primary: hsl(207 90% 42%);
-  --primary-foreground: hsl(0 0% 100%);
-  --secondary: hsl(210 11% 20%);
-  --secondary-foreground: hsl(0 0% 100%);
-  --muted: hsl(41 9% 94%);
-  --muted-foreground: hsl(210 11% 20%);
-  --accent: hsl(208 20% 89%);
-  --accent-foreground: hsl(207 90% 42%);
-  --destructive: hsl(0 70% 50%);
-  --destructive-foreground: hsl(0 0% 100%);
-  --border: hsl(210 20% 82%);
-  --input: hsl(204 20% 97%);
-  --ring: hsl(207 90% 42%);
-  --chart-1: hsl(207 90% 42%);
-  --chart-2: hsl(142 76% 36%);
+  --background: hsl(0 0% 7%);
+  --foreground: hsl(0 0% 98%);
+  --card: hsl(0 0% 9%);
+  --card-foreground: hsl(0 0% 98%);
+  --popover: hsl(0 0% 9%);
+  --popover-foreground: hsl(0 0% 98%);
+  --primary: hsl(142 79% 49%);
+  --primary-foreground: hsl(0 0% 0%);
+  --secondary: hsl(0 0% 15%);
+  --secondary-foreground: hsl(0 0% 98%);
+  --muted: hsl(0 0% 15%);
+  --muted-foreground: hsl(0 0% 60%);
+  --accent: hsl(0 0% 15%);
+  --accent-foreground: hsl(0 0% 98%);
+  --destructive: hsl(0 62% 50%);
+  --destructive-foreground: hsl(0 0% 98%);
+  --border: hsl(0 0% 15%);
+  --input: hsl(0 0% 15%);
+  --ring: hsl(142 79% 49%);
+  --chart-1: hsl(142 79% 49%);
+  --chart-2: hsl(220 70% 50%);
   --chart-3: hsl(38 92% 50%);
-  --chart-4: hsl(0 70% 50%);
+  --chart-4: hsl(0 62% 50%);
   --chart-5: hsl(271 81% 56%);
-  --sidebar: hsl(60 9% 98%);
-  --sidebar-foreground: hsl(210 11% 20%);
-  --sidebar-primary: hsl(207 90% 42%);
-  --sidebar-primary-foreground: hsl(0 0% 100%);
-  --sidebar-accent: hsl(208 20% 89%);
-  --sidebar-accent-foreground: hsl(207 90% 42%);
-  --sidebar-border: hsl(210 20% 82%);
-  --sidebar-ring: hsl(207 90% 42%);
-  --font-sans: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  --sidebar: hsl(0 0% 4%);
+  --sidebar-foreground: hsl(0 0% 98%);
+  --sidebar-primary: hsl(142 79% 49%);
+  --sidebar-primary-foreground: hsl(0 0% 0%);
+  --sidebar-accent: hsl(0 0% 15%);
+  --sidebar-accent-foreground: hsl(142 79% 49%);
+  --sidebar-border: hsl(0 0% 15%);
+  --sidebar-ring: hsl(142 79% 49%);
+  --font-sans: 'Circular', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   --font-serif: Georgia, serif;
-  --font-mono: Menlo, monospace;
-  --radius: 0.125rem;
+  --font-mono: 'SF Mono', Consolas, monospace;
+  --radius: 0.5rem;
   
-  /* Azure specific colors */
-  --azure-blue: hsl(207 90% 42%);
-  --azure-blue-dark: hsl(210 84% 40%);
-  --neutral-10: hsl(30 22% 97%);
-  --neutral-20: hsl(21 11% 94%);
-  --neutral-30: hsl(210 20% 82%);
-  --neutral-70: hsl(210 11% 36%);
-  --neutral-90: hsl(210 11% 20%);
-  --success: hsl(142 76% 36%);
-  --warning: hsl(38 92% 50%);
-  --error: hsl(0 70% 50%);
+  /* Spotify specific colors */
+  --spotify-green: hsl(142 79% 49%);
+  --spotify-dark-green: hsl(142 69% 39%);
+  --spotify-bg: hsl(0 0% 7%);
+  --spotify-card: hsl(0 0% 9%);
+  --spotify-sidebar: hsl(0 0% 4%);
+  --spotify-text: hsl(0 0% 98%);
+  --spotify-text-muted: hsl(0 0% 65%);
+  --spotify-border: hsl(0 0% 15%);
+  --spotify-hover: hsl(0 0% 15%);
 }
 
 .dark {
@@ -99,47 +98,41 @@
   }
 }
 
-/* Custom Azure styles */
-.azure-blue {
-  background-color: var(--azure-blue);
+/* Custom Spotify styles */
+.spotify-green {
+  background-color: var(--spotify-green);
 }
 
-.azure-blue-dark {
-  background-color: var(--azure-blue-dark);
+.spotify-dark-green {
+  background-color: var(--spotify-dark-green);
 }
 
-.neutral-10 {
-  background-color: var(--neutral-10);
+.spotify-bg {
+  background-color: var(--spotify-bg);
 }
 
-.neutral-20 {
-  background-color: var(--neutral-20);
+.spotify-card {
+  background-color: var(--spotify-card);
 }
 
-.neutral-30 {
-  background-color: var(--neutral-30);
+.spotify-sidebar {
+  background-color: var(--spotify-sidebar);
 }
 
-.text-neutral-70 {
-  color: var(--neutral-70);
+.text-spotify-text {
+  color: var(--spotify-text);
 }
 
-.text-neutral-90 {
-  color: var(--neutral-90);
+.text-spotify-muted {
+  color: var(--spotify-text-muted);
 }
 
-.bg-success {
-  background-color: var(--success);
+.border-spotify-border {
+  border-color: var(--spotify-border);
 }
 
-.bg-warning {
-  background-color: var(--warning);
-}
-
-.bg-error {
-  background-color: var(--error);
-}
-
-.text-error {
-  color: var(--error);
+.hover-spotify {
+  &:hover {
+    background-color: var(--spotify-hover);
+  }
 }
