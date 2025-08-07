@@ -1,7 +1,8 @@
-import { User, Plus } from 'lucide-react';
+import { User, Plus, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Project } from '@/types/gantt';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
+import { useState } from 'react';
 
 interface SidebarProps {
   userName: string;
@@ -11,9 +12,21 @@ interface SidebarProps {
 }
 
 export default function Sidebar({ userName, projects, onToggleProject, onAddProject }: SidebarProps) {
+  const [isCollapsed, setIsCollapsed] = useState(false);
+
   return (
-    <aside className="w-64 bg-wrike-sidebar border-r border-wrike-border flex-shrink-0">
-      <div className="p-6">
+    <aside className={`${isCollapsed ? 'w-12' : 'w-64'} bg-wrike-sidebar border-r border-wrike-border flex-shrink-0 transition-all duration-300 relative`}>
+      {/* Toggle Button */}
+      <Button
+        onClick={() => setIsCollapsed(!isCollapsed)}
+        variant="ghost"
+        size="sm"
+        className="absolute -right-3 top-4 z-10 w-6 h-6 bg-white border border-wrike-border rounded-full p-1 hover:bg-wrike-hover shadow-sm"
+      >
+        {isCollapsed ? <ChevronRight size={12} /> : <ChevronLeft size={12} />}
+      </Button>
+
+      <div className={`p-6 ${isCollapsed ? 'hidden' : 'block'}`}>
         <div className="mb-6">
           <div className="flex items-center space-x-3 mb-4">
             <div className="w-8 h-8 bg-wrike-blue rounded-full flex items-center justify-center">
@@ -51,6 +64,15 @@ export default function Sidebar({ userName, projects, onToggleProject, onAddProj
           </Button>
         </div>
       </div>
+
+      {/* Collapsed State Icon */}
+      {isCollapsed && (
+        <div className="p-3 flex justify-center">
+          <div className="w-6 h-6 bg-wrike-blue rounded-full flex items-center justify-center">
+            <User className="text-white" size={12} />
+          </div>
+        </div>
+      )}
     </aside>
   );
 }

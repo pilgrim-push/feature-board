@@ -23,7 +23,7 @@ export default function TaskTable({
   return (
     <div className="w-[600px] border-r border-wrike-border bg-white">
       {/* Table Header */}
-      <div className="sticky top-0 bg-wrike-sidebar border-b border-wrike-border grid grid-cols-12 h-14 text-xs font-semibold text-wrike-text-muted uppercase tracking-wider">
+      <div className="sticky top-0 bg-wrike-sidebar border-b border-wrike-border grid grid-cols-12 h-[74px] text-xs font-semibold text-wrike-text-muted uppercase tracking-wider">
         <div className="col-span-1 px-4 py-3 border-r border-wrike-border flex items-center justify-center">
           <Checkbox
             checked={allTasksSelected}

@@ -14,24 +14,24 @@ export default function Timeline({ tasks, startDate, numberOfDays = 10 }: Timeli
   return (
     <div className="flex-1 bg-white">
       {/* Timeline Header */}
-      <div className="sticky top-0 bg-wrike-sidebar border-b border-wrike-border">
+      <div className="sticky top-0 bg-wrike-sidebar border-b border-wrike-border h-[74px]">
         {/* Date Range Header */}
-        <div className="flex">
+        <div className="flex h-[37px]">
           {dateRange.map(({ date }) => (
             <div 
               key={date} 
-              className="px-4 py-3 text-center text-sm font-semibold text-wrike-text border-r border-wrike-border min-w-[120px] h-10 flex items-center justify-center"
+              className="px-4 py-3 text-center text-sm font-semibold text-wrike-text border-r border-wrike-border min-w-[120px] flex items-center justify-center"
             >
               {formatDate(date)}
             </div>
           ))}
         </div>
         {/* Day of Week Header */}
-        <div className="flex border-t border-wrike-border">
+        <div className="flex border-t border-wrike-border h-[37px]">
           {dateRange.map(({ date, dayOfWeek, isWeekend }) => (
             <div 
               key={date} 
-              className={`px-4 py-2 text-center text-xs text-wrike-text-muted border-r border-wrike-border min-w-[120px] h-8 flex items-center justify-center ${
+              className={`px-4 py-2 text-center text-xs text-wrike-text-muted border-r border-wrike-border min-w-[120px] flex items-center justify-center ${
                 isWeekend ? 'bg-wrike-blue/10' : ''
               }`}
             >
