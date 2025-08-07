@@ -63,12 +63,12 @@ export function getTaskPosition(taskStartDate: string, timelineStartDate: string
 export function getTaskBarColor(priority: string): string {
   switch (priority) {
     case 'high':
-      return 'bg-success';
+      return 'bg-gradient-to-r from-red-500 to-red-600';
     case 'medium':
-      return 'bg-azure-blue';
+      return 'bg-gradient-to-r from-blue-500 to-blue-600';
     case 'low':
-      return 'bg-warning';
+      return 'bg-gradient-to-r from-green-500 to-green-600';
     default:
-      return 'bg-azure-blue';
+      return 'bg-gradient-to-r from-blue-500 to-blue-600';
   }
 }

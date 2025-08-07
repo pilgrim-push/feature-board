@@ -6,6 +6,7 @@ import { useToast } from '@/hooks/use-toast';
 import TaskTable from './TaskTable';
 import Timeline from './Timeline';
 import TaskModal from './TaskModal';
+import DateRangePicker from './DateRangePicker';
 
 interface GanttChartProps {
   tasks: Task[];
@@ -14,15 +15,23 @@ interface GanttChartProps {
 
 export default function GanttChart({ tasks, onUpdateTasks }: GanttChartProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const { toast } = useToast();
-
-  // Get the earliest start date for the timeline
-  const getTimelineStartDate = () => {
+  const [timelineStartDate, setTimelineStartDate] = useState(() => {
     if (tasks.length === 0) {
       return new Date().toISOString().split('T')[0];
     }
     const dates = tasks.map(task => task.startDate).sort();
     return dates[0];
+  });
+  const [timelineDays, setTimelineDays] = useState(15);
+  const { toast } = useToast();
+
+  // Get the earliest start date for the timeline
+  const getTimelineStartDate = () => {
+    if (tasks.length === 0) {
+      return timelineStartDate;
+    }
+    const dates = tasks.map(task => task.startDate).sort();
+    return dates[0] < timelineStartDate ? dates[0] : timelineStartDate;
   };
 
   const handleAddTask = () => {
@@ -82,18 +91,30 @@ export default function GanttChart({ tasks, onUpdateTasks }: GanttChartProps) {
     onUpdateTasks(updatedTasks);
   };
 
+  const handleDateRangeChange = (startDate: string, numberOfDays: number) => {
+    setTimelineStartDate(startDate);
+    setTimelineDays(numberOfDays);
+  };
+
   const allTasksSelected = tasks.length > 0 && tasks.every(task => task.selected);
 
   return (
     <main className="flex-1 flex flex-col overflow-hidden">
       {/* Task Management Toolbar */}
-      <div className="bg-white border-b border-neutral-30 px-6 py-4">
+      <div className="bg-white border-b border-gray-200 px-6 py-4 shadow-sm">
         <div className="flex items-center justify-between">
-          <h2 className="text-lg font-semibold text-neutral-90">Task Management</h2>
+          <div className="flex items-center space-x-6">
+            <h2 className="text-xl font-semibold text-gray-800">Task Management</h2>
+            <DateRangePicker
+              startDate={getTimelineStartDate()}
+              numberOfDays={timelineDays}
+              onDateRangeChange={handleDateRangeChange}
+            />
+          </div>
           <div className="flex items-center space-x-3">
             <Button 
               onClick={handleAddTask}
-              className="px-3 py-2 bg-azure-blue text-white rounded-sm hover:bg-azure-blue-dark transition-colors duration-200 text-sm font-medium"
+              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all duration-200 text-sm font-medium shadow-sm hover:shadow-md"
             >
               <Plus className="mr-2" size={16} />
               Add Task
@@ -101,7 +122,7 @@ export default function GanttChart({ tasks, onUpdateTasks }: GanttChartProps) {
             <Button 
               onClick={handleDeleteSelected}
               variant="outline"
-              className="px-3 py-2 border border-neutral-30 text-neutral-90 rounded-sm hover:bg-neutral-20 transition-colors duration-200 text-sm font-medium"
+              className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-red-50 hover:border-red-300 hover:text-red-600 transition-all duration-200 text-sm font-medium"
             >
               <Trash2 className="mr-2" size={16} />
               Delete Selected
@@ -111,7 +132,7 @@ export default function GanttChart({ tasks, onUpdateTasks }: GanttChartProps) {
       </div>
 
       {/* Gantt Chart Container */}
-      <div className="flex-1 overflow-auto bg-white">
+      <div className="flex-1 overflow-auto bg-gray-50">
         <div className="min-w-max">
           <div className="flex">
             <TaskTable
@@ -124,7 +145,7 @@ export default function GanttChart({ tasks, onUpdateTasks }: GanttChartProps) {
             <Timeline
               tasks={tasks}
               startDate={getTimelineStartDate()}
-              numberOfDays={15}
+              numberOfDays={timelineDays}
             />
           </div>
         </div>
