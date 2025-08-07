@@ -101,10 +101,9 @@ export default function GanttChart({ tasks, onUpdateTasks }: GanttChartProps) {
   return (
     <main className="flex-1 flex flex-col overflow-hidden">
       {/* Task Management Toolbar */}
-      <div className="bg-spotify-card border-b border-spotify-border px-6 py-4">
+      <div className="bg-white border-b border-wrike-border px-6 py-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-6">
-            <h2 className="text-xl font-bold text-spotify-text">Task Management</h2>
             <DateRangePicker
               startDate={getTimelineStartDate()}
               numberOfDays={timelineDays}
@@ -114,7 +113,7 @@ export default function GanttChart({ tasks, onUpdateTasks }: GanttChartProps) {
           <div className="flex items-center space-x-3">
             <Button 
               onClick={handleAddTask}
-              className="px-4 py-2 bg-spotify-green text-black rounded-full hover:bg-spotify-dark-green transition-all duration-200 text-sm font-bold hover:scale-105 shadow-lg"
+              className="px-4 py-2 bg-wrike-blue text-white rounded hover:bg-wrike-blue-dark transition-colors duration-200 text-sm font-medium"
             >
               <Plus className="mr-2" size={16} />
               Add Task
@@ -122,7 +121,7 @@ export default function GanttChart({ tasks, onUpdateTasks }: GanttChartProps) {
             <Button 
               onClick={handleDeleteSelected}
               variant="outline"
-              className="px-4 py-2 border border-spotify-border text-spotify-text rounded-full hover:bg-red-500/10 hover:border-red-400 hover:text-red-400 transition-all duration-200 text-sm font-medium"
+              className="px-4 py-2 border border-wrike-border text-wrike-text rounded hover:bg-wrike-error/10 hover:border-wrike-error hover:text-wrike-error transition-colors duration-200 text-sm font-medium"
             >
               <Trash2 className="mr-2" size={16} />
               Delete Selected
@@ -132,7 +131,7 @@ export default function GanttChart({ tasks, onUpdateTasks }: GanttChartProps) {
       </div>
 
       {/* Gantt Chart Container */}
-      <div className="flex-1 overflow-auto bg-spotify-bg">
+      <div className="flex-1 overflow-auto bg-wrike-bg">
         <div className="min-w-max">
           <div className="flex">
             <TaskTable
