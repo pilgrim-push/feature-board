@@ -63,12 +63,12 @@ export function getTaskPosition(taskStartDate: string, timelineStartDate: string
 export function getTaskBarColor(priority: string): string {
   switch (priority) {
     case 'high':
-      return 'bg-gradient-to-r from-red-500 to-red-600';
+      return 'bg-wrike-error';
     case 'medium':
-      return 'bg-gradient-to-r from-purple-500 to-purple-600';
+      return 'bg-wrike-blue';
     case 'low':
-      return 'bg-gradient-to-r from-emerald-500 to-emerald-600';
+      return 'bg-wrike-success';
     default:
-      return 'bg-gradient-to-r from-purple-500 to-purple-600';
+      return 'bg-wrike-blue';
   }
 }

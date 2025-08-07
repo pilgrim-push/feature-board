@@ -41,7 +41,7 @@ export default function DateRangePicker({ startDate, numberOfDays, onDateRangeCh
         onClick={handlePreviousWeek}
         variant="outline"
         size="sm"
-        className="px-2 py-1 border-spotify-border text-spotify-text hover:bg-spotify-hover rounded-lg"
+        className="px-2 py-1 border-wrike-border text-wrike-text hover:bg-wrike-hover rounded"
       >
         <ChevronLeft size={16} />
       </Button>
@@ -50,7 +50,7 @@ export default function DateRangePicker({ startDate, numberOfDays, onDateRangeCh
         onClick={handleToday}
         variant="outline"
         size="sm"
-        className="px-3 py-1 border-spotify-border text-spotify-text hover:bg-spotify-hover rounded-lg text-xs font-medium"
+        className="px-3 py-1 border-wrike-border text-wrike-text hover:bg-wrike-hover rounded text-xs font-medium"
       >
         Today
       </Button>
@@ -59,7 +59,7 @@ export default function DateRangePicker({ startDate, numberOfDays, onDateRangeCh
         <PopoverTrigger asChild>
           <Button
             variant="outline"
-            className="px-3 py-1 border-spotify-border text-spotify-text hover:bg-spotify-hover rounded-lg text-xs font-medium"
+            className="px-3 py-1 border-wrike-border text-wrike-text hover:bg-wrike-hover rounded text-xs font-medium"
           >
             <Calendar className="mr-2" size={14} />
             {format(new Date(startDate), 'MMM dd')} - {format(addDays(new Date(startDate), numberOfDays - 1), 'MMM dd')} ({numberOfDays} days)
@@ -103,7 +103,7 @@ export default function DateRangePicker({ startDate, numberOfDays, onDateRangeCh
         onClick={handleNextWeek}
         variant="outline"
         size="sm"
-        className="px-2 py-1 border-spotify-border text-spotify-text hover:bg-spotify-hover rounded-lg"
+        className="px-2 py-1 border-wrike-border text-wrike-text hover:bg-wrike-hover rounded"
       >
         <ChevronRight size={16} />
       </Button>

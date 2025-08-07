@@ -66,7 +66,7 @@ export default function GanttChartPage() {
   };
 
   return (
-    <div className="h-screen overflow-hidden bg-spotify-bg font-sans text-spotify-text text-sm">
+    <div className="h-screen overflow-hidden bg-wrike-bg font-sans text-wrike-text text-sm">
       <Header 
         onSaveProject={handleSaveProject}
         onExportChart={handleExportChart}
