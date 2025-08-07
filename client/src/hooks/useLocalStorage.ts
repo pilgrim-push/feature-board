@@ -28,17 +28,17 @@ export function useLocalStorage() {
         const parsedState = JSON.parse(saved);
         setState({ ...defaultState, ...parsedState });
       } else {
-        // Создаем тестовую задачу
+        // Создаем тестовую задачу начинающуюся в пятницу для демонстрации разрывов
         const testState = {
           ...defaultState,
           tasks: [
             {
               id: 1,
-              name: 'Test Task',
-              startDate: '2025-08-07',
-              duration: 5, // 5 рабочих дней
+              name: 'Test Task (5 working days)',
+              startDate: '2025-08-08', // пятница
+              duration: 5, // 5 рабочих дней: пт + пн-чт
               priority: 'medium' as const,
-              description: 'Test task for working days',
+              description: 'Test task starting Friday, spanning weekend',
               selected: false
             }
           ]
