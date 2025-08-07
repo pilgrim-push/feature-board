@@ -23,7 +23,7 @@ export default function TaskTable({
   return (
     <div className="w-[800px] border-r border-wrike-border bg-white">
       {/* Table Header */}
-      <div className="sticky top-0 bg-wrike-sidebar border-b border-wrike-border grid grid-cols-12 h-[60px] text-xs font-semibold text-wrike-text-muted uppercase tracking-wider">
+      <div className="sticky top-0 bg-wrike-sidebar border-b border-wrike-border grid grid-cols-10 h-[60px] text-xs font-semibold text-wrike-text-muted uppercase tracking-wider">
         <div className="col-span-1 px-3 py-2 border-r border-wrike-border flex items-center justify-center">
           <Checkbox
             checked={allTasksSelected}
@@ -32,18 +32,17 @@ export default function TaskTable({
           />
         </div>
         <div className="col-span-1 px-3 py-2 border-r border-wrike-border flex items-center justify-center">#</div>
-        <div className="col-span-3 px-3 py-2 border-r border-wrike-border flex items-center">Task</div>
+        <div className="col-span-4 px-3 py-2 border-r border-wrike-border flex items-center">Task</div>
         <div className="col-span-2 px-3 py-2 border-r border-wrike-border flex items-center">Start Date</div>
-        <div className="col-span-2 px-3 py-2 border-r border-wrike-border flex items-center">Duration</div>
-        <div className="col-span-2 px-3 py-2 border-r border-wrike-border flex items-center">Priority</div>
-        <div className="col-span-2 px-3 py-2 flex items-center justify-center">Actions</div>
+        <div className="col-span-1 px-3 py-2 border-r border-wrike-border flex items-center">Duration</div>
+        <div className="col-span-1 px-3 py-2 flex items-center">Priority</div>
       </div>
 
       {/* Task Rows */}
       {tasks.map((task, index) => (
         <div 
           key={task.id} 
-          className="border-b border-wrike-border grid grid-cols-12 h-12 hover:bg-wrike-hover transition-colors duration-200 group"
+          className="border-b border-wrike-border grid grid-cols-10 h-12 hover:bg-wrike-hover transition-colors duration-200 group"
         >
           <div className="col-span-1 px-3 py-2 border-r border-wrike-border flex items-center justify-center">
             <Checkbox
@@ -55,7 +54,7 @@ export default function TaskTable({
           <div className="col-span-1 px-3 py-2 border-r border-wrike-border flex items-center justify-center text-wrike-text-muted font-medium">
             {index + 1}
           </div>
-          <div className="col-span-3 px-3 py-2 border-r border-wrike-border flex items-center">
+          <div className="col-span-4 px-3 py-2 border-r border-wrike-border flex items-center">
             <Input
               value={task.name}
               onChange={(e) => onUpdateTask(task.id, 'name', e.target.value)}
@@ -70,7 +69,7 @@ export default function TaskTable({
               className="w-full border border-wrike-border bg-white text-wrike-text rounded px-2 py-1 text-sm focus:border-wrike-blue focus:ring-1 focus:ring-wrike-blue/20 transition-colors"
             />
           </div>
-          <div className="col-span-2 px-3 py-2 border-r border-wrike-border flex items-center">
+          <div className="col-span-1 px-3 py-2 border-r border-wrike-border flex items-center">
             <Input
               type="number"
               value={task.duration}
@@ -80,7 +79,7 @@ export default function TaskTable({
             />
             <span className="ml-1 text-xs text-wrike-text-muted font-medium">d</span>
           </div>
-          <div className="col-span-2 px-3 py-2 border-r border-wrike-border flex items-center">
+          <div className="col-span-1 px-3 py-2 flex items-center">
             <Select 
               value={task.priority} 
               onValueChange={(value: 'low' | 'medium' | 'high') => onUpdateTask(task.id, 'priority', value)}
@@ -94,16 +93,6 @@ export default function TaskTable({
                 <SelectItem value="low" className="text-wrike-text hover:bg-wrike-hover">Low</SelectItem>
               </SelectContent>
             </Select>
-          </div>
-          <div className="col-span-2 px-3 py-2 flex items-center justify-center">
-            <Button
-              onClick={() => onDeleteTask(task.id)}
-              variant="ghost"
-              size="sm"
-              className="text-wrike-error hover:bg-wrike-error/10 hover:text-wrike-error p-1 rounded transition-all duration-200 opacity-0 group-hover:opacity-100"
-            >
-              <Trash2 size={12} />
-            </Button>
           </div>
         </div>
       ))}
