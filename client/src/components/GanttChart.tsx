@@ -187,8 +187,8 @@ export default function GanttChart({ tasks, onUpdateTasks }: GanttChartProps) {
 
       {/* Enhanced Gantt Chart Container */}
       <div className="flex-1 overflow-auto gradient-bg">
-        <div className="min-w-max glass-surface">
-          <div className="flex shadow-lg rounded-lg overflow-hidden border border-stripe-border-light">
+        <div className="min-w-max">
+          <div className="flex shadow-lg border border-stripe-border-light bg-gradient-to-br from-stripe-surface/80 to-stripe-gray-50/60 backdrop-filter backdrop-blur-sm">
             <TaskTable
               tasks={tasks}
               onUpdateTask={handleUpdateTask}

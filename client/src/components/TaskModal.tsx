@@ -105,7 +105,7 @@ export default function TaskModal({ isOpen, onClose, onSave, onUpdate, editingTa
 
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
-      <DialogContent className="glass-card rounded-2xl shadow-2xl w-96 max-w-full mx-4 border border-stripe-border-light">
+      <DialogContent className="glass-card rounded-2xl shadow-2xl w-96 max-w-full mx-4 border border-stripe-border-light" aria-describedby="task-modal-description">
         <div className="animated-gradient h-1 rounded-t-2xl"></div>
         <DialogHeader className="p-6 border-b border-stripe-border-light">
           <DialogTitle className="text-lg font-semibold text-stripe-text flex items-center space-x-2">
@@ -113,6 +113,9 @@ export default function TaskModal({ isOpen, onClose, onSave, onUpdate, editingTa
             <span>{isEditing ? 'Edit Task' : 'Add New Task'}</span>
           </DialogTitle>
         </DialogHeader>
+        <div id="task-modal-description" className="sr-only">
+          {isEditing ? 'Edit task details including name, dates, priority and dependencies' : 'Create a new task with name, dates, priority and dependencies'}
+        </div>
         
         <div className="p-6 space-y-6">
           <div>
