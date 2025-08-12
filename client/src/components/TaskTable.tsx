@@ -21,22 +21,10 @@ export default function TaskTable({
   onSelectAllTasks,
   allTasksSelected 
 }: TaskTableProps) {
-  
-  const handleStartDateChange = (taskId: number, newStartDate: string) => {
-    const task = tasks.find(t => t.id === taskId);
-    if (task) {
-      // Обновляем дату начала
-      onUpdateTask(taskId, 'startDate', newStartDate);
-    }
-  };
-
-  const handleDurationChange = (taskId: number, newDuration: number) => {
-    onUpdateTask(taskId, 'duration', newDuration);
-  };
   return (
     <div className="w-[800px] border-r border-wrike-border bg-white">
       {/* Table Header */}
-      <div className="sticky top-0 bg-wrike-sidebar border-b border-wrike-border grid grid-cols-10 h-[60px] text-xs font-semibold text-wrike-text-muted uppercase tracking-wider">
+      <div className="sticky top-0 bg-wrike-sidebar border-b border-wrike-border grid grid-cols-2 h-[60px] text-xs font-semibold text-wrike-text-muted uppercase tracking-wider">
         <div className="col-span-1 px-3 py-2 border-r border-wrike-border flex items-center justify-center">
           <Checkbox
             checked={allTasksSelected}
@@ -44,71 +32,39 @@ export default function TaskTable({
             className="w-4 h-4 text-wrike-blue border-wrike-border rounded focus:ring-wrike-blue focus:ring-1"
           />
         </div>
-        <div className="col-span-1 px-3 py-2 border-r border-wrike-border flex items-center justify-center">#</div>
-        <div className="col-span-4 px-3 py-2 border-r border-wrike-border flex items-center">Task</div>
-        <div className="col-span-2 px-3 py-2 border-r border-wrike-border flex items-center">Start Date</div>
-        <div className="col-span-1 px-3 py-2 border-r border-wrike-border flex items-center">Duration</div>
-        <div className="col-span-1 px-3 py-2 flex items-center">Priority</div>
+        <div className="col-span-1 px-3 py-2 flex items-center">Task</div>
       </div>
 
       {/* Task Rows */}
-      {tasks.map((task, index) => (
-        <div 
-          key={task.id} 
-          className="border-b border-wrike-border grid grid-cols-10 h-12 hover:bg-wrike-hover transition-colors duration-200 group"
-        >
-          <div className="col-span-1 px-3 py-2 border-r border-wrike-border flex items-center justify-center">
-            <Checkbox
-              checked={task.selected || false}
-              onCheckedChange={(checked) => onUpdateTask(task.id, 'selected', checked)}
-              className="w-4 h-4 text-wrike-blue border-wrike-border rounded focus:ring-wrike-blue focus:ring-1"
-            />
+      {tasks.map((task, index) => {
+        const endDate = calculateEndDate(task.startDate, task.duration);
+        const priorityText = task.priority === 'high' ? 'Высокий' : task.priority === 'medium' ? 'Средний' : 'Низкий';
+        
+        return (
+          <div 
+            key={task.id} 
+            className="border-b border-wrike-border grid grid-cols-2 h-auto min-h-12 hover:bg-wrike-hover transition-colors duration-200 group"
+          >
+            <div className="col-span-1 px-3 py-2 border-r border-wrike-border flex items-center justify-center">
+              <Checkbox
+                checked={task.selected || false}
+                onCheckedChange={(checked) => onUpdateTask(task.id, 'selected', checked)}
+                className="w-4 h-4 text-wrike-blue border-wrike-border rounded focus:ring-wrike-blue focus:ring-1"
+              />
+            </div>
+            <div className="col-span-1 px-3 py-2 flex flex-col justify-center space-y-1">
+              <Input
+                value={task.name}
+                onChange={(e) => onUpdateTask(task.id, 'name', e.target.value)}
+                className="w-full border-none bg-transparent text-wrike-text hover:bg-wrike-hover focus:bg-wrike-sidebar focus:border focus:border-wrike-blue rounded px-2 py-1 text-sm font-medium transition-all"
+              />
+              <div className="text-xs text-wrike-text-muted px-2 space-y-0.5">
+                <div>#{index + 1} • {task.startDate} - {formatDateForInput(endDate)} • {task.duration} дн. • {priorityText}</div>
+              </div>
+            </div>
           </div>
-          <div className="col-span-1 px-3 py-2 border-r border-wrike-border flex items-center justify-center text-wrike-text-muted font-medium">
-            {index + 1}
-          </div>
-          <div className="col-span-4 px-3 py-2 border-r border-wrike-border flex items-center">
-            <Input
-              value={task.name}
-              onChange={(e) => onUpdateTask(task.id, 'name', e.target.value)}
-              className="w-full border-none bg-transparent text-wrike-text hover:bg-wrike-hover focus:bg-wrike-sidebar focus:border focus:border-wrike-blue rounded px-2 py-1 text-sm transition-all"
-            />
-          </div>
-          <div className="col-span-2 px-3 py-2 border-r border-wrike-border flex items-center">
-            <Input
-              type="date"
-              value={task.startDate}
-              onChange={(e) => handleStartDateChange(task.id, e.target.value)}
-              className="w-full border border-wrike-border bg-white text-wrike-text rounded px-2 py-1 text-sm focus:border-wrike-blue focus:ring-1 focus:ring-wrike-blue/20 transition-colors"
-            />
-          </div>
-          <div className="col-span-1 px-3 py-2 border-r border-wrike-border flex items-center">
-            <Input
-              type="number"
-              value={task.duration}
-              onChange={(e) => handleDurationChange(task.id, parseInt(e.target.value) || 1)}
-              min="1"
-              className="w-full border border-wrike-border bg-white text-wrike-text rounded px-2 py-1 text-sm focus:border-wrike-blue focus:ring-1 focus:ring-wrike-blue/20 transition-colors"
-            />
-            <span className="ml-1 text-xs text-wrike-text-muted font-medium">d</span>
-          </div>
-          <div className="col-span-1 px-3 py-2 flex items-center">
-            <Select 
-              value={task.priority} 
-              onValueChange={(value: 'low' | 'medium' | 'high') => onUpdateTask(task.id, 'priority', value)}
-            >
-              <SelectTrigger className="w-full border border-wrike-border bg-white text-wrike-text rounded px-2 py-1 text-sm focus:border-wrike-blue focus:ring-1 focus:ring-wrike-blue/20 transition-colors">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent className="bg-white border-wrike-border">
-                <SelectItem value="high" className="text-wrike-text hover:bg-wrike-hover">High</SelectItem>
-                <SelectItem value="medium" className="text-wrike-text hover:bg-wrike-hover">Medium</SelectItem>
-                <SelectItem value="low" className="text-wrike-text hover:bg-wrike-hover">Low</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-        </div>
-      ))}
+        );
+      })}
     </div>
   );
 }
