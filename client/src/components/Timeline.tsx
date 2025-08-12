@@ -1,19 +1,100 @@
+import { useState, useRef } from 'react';
 import { Task } from '@/types/gantt';
 import { generateDateRange, formatDate, getTaskPosition, getTaskBarColor } from '@/utils/dateUtils';
 import { calculateEndDate, getDaysInRange, isWeekendDay } from '@/utils/workingDays';
+import { addDays, format } from 'date-fns';
 
 interface TimelineProps {
   tasks: Task[];
   startDate: string;
   numberOfDays?: number;
+  onUpdateTask?: (id: number, field: keyof Task, value: any) => void;
 }
 
-export default function Timeline({ tasks, startDate, numberOfDays = 10 }: TimelineProps) {
+export default function Timeline({ tasks, startDate, numberOfDays = 10, onUpdateTask }: TimelineProps) {
   const dateRange = generateDateRange(startDate, numberOfDays);
   const dayWidth = 120; // Increased width for better spacing
+  
+  const [dragState, setDragState] = useState<{
+    isDragging: boolean;
+    taskId: number | null;
+    startX: number;
+    startPosition: number;
+    originalStartDate: string;
+  }>({
+    isDragging: false,
+    taskId: null,
+    startX: 0,
+    startPosition: 0,
+    originalStartDate: ''
+  });
+
+  const timelineRef = useRef<HTMLDivElement>(null);
+
+  // Функция для преобразования позиции в дату (находит ближайший рабочий день)
+  const positionToDate = (position: number): string => {
+    let targetDate = addDays(new Date(startDate), position);
+    
+    // Если попали на выходной, сдвигаем на понедельник
+    while (isWeekendDay(targetDate)) {
+      targetDate = addDays(targetDate, 1);
+    }
+    
+    return format(targetDate, 'yyyy-MM-dd');
+  };
+
+  // Обработчик начала перетаскивания
+  const handleMouseDown = (e: React.MouseEvent, task: Task) => {
+    if (!onUpdateTask) return;
+    
+    e.preventDefault();
+    const rect = timelineRef.current?.getBoundingClientRect();
+    if (!rect) return;
+
+    const startX = e.clientX;
+    const position = getTaskPosition(task.startDate, startDate);
+    
+    setDragState({
+      isDragging: true,
+      taskId: task.id,
+      startX,
+      startPosition: position,
+      originalStartDate: task.startDate
+    });
+  };
+
+  // Обработчик движения мыши
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!dragState.isDragging || !onUpdateTask || !dragState.taskId) return;
+
+    const deltaX = e.clientX - dragState.startX;
+    const daysDelta = Math.round(deltaX / dayWidth);
+    const newPosition = Math.max(0, dragState.startPosition + daysDelta);
+    const newStartDate = positionToDate(newPosition);
+
+    // Обновляем позицию задачи
+    onUpdateTask(dragState.taskId, 'startDate', newStartDate);
+  };
+
+  // Обработчик окончания перетаскивания
+  const handleMouseUp = () => {
+    setDragState({
+      isDragging: false,
+      taskId: null,
+      startX: 0,
+      startPosition: 0,
+      originalStartDate: ''
+    });
+  };
 
   return (
-    <div className="flex-1 bg-white">
+    <div 
+      className="flex-1 bg-white select-none"
+      ref={timelineRef}
+      onMouseMove={handleMouseMove}
+      onMouseUp={handleMouseUp}
+      onMouseLeave={handleMouseUp}
+    >
       {/* Timeline Header */}
       <div className="sticky top-0 bg-wrike-sidebar border-b border-wrike-border h-[60px]">
         {/* Date Range Header */}
@@ -111,18 +192,23 @@ export default function Timeline({ tasks, startDate, numberOfDays = 10 }: Timeli
                     const segmentLeftOffset = segment.start * dayWidth + 12;
                     const segmentWidth = (segment.end - segment.start + 1) * dayWidth - 24;
                     
+                    const isDragging = dragState.isDragging && dragState.taskId === task.id;
+                    
                     return (
                       <div
                         key={segmentIndex}
-                        className={`absolute h-8 ${barColor} rounded flex items-center px-3 shadow-sm hover:shadow-md transition-shadow duration-200`}
+                        className={`absolute h-8 ${barColor} rounded flex items-center px-3 shadow-sm hover:shadow-md transition-all duration-200 cursor-move ${
+                          isDragging ? 'opacity-75 shadow-lg scale-105 z-50' : ''
+                        }`}
                         style={{
                           left: `${segmentLeftOffset}px`,
                           width: `${segmentWidth}px`,
                           top: 0,
                         }}
+                        onMouseDown={(e) => handleMouseDown(e, task)}
                       >
                         {segmentIndex === 0 && (
-                          <span className="text-white text-xs font-medium truncate">
+                          <span className="text-white text-xs font-medium truncate pointer-events-none">
                             {task.name} ({task.duration}d)
                           </span>
                         )}

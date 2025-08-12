@@ -141,6 +141,7 @@ export default function GanttChart({ tasks, onUpdateTasks }: GanttChartProps) {
               tasks={tasks}
               startDate={getTimelineStartDate()}
               numberOfDays={timelineDays}
+              onUpdateTask={handleUpdateTask}
             />
           </div>
         </div>
