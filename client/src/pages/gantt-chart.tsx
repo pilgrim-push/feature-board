@@ -75,7 +75,7 @@ export default function GanttChartPage() {
         />
       </div>
       
-      <div className="flex h-full overflow-hidden">
+      <div className="flex h-full">
         <div className="gradient-surface border-r border-stripe-border-light">
           <Sidebar
             userName={state.user.name}
@@ -85,7 +85,7 @@ export default function GanttChartPage() {
           />
         </div>
         
-        <div className="flex-1 glass-surface">
+        <div className="flex-1 glass-surface overflow-hidden">
           <GanttChart
             tasks={state.tasks}
             onUpdateTasks={handleUpdateTasks}

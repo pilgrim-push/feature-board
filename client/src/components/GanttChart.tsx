@@ -187,9 +187,9 @@ export default function GanttChart({ tasks, onUpdateTasks }: GanttChartProps) {
         </div>
       </div>
 
-      {/* Enhanced Gantt Chart Container */}
-      <div className="flex-1 overflow-x-auto overflow-y-auto gradient-bg">
-        <div className="flex bg-gradient-to-br from-stripe-surface/80 to-stripe-gray-50/60 backdrop-filter backdrop-blur-sm shadow-lg border border-stripe-border-light" style={{ minWidth: `${800 + (timelineDays * 120)}px` }}>
+      {/* Enhanced Gantt Chart Container with forced scroll */}
+      <div className="flex-1 gantt-horizontal-scroll gradient-bg" style={{ maxHeight: 'calc(100vh - 120px)' }}>
+        <div className="gantt-container bg-gradient-to-br from-stripe-surface/80 to-stripe-gray-50/60 backdrop-filter backdrop-blur-sm shadow-lg border border-stripe-border-light" style={{ minWidth: `${800 + (timelineDays * 120)}px`, height: 'fit-content' }}>
           <TaskTable
             tasks={tasks}
             onUpdateTask={handleUpdateTask}
