@@ -105,22 +105,24 @@ export default function TaskModal({ isOpen, onClose, onSave, onUpdate, editingTa
 
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
-      <DialogContent className="bg-stripe-surface rounded-lg shadow-xl w-96 max-w-full mx-4">
-        <DialogHeader className="p-6 border-b border-stripe-border">
-          <DialogTitle className="text-lg font-semibold text-stripe-text">
-            {isEditing ? 'Edit Task' : 'Add New Task'}
+      <DialogContent className="glass-card rounded-2xl shadow-2xl w-96 max-w-full mx-4 border border-stripe-border-light">
+        <div className="animated-gradient h-1 rounded-t-2xl"></div>
+        <DialogHeader className="p-6 border-b border-stripe-border-light">
+          <DialogTitle className="text-lg font-semibold text-stripe-text flex items-center space-x-2">
+            <div className="w-2 h-2 rounded-full bg-gradient-to-r from-stripe-blue to-stripe-purple"></div>
+            <span>{isEditing ? 'Edit Task' : 'Add New Task'}</span>
           </DialogTitle>
         </DialogHeader>
         
-        <div className="p-6 space-y-4">
+        <div className="p-6 space-y-6">
           <div>
-            <Label className="block text-sm font-medium text-stripe-text mb-1">Task Name</Label>
+            <Label className="block text-sm font-medium text-stripe-text mb-2">Task Name</Label>
             <Input
               type="text"
               value={task.name}
               onChange={(e) => setTask({ ...task, name: e.target.value })}
               placeholder="Enter task name"
-              className="w-full border border-stripe-border rounded-md px-3 py-2 text-sm focus:border-stripe-blue focus:ring-1 focus:ring-stripe-blue/20"
+              className="w-full border border-stripe-border-light rounded-lg px-4 py-3 text-sm focus:border-stripe-blue focus:ring-2 focus:ring-stripe-blue/20 glass-surface hover-lift transition-all duration-200"
             />
           </div>
           
@@ -200,17 +202,17 @@ export default function TaskModal({ isOpen, onClose, onSave, onUpdate, editingTa
           )}
         </div>
         
-        <div className="p-6 border-t border-stripe-border flex justify-end space-x-3">
+        <div className="p-6 border-t border-stripe-border-light flex justify-end space-x-3 gradient-surface">
           <Button
             onClick={handleClose}
             variant="outline"
-            className="px-4 py-2 border border-stripe-border text-stripe-text rounded-md hover:bg-stripe-hover transition-colors duration-200 text-sm font-medium"
+            className="px-6 py-2.5 border border-stripe-border-light text-stripe-text rounded-lg hover:bg-stripe-hover hover-lift transition-all duration-200 text-sm font-medium glass-surface"
           >
             Cancel
           </Button>
           <Button
             onClick={handleSave}
-            className="px-4 py-2 bg-stripe-blue text-white rounded-md hover:bg-stripe-blue-hover transition-colors duration-200 text-sm font-medium"
+            className="px-6 py-2.5 bg-gradient-to-r from-stripe-blue to-stripe-purple hover:from-stripe-blue-hover hover:to-stripe-purple text-white rounded-lg shadow-lg hover-lift transition-all duration-200 text-sm font-medium"
           >
             {isEditing ? 'Save Changes' : 'Add Task'}
           </Button>

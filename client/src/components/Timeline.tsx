@@ -97,26 +97,26 @@ export default function Timeline({ tasks, startDate, numberOfDays = 10, onUpdate
       onMouseUp={handleMouseUp}
       onMouseLeave={handleMouseUp}
     >
-      {/* Timeline Header */}
-      <div className="sticky top-0 bg-stripe-gray-50 border-b border-stripe-border h-[60px]">
+      {/* Enhanced Timeline Header with gradient */}
+      <div className="sticky top-0 gradient-surface border-b border-stripe-border-light h-[60px] backdrop-filter backdrop-blur-sm shadow-sm">
         {/* Date Range Header */}
         <div className="flex h-[30px]">
           {dateRange.map(({ date }) => (
             <div 
               key={date} 
-              className="px-4 py-2 text-center text-sm font-semibold text-stripe-text border-r border-stripe-border min-w-[120px] flex items-center justify-center"
+              className="px-4 py-2 text-center text-sm font-semibold text-stripe-text border-r border-stripe-border-light min-w-[120px] flex items-center justify-center hover:bg-gradient-to-br hover:from-stripe-blue-light hover:to-stripe-purple-light/30 transition-all duration-200"
             >
               {formatDate(date)}
             </div>
           ))}
         </div>
-        {/* Day of Week Header */}
-        <div className="flex border-t border-stripe-border h-[30px]">
+        {/* Day of Week Header with enhanced styling */}
+        <div className="flex border-t border-stripe-border-light h-[30px]">
           {dateRange.map(({ date, dayOfWeek, isWeekend }) => (
             <div 
               key={date} 
-              className={`px-4 py-1 text-center text-xs text-stripe-text-muted border-r border-stripe-border min-w-[120px] flex items-center justify-center ${
-                isWeekend ? 'bg-stripe-blue-light' : ''
+              className={`px-4 py-1 text-center text-xs text-stripe-text-muted border-r border-stripe-border-light min-w-[120px] flex items-center justify-center transition-all duration-200 ${
+                isWeekend ? 'bg-gradient-to-br from-stripe-blue-light to-stripe-purple-light/50' : 'hover:bg-stripe-hover'
               }`}
             >
               {dayOfWeek}
@@ -187,7 +187,7 @@ export default function Timeline({ tasks, startDate, numberOfDays = 10, onUpdate
           }
           
           return (
-            <div key={task.id} className="h-12 border-b border-stripe-border relative hover:bg-stripe-hover/30 transition-colors duration-200">
+            <div key={task.id} className="h-12 border-b border-stripe-border-light relative hover:bg-gradient-to-r hover:from-stripe-hover hover:to-stripe-blue-light/20 transition-all duration-200">
               {hasIntersection && workingSegments.length > 0 && (
                 <div className="absolute top-2 bottom-2">
                   {workingSegments.map((segment, segmentIndex) => {
@@ -199,8 +199,8 @@ export default function Timeline({ tasks, startDate, numberOfDays = 10, onUpdate
                     return (
                       <div
                         key={segmentIndex}
-                        className={`absolute h-8 ${barColor} rounded flex items-center px-3 shadow-sm hover:shadow-md transition-all duration-200 cursor-move ${
-                          isDragging ? 'opacity-75 shadow-lg scale-105 z-50' : ''
+                        className={`absolute h-8 ${barColor} rounded-lg flex items-center px-3 shadow-lg hover:shadow-xl transition-all duration-200 cursor-move hover-lift ${
+                          isDragging ? 'opacity-75 shadow-2xl scale-105 z-50 rotate-1' : ''
                         }`}
                         style={{
                           left: `${segmentLeftOffset}px`,
@@ -248,14 +248,14 @@ export default function Timeline({ tasks, startDate, numberOfDays = 10, onUpdate
           ).flat().filter(Boolean)}
         </svg>
 
-        {/* Grid Lines */}
+        {/* Enhanced Grid Lines with gradient weekends */}
         <div className="absolute inset-0 pointer-events-none">
           <div className="flex h-full">
             {dateRange.map(({ date, isWeekend }) => (
               <div 
                 key={date} 
-                className={`min-w-[120px] border-r border-stripe-border h-full ${
-                  isWeekend ? 'bg-stripe-blue/5' : ''
+                className={`min-w-[120px] border-r border-stripe-border-light h-full transition-all duration-300 ${
+                  isWeekend ? 'bg-gradient-to-b from-stripe-blue-light/30 to-stripe-purple-light/20' : ''
                 }`}
               />
             ))}

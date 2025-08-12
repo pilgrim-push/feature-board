@@ -36,12 +36,12 @@ export default function DateRangePicker({ startDate, numberOfDays, onDateRangeCh
   };
 
   return (
-    <div className="flex items-center space-x-2">
+    <div className="flex items-center space-x-3">
       <Button
         onClick={handlePreviousWeek}
         variant="outline"
         size="sm"
-        className="px-2 py-1 border-stripe-border text-stripe-text hover:bg-stripe-hover rounded-md"
+        className="px-3 py-2 border border-stripe-border-light text-stripe-text hover:bg-gradient-to-r hover:from-stripe-blue hover:to-stripe-purple hover:text-white rounded-lg hover-lift transition-all duration-200 glass-surface"
       >
         <ChevronLeft size={16} />
       </Button>
@@ -50,7 +50,7 @@ export default function DateRangePicker({ startDate, numberOfDays, onDateRangeCh
         onClick={handleToday}
         variant="outline"
         size="sm"
-        className="px-3 py-1 border-stripe-border text-stripe-text hover:bg-stripe-hover rounded-md text-xs font-medium"
+        className="px-4 py-2 border border-stripe-border-light text-stripe-text hover:bg-gradient-to-r hover:from-green-500 hover:to-emerald-500 hover:text-white rounded-lg text-sm font-medium hover-lift transition-all duration-200 glass-surface"
       >
         Today
       </Button>
@@ -59,38 +59,39 @@ export default function DateRangePicker({ startDate, numberOfDays, onDateRangeCh
         <PopoverTrigger asChild>
           <Button
             variant="outline"
-            className="px-3 py-1 border-stripe-border text-stripe-text hover:bg-stripe-hover rounded-md text-xs font-medium"
+            className="px-4 py-2 border border-stripe-border-light text-stripe-text hover:bg-gradient-to-r hover:from-stripe-blue hover:to-stripe-purple hover:text-white rounded-lg text-sm font-medium hover-lift transition-all duration-200 glass-surface"
           >
-            <Calendar className="mr-2" size={14} />
+            <Calendar className="mr-2" size={16} />
             {format(new Date(startDate), 'MMM dd')} - {format(addDays(new Date(startDate), numberOfDays - 1), 'MMM dd')} ({numberOfDays} days)
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-80 p-4 bg-stripe-surface border border-stripe-border shadow-lg rounded-md">
-          <div className="space-y-4">
+        <PopoverContent className="w-80 p-6 glass-card border border-stripe-border-light shadow-2xl rounded-2xl backdrop-filter backdrop-blur-sm">
+          <div className="animated-gradient h-1 rounded-t-2xl absolute -top-px left-0 right-0"></div>
+          <div className="space-y-6">
             <div>
-              <Label className="text-sm font-medium text-stripe-text">Start Date</Label>
+              <Label className="text-sm font-semibold text-stripe-text mb-2 block">Start Date</Label>
               <Input
                 type="date"
                 value={tempStartDate}
                 onChange={(e) => setTempStartDate(e.target.value)}
-                className="mt-1 bg-stripe-surface border-stripe-border text-stripe-text focus:border-stripe-blue focus:ring-1 focus:ring-stripe-blue/20 rounded-md"
+                className="mt-1 glass-surface border-stripe-border-light text-stripe-text focus:border-stripe-blue focus:ring-2 focus:ring-stripe-blue/20 rounded-lg hover-lift transition-all duration-200"
               />
             </div>
             <div>
-              <Label className="text-sm font-medium text-stripe-text">Number of Days</Label>
+              <Label className="text-sm font-semibold text-stripe-text mb-2 block">Number of Days</Label>
               <Input
                 type="number"
                 min="1"
                 max="90"
                 value={tempNumberOfDays}
                 onChange={(e) => setTempNumberOfDays(parseInt(e.target.value) || 1)}
-                className="mt-1 bg-stripe-surface border-stripe-border text-stripe-text focus:border-stripe-blue focus:ring-1 focus:ring-stripe-blue/20 rounded-md"
+                className="mt-1 glass-surface border-stripe-border-light text-stripe-text focus:border-stripe-blue focus:ring-2 focus:ring-stripe-blue/20 rounded-lg hover-lift transition-all duration-200"
               />
             </div>
-            <div className="flex justify-end space-x-2">
+            <div className="flex justify-end space-x-3 pt-4">
               <Button
                 onClick={handleApply}
-                className="px-4 py-2 bg-stripe-blue text-white rounded-md hover:bg-stripe-blue-hover text-sm font-medium"
+                className="px-6 py-2.5 bg-gradient-to-r from-stripe-blue to-stripe-purple text-white rounded-lg hover:from-stripe-blue-hover hover:to-stripe-purple shadow-lg hover-lift transition-all duration-200 text-sm font-medium"
               >
                 Apply
               </Button>
@@ -103,7 +104,7 @@ export default function DateRangePicker({ startDate, numberOfDays, onDateRangeCh
         onClick={handleNextWeek}
         variant="outline"
         size="sm"
-        className="px-2 py-1 border-stripe-border text-stripe-text hover:bg-stripe-hover rounded-md"
+        className="px-3 py-2 border border-stripe-border-light text-stripe-text hover:bg-gradient-to-r hover:from-stripe-blue hover:to-stripe-purple hover:text-white rounded-lg hover-lift transition-all duration-200 glass-surface"
       >
         <ChevronRight size={16} />
       </Button>

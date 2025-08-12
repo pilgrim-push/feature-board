@@ -24,17 +24,17 @@ export default function TaskTable({
   onEditTask 
 }: TaskTableProps) {
   return (
-    <div className="w-[800px] border-r border-stripe-border bg-stripe-surface">
-      {/* Table Header */}
-      <div className="sticky top-0 bg-stripe-gray-50 border-b border-stripe-border flex h-[60px] text-xs font-semibold text-stripe-text-muted uppercase tracking-wider">
-        <div className="w-12 px-3 py-2 border-r border-stripe-border flex items-center justify-center shrink-0">
+    <div className="w-[800px] border-r border-stripe-border-light bg-gradient-to-b from-stripe-surface to-stripe-gray-50/30">
+      {/* Enhanced Table Header */}
+      <div className="sticky top-0 gradient-surface border-b border-stripe-border-light flex h-[60px] text-xs font-semibold text-stripe-text-muted uppercase tracking-wider backdrop-filter backdrop-blur-sm">
+        <div className="w-12 px-3 py-2 border-r border-stripe-border-light flex items-center justify-center shrink-0">
           <Checkbox
             checked={allTasksSelected}
             onCheckedChange={onSelectAllTasks}
-            className="w-4 h-4 text-stripe-blue border-stripe-border rounded focus:ring-stripe-blue focus:ring-1"
+            className="w-4 h-4 text-stripe-blue border-stripe-border-light rounded focus:ring-stripe-blue focus:ring-1 hover-lift"
           />
         </div>
-        <div className="flex-1 px-3 py-2 flex items-center">Task</div>
+        <div className="flex-1 px-3 py-2 flex items-center">Tasks & Dependencies</div>
       </div>
 
       {/* Task Rows */}
@@ -42,13 +42,13 @@ export default function TaskTable({
         return (
           <div 
             key={task.id} 
-            className="border-b border-stripe-border flex h-12 hover:bg-stripe-hover transition-colors duration-200 group"
+            className="border-b border-stripe-border-light flex h-12 hover:bg-gradient-to-r hover:from-stripe-hover hover:to-stripe-blue-light/30 transition-all duration-200 group hover-lift"
           >
-            <div className="w-12 px-3 py-2 border-r border-stripe-border flex items-center justify-center shrink-0">
+            <div className="w-12 px-3 py-2 border-r border-stripe-border-light flex items-center justify-center shrink-0">
               <Checkbox
                 checked={task.selected || false}
                 onCheckedChange={(checked) => onUpdateTask(task.id, 'selected', checked)}
-                className="w-4 h-4 text-stripe-blue border-stripe-border rounded focus:ring-stripe-blue focus:ring-1"
+                className="w-4 h-4 text-stripe-blue border-stripe-border-light rounded focus:ring-stripe-blue focus:ring-1 hover-lift"
               />
             </div>
             <div className="flex-1 px-3 py-2 flex items-center">

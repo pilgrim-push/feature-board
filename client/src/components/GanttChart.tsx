@@ -153,20 +153,22 @@ export default function GanttChart({ tasks, onUpdateTasks }: GanttChartProps) {
 
   return (
     <main className="flex-1 flex flex-col overflow-hidden">
-      {/* Task Management Toolbar */}
-      <div className="bg-stripe-surface border-b border-stripe-border px-6 py-3">
+      {/* Modern Task Management Toolbar */}
+      <div className="gradient-surface border-b border-stripe-border-light px-6 py-4 backdrop-filter backdrop-blur-sm">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-6">
-            <DateRangePicker
-              startDate={getTimelineStartDate()}
-              numberOfDays={timelineDays}
-              onDateRangeChange={handleDateRangeChange}
-            />
+            <div className="glass-card px-4 py-2 rounded-lg">
+              <DateRangePicker
+                startDate={getTimelineStartDate()}
+                numberOfDays={timelineDays}
+                onDateRangeChange={handleDateRangeChange}
+              />
+            </div>
           </div>
           <div className="flex items-center space-x-3">
             <Button 
               onClick={handleAddTask}
-              className="px-4 py-2 bg-stripe-blue text-white rounded-md hover:bg-stripe-blue-hover transition-colors duration-200 text-sm font-medium"
+              className="px-6 py-2.5 bg-gradient-to-r from-stripe-blue to-stripe-purple hover:from-stripe-blue-hover hover:to-stripe-purple text-white rounded-lg shadow-lg hover-lift transition-all duration-200 text-sm font-medium"
             >
               <Plus className="mr-2" size={16} />
               Add Task
@@ -174,7 +176,7 @@ export default function GanttChart({ tasks, onUpdateTasks }: GanttChartProps) {
             <Button 
               onClick={handleDeleteSelected}
               variant="outline"
-              className="px-4 py-2 border border-stripe-border text-stripe-text rounded-md hover:bg-stripe-danger/10 hover:border-stripe-danger hover:text-stripe-danger transition-colors duration-200 text-sm font-medium"
+              className="px-4 py-2.5 border border-stripe-border-light text-stripe-text rounded-lg hover:bg-gradient-to-r hover:from-stripe-danger hover:to-red-500 hover:text-white hover-lift transition-all duration-200 text-sm font-medium glass-surface"
             >
               <Trash2 className="mr-2" size={16} />
               Delete Selected
@@ -183,10 +185,10 @@ export default function GanttChart({ tasks, onUpdateTasks }: GanttChartProps) {
         </div>
       </div>
 
-      {/* Gantt Chart Container */}
-      <div className="flex-1 overflow-auto bg-stripe-bg">
-        <div className="min-w-max">
-          <div className="flex">
+      {/* Enhanced Gantt Chart Container */}
+      <div className="flex-1 overflow-auto gradient-bg">
+        <div className="min-w-max glass-surface">
+          <div className="flex shadow-lg rounded-lg overflow-hidden border border-stripe-border-light">
             <TaskTable
               tasks={tasks}
               onUpdateTask={handleUpdateTask}
