@@ -91,7 +91,8 @@ export default function Timeline({ tasks, startDate, numberOfDays = 10, onUpdate
 
   return (
     <div 
-      className="flex-1 bg-white select-none min-w-0"
+      className="bg-white select-none"
+      style={{ width: `${numberOfDays * 120}px` }}
       ref={timelineRef}
       onMouseMove={handleMouseMove}
       onMouseUp={handleMouseUp}
@@ -100,24 +101,26 @@ export default function Timeline({ tasks, startDate, numberOfDays = 10, onUpdate
       {/* Enhanced Timeline Header with gradient */}
       <div className="sticky top-0 gradient-surface border-b border-stripe-border-light h-[60px] backdrop-filter backdrop-blur-sm shadow-sm">
         {/* Date Range Header */}
-        <div className="flex h-[30px] min-w-max">
+        <div className="flex h-[30px]" style={{ width: `${numberOfDays * 120}px` }}>
           {dateRange.map(({ date }) => (
             <div 
               key={date} 
-              className="px-4 py-2 text-center text-sm font-semibold text-stripe-text border-r border-stripe-border-light w-[120px] flex-shrink-0 flex items-center justify-center hover:bg-gradient-to-br hover:from-stripe-blue-light hover:to-stripe-purple-light/30 transition-all duration-200"
+              className="px-4 py-2 text-center text-sm font-semibold text-stripe-text border-r border-stripe-border-light flex items-center justify-center hover:bg-gradient-to-br hover:from-stripe-blue-light hover:to-stripe-purple-light/30 transition-all duration-200"
+              style={{ width: '120px' }}
             >
               {formatDate(date)}
             </div>
           ))}
         </div>
         {/* Day of Week Header with enhanced styling */}
-        <div className="flex border-t border-stripe-border-light h-[30px] min-w-max">
+        <div className="flex border-t border-stripe-border-light h-[30px]" style={{ width: `${numberOfDays * 120}px` }}>
           {dateRange.map(({ date, dayOfWeek, isWeekend }) => (
             <div 
               key={date} 
-              className={`px-4 py-1 text-center text-xs text-stripe-text-muted border-r border-stripe-border-light w-[120px] flex-shrink-0 flex items-center justify-center transition-all duration-200 ${
+              className={`px-4 py-1 text-center text-xs text-stripe-text-muted border-r border-stripe-border-light flex items-center justify-center transition-all duration-200 ${
                 isWeekend ? 'bg-gradient-to-br from-stripe-blue-light to-stripe-purple-light/50' : 'hover:bg-stripe-hover'
               }`}
+              style={{ width: '120px' }}
             >
               {dayOfWeek}
             </div>
@@ -250,13 +253,14 @@ export default function Timeline({ tasks, startDate, numberOfDays = 10, onUpdate
 
         {/* Enhanced Grid Lines with gradient weekends */}
         <div className="absolute inset-0 pointer-events-none">
-          <div className="flex h-full min-w-max">
+          <div className="flex h-full" style={{ width: `${numberOfDays * 120}px` }}>
             {dateRange.map(({ date, isWeekend }) => (
               <div 
                 key={date} 
-                className={`w-[120px] flex-shrink-0 border-r border-stripe-border-light h-full transition-all duration-300 ${
+                className={`border-r border-stripe-border-light h-full transition-all duration-300 ${
                   isWeekend ? 'bg-gradient-to-b from-stripe-blue-light/30 to-stripe-purple-light/20' : ''
                 }`}
+                style={{ width: '120px' }}
               />
             ))}
           </div>

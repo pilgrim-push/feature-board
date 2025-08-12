@@ -188,8 +188,8 @@ export default function GanttChart({ tasks, onUpdateTasks }: GanttChartProps) {
       </div>
 
       {/* Enhanced Gantt Chart Container */}
-      <div className="flex-1 overflow-auto gradient-bg">
-        <div className="flex min-w-max shadow-lg border border-stripe-border-light bg-gradient-to-br from-stripe-surface/80 to-stripe-gray-50/60 backdrop-filter backdrop-blur-sm">
+      <div className="flex-1 overflow-x-auto overflow-y-auto gradient-bg">
+        <div className="flex bg-gradient-to-br from-stripe-surface/80 to-stripe-gray-50/60 backdrop-filter backdrop-blur-sm shadow-lg border border-stripe-border-light" style={{ minWidth: `${800 + (timelineDays * 120)}px` }}>
           <TaskTable
             tasks={tasks}
             onUpdateTask={handleUpdateTask}
