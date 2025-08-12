@@ -9,9 +9,10 @@ interface TimelineProps {
   startDate: string;
   numberOfDays?: number;
   onUpdateTask?: (id: number, field: keyof Task, value: any) => void;
+  onEditTask?: (task: Task) => void;
 }
 
-export default function Timeline({ tasks, startDate, numberOfDays = 10, onUpdateTask }: TimelineProps) {
+export default function Timeline({ tasks, startDate, numberOfDays = 10, onUpdateTask, onEditTask }: TimelineProps) {
   const dateRange = generateDateRange(startDate, numberOfDays);
   const dayWidth = 120; // Increased width for better spacing
   
@@ -206,6 +207,7 @@ export default function Timeline({ tasks, startDate, numberOfDays = 10, onUpdate
                           top: 0,
                         }}
                         onMouseDown={(e) => handleMouseDown(e, task)}
+                        onDoubleClick={() => onEditTask?.(task)}
                       >
                         {segmentIndex === 0 && (
                           <span className="text-white text-xs font-medium truncate pointer-events-none">

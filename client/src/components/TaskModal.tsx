@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { NewTask } from '@/types/gantt';
+import { useState, useEffect } from 'react';
+import { NewTask, Task } from '@/types/gantt';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -12,9 +12,11 @@ interface TaskModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSave: (task: NewTask) => void;
+  onUpdate?: (task: Task) => void;
+  editingTask?: Task | null;
 }
 
-export default function TaskModal({ isOpen, onClose, onSave }: TaskModalProps) {
+export default function TaskModal({ isOpen, onClose, onSave, onUpdate, editingTask }: TaskModalProps) {
   const [task, setTask] = useState<NewTask>({
     name: '',
     startDate: new Date().toISOString().split('T')[0],
@@ -23,9 +25,43 @@ export default function TaskModal({ isOpen, onClose, onSave }: TaskModalProps) {
     description: ''
   });
 
+  const isEditing = !!editingTask;
+
+  // Заполняем форму данными при редактировании
+  useEffect(() => {
+    if (editingTask) {
+      setTask({
+        name: editingTask.name,
+        startDate: editingTask.startDate,
+        duration: editingTask.duration,
+        priority: editingTask.priority,
+        description: editingTask.description || ''
+      });
+    } else {
+      setTask({
+        name: '',
+        startDate: new Date().toISOString().split('T')[0],
+        duration: 1,
+        priority: 'medium',
+        description: ''
+      });
+    }
+  }, [editingTask, isOpen]);
+
   const handleSave = () => {
     if (task.name.trim()) {
-      onSave(task);
+      if (isEditing && onUpdate && editingTask) {
+        // Обновляем существующую задачу
+        onUpdate({
+          ...editingTask,
+          ...task
+        });
+      } else {
+        // Создаем новую задачу
+        onSave(task);
+      }
+      
+      // Сбрасываем форму
       setTask({
         name: '',
         startDate: new Date().toISOString().split('T')[0],
@@ -52,7 +88,9 @@ export default function TaskModal({ isOpen, onClose, onSave }: TaskModalProps) {
     <Dialog open={isOpen} onOpenChange={handleClose}>
       <DialogContent className="bg-white rounded-lg shadow-xl w-96 max-w-full mx-4">
         <DialogHeader className="p-6 border-b border-wrike-border">
-          <DialogTitle className="text-lg font-semibold text-wrike-text">Add New Task</DialogTitle>
+          <DialogTitle className="text-lg font-semibold text-wrike-text">
+            {isEditing ? 'Edit Task' : 'Add New Task'}
+          </DialogTitle>
         </DialogHeader>
         
         <div className="p-6 space-y-4">
@@ -128,7 +166,7 @@ export default function TaskModal({ isOpen, onClose, onSave }: TaskModalProps) {
             onClick={handleSave}
             className="px-4 py-2 bg-wrike-blue text-white rounded hover:bg-wrike-blue-dark transition-colors duration-200 text-sm font-medium"
           >
-            Add Task
+            {isEditing ? 'Save Changes' : 'Add Task'}
           </Button>
         </div>
       </DialogContent>

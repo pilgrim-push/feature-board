@@ -12,6 +12,7 @@ interface TaskTableProps {
   onDeleteTask: (id: number) => void;
   onSelectAllTasks: (selected: boolean) => void;
   allTasksSelected: boolean;
+  onEditTask?: (task: Task) => void;
 }
 
 export default function TaskTable({ 
@@ -19,7 +20,8 @@ export default function TaskTable({
   onUpdateTask, 
   onDeleteTask, 
   onSelectAllTasks,
-  allTasksSelected 
+  allTasksSelected,
+  onEditTask 
 }: TaskTableProps) {
   return (
     <div className="w-[800px] border-r border-wrike-border bg-white">
@@ -53,7 +55,8 @@ export default function TaskTable({
               <Input
                 value={task.name}
                 onChange={(e) => onUpdateTask(task.id, 'name', e.target.value)}
-                className="w-full border-none bg-transparent text-wrike-text hover:bg-wrike-hover focus:bg-wrike-sidebar focus:border focus:border-wrike-blue rounded px-2 py-1 text-sm font-medium transition-all"
+                onDoubleClick={() => onEditTask?.(task)}
+                className="w-full border-none bg-transparent text-wrike-text hover:bg-wrike-hover focus:bg-wrike-sidebar focus:border focus:border-wrike-blue rounded px-2 py-1 text-sm font-medium transition-all cursor-pointer"
               />
             </div>
           </div>

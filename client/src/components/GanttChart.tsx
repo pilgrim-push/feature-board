@@ -15,6 +15,7 @@ interface GanttChartProps {
 
 export default function GanttChart({ tasks, onUpdateTasks }: GanttChartProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editingTask, setEditingTask] = useState<Task | null>(null);
   const [timelineStartDate, setTimelineStartDate] = useState(() => {
     if (tasks.length === 0) {
       return new Date().toISOString().split('T')[0];
@@ -31,6 +32,12 @@ export default function GanttChart({ tasks, onUpdateTasks }: GanttChartProps) {
   };
 
   const handleAddTask = () => {
+    setEditingTask(null);
+    setIsModalOpen(true);
+  };
+
+  const handleEditTask = (task: Task) => {
+    setEditingTask(task);
     setIsModalOpen(true);
   };
 
@@ -42,6 +49,22 @@ export default function GanttChart({ tasks, onUpdateTasks }: GanttChartProps) {
       title: "Task Added",
       description: `Task "${newTask.name}" has been added successfully.`,
     });
+  };
+
+  const handleUpdateTaskFromModal = (updatedTask: Task) => {
+    const updatedTasks = tasks.map(task => 
+      task.id === updatedTask.id ? updatedTask : task
+    );
+    onUpdateTasks(updatedTasks);
+    toast({
+      title: "Task Updated",
+      description: `Task "${updatedTask.name}" has been updated successfully.`,
+    });
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setEditingTask(null);
   };
 
   const handleUpdateTask = (id: number, field: keyof Task, value: any) => {
@@ -136,12 +159,14 @@ export default function GanttChart({ tasks, onUpdateTasks }: GanttChartProps) {
               onDeleteTask={handleDeleteTask}
               onSelectAllTasks={handleSelectAllTasks}
               allTasksSelected={allTasksSelected}
+              onEditTask={handleEditTask}
             />
             <Timeline
               tasks={tasks}
               startDate={getTimelineStartDate()}
               numberOfDays={timelineDays}
               onUpdateTask={handleUpdateTask}
+              onEditTask={handleEditTask}
             />
           </div>
         </div>
@@ -149,8 +174,10 @@ export default function GanttChart({ tasks, onUpdateTasks }: GanttChartProps) {
 
       <TaskModal
         isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
+        onClose={handleCloseModal}
         onSave={handleSaveTask}
+        onUpdate={handleUpdateTaskFromModal}
+        editingTask={editingTask}
       />
     </main>
   );
