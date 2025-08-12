@@ -25,13 +25,9 @@ export default function GanttChart({ tasks, onUpdateTasks }: GanttChartProps) {
   const [timelineDays, setTimelineDays] = useState(15);
   const { toast } = useToast();
 
-  // Get the earliest start date for the timeline
+  // Get the timeline start date - use user-selected date, not constrained by tasks
   const getTimelineStartDate = () => {
-    if (tasks.length === 0) {
-      return timelineStartDate;
-    }
-    const dates = tasks.map(task => task.startDate).sort();
-    return dates[0] < timelineStartDate ? dates[0] : timelineStartDate;
+    return timelineStartDate;
   };
 
   const handleAddTask = () => {
