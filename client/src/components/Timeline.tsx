@@ -53,12 +53,18 @@ export default function Timeline({ tasks, startDate, numberOfDays = 10 }: Timeli
           const endDate = calculateEndDate(task.startDate, task.duration);
           const taskDaysRange = getDaysInRange(new Date(task.startDate), endDate);
           
+          // Проверяем, есть ли пересечение задачи с видимым диапазоном
+          const taskEndPosition = getTaskPosition(endDate.toISOString().split('T')[0], startDate);
+          const hasIntersection = !(position >= numberOfDays || taskEndPosition < 0);
+          
           // Группируем рабочие дни в непрерывные сегменты
           const workingSegments: Array<{ start: number; end: number; days: any[] }> = [];
           let currentSegment: any[] = [];
           
           taskDaysRange.forEach((day, dayIndex) => {
             const dayPosition = getTaskPosition(day.date.toISOString().split('T')[0], startDate);
+            
+            // Только если день попадает в видимый диапазон
             if (dayPosition >= 0 && dayPosition < numberOfDays) {
               if (!day.isWeekend) {
                 currentSegment.push({ ...day, position: dayPosition });
@@ -73,6 +79,18 @@ export default function Timeline({ tasks, startDate, numberOfDays = 10 }: Timeli
                   currentSegment = [];
                 }
               }
+            } else if (dayPosition >= numberOfDays) {
+              // Если мы вышли за пределы видимого диапазона, завершаем текущий сегмент
+              if (currentSegment.length > 0) {
+                workingSegments.push({
+                  start: currentSegment[0].position,
+                  end: currentSegment[currentSegment.length - 1].position,
+                  days: [...currentSegment]
+                });
+                currentSegment = [];
+              }
+              // Прерываем цикл, так как дальше дни уже не видны
+              return;
             }
           });
           
@@ -87,7 +105,7 @@ export default function Timeline({ tasks, startDate, numberOfDays = 10 }: Timeli
           
           return (
             <div key={task.id} className="h-12 border-b border-wrike-border relative hover:bg-wrike-hover/30 transition-colors duration-200">
-              {workingSegments.length > 0 && (
+              {hasIntersection && workingSegments.length > 0 && (
                 <div className="absolute top-2 bottom-2">
                   {workingSegments.map((segment, segmentIndex) => {
                     const segmentLeftOffset = segment.start * dayWidth + 12;
