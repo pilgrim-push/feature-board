@@ -6,7 +6,9 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
+import { Checkbox } from '@/components/ui/checkbox';
 import { calculateEndDate, formatDateForInput } from '@/utils/workingDays';
+import { getAvailablePredecessors } from '@/utils/dependencies';
 
 interface TaskModalProps {
   isOpen: boolean;
@@ -14,15 +16,17 @@ interface TaskModalProps {
   onSave: (task: NewTask) => void;
   onUpdate?: (task: Task) => void;
   editingTask?: Task | null;
+  allTasks: Task[];
 }
 
-export default function TaskModal({ isOpen, onClose, onSave, onUpdate, editingTask }: TaskModalProps) {
+export default function TaskModal({ isOpen, onClose, onSave, onUpdate, editingTask, allTasks }: TaskModalProps) {
   const [task, setTask] = useState<NewTask>({
     name: '',
     startDate: new Date().toISOString().split('T')[0],
     duration: 1,
     priority: 'medium',
-    description: ''
+    description: '',
+    dependencies: []
   });
 
   const isEditing = !!editingTask;
@@ -35,7 +39,8 @@ export default function TaskModal({ isOpen, onClose, onSave, onUpdate, editingTa
         startDate: editingTask.startDate,
         duration: editingTask.duration,
         priority: editingTask.priority,
-        description: editingTask.description || ''
+        description: editingTask.description || '',
+        dependencies: editingTask.dependencies || []
       });
     } else {
       setTask({
@@ -43,7 +48,8 @@ export default function TaskModal({ isOpen, onClose, onSave, onUpdate, editingTa
         startDate: new Date().toISOString().split('T')[0],
         duration: 1,
         priority: 'medium',
-        description: ''
+        description: '',
+        dependencies: []
       });
     }
   }, [editingTask, isOpen]);
@@ -67,7 +73,8 @@ export default function TaskModal({ isOpen, onClose, onSave, onUpdate, editingTa
         startDate: new Date().toISOString().split('T')[0],
         duration: 1,
         priority: 'medium',
-        description: ''
+        description: '',
+        dependencies: []
       });
       onClose();
     }
@@ -79,9 +86,21 @@ export default function TaskModal({ isOpen, onClose, onSave, onUpdate, editingTa
       startDate: new Date().toISOString().split('T')[0],
       duration: 1,
       priority: 'medium',
-      description: ''
+      description: '',
+      dependencies: []
     });
     onClose();
+  };
+
+  const availablePredecessors = getAvailablePredecessors(allTasks, editingTask?.id || -1);
+
+  const handleDependencyChange = (taskId: number, checked: boolean) => {
+    const currentDeps = task.dependencies || [];
+    if (checked) {
+      setTask({ ...task, dependencies: [...currentDeps, taskId] });
+    } else {
+      setTask({ ...task, dependencies: currentDeps.filter(id => id !== taskId) });
+    }
   };
 
   return (
@@ -152,6 +171,33 @@ export default function TaskModal({ isOpen, onClose, onSave, onUpdate, editingTa
               className="w-full border border-stripe-border rounded-md px-3 py-2 text-sm focus:border-stripe-blue focus:ring-1 focus:ring-stripe-blue/20"
             />
           </div>
+
+          {availablePredecessors.length > 0 && (
+            <div>
+              <Label className="block text-sm font-medium text-stripe-text mb-2">Dependencies</Label>
+              <div className="space-y-2 max-h-32 overflow-y-auto border border-stripe-border rounded-md p-3">
+                {availablePredecessors.map((predecessor) => (
+                  <div key={predecessor.id} className="flex items-center space-x-2">
+                    <Checkbox
+                      id={`dep-${predecessor.id}`}
+                      checked={task.dependencies?.includes(predecessor.id) || false}
+                      onCheckedChange={(checked) => handleDependencyChange(predecessor.id, !!checked)}
+                      className="w-4 h-4 text-stripe-blue border-stripe-border rounded focus:ring-stripe-blue focus:ring-1"
+                    />
+                    <Label
+                      htmlFor={`dep-${predecessor.id}`}
+                      className="text-sm text-stripe-text cursor-pointer flex-1"
+                    >
+                      {predecessor.name}
+                    </Label>
+                  </div>
+                ))}
+              </div>
+              <p className="text-xs text-stripe-text-muted mt-1">
+                Selected tasks must be completed before this task can start
+              </p>
+            </div>
+          )}
         </div>
         
         <div className="p-6 border-t border-stripe-border flex justify-end space-x-3">

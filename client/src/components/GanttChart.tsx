@@ -3,6 +3,7 @@ import { Plus, Trash2 } from 'lucide-react';
 import { Task, NewTask } from '@/types/gantt';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
+import { recalculateTaskDates, validateDependencies } from '@/utils/dependencies';
 import TaskTable from './TaskTable';
 import Timeline from './Timeline';
 import TaskModal from './TaskModal';
@@ -43,8 +44,25 @@ export default function GanttChart({ tasks, onUpdateTasks }: GanttChartProps) {
 
   const handleSaveTask = (newTask: NewTask) => {
     const id = Math.max(0, ...tasks.map(t => t.id)) + 1;
-    const task: Task = { ...newTask, id, selected: false };
-    onUpdateTasks([...tasks, task]);
+    const taskToAdd: Task = { ...newTask, id, selected: false };
+    let updatedTasks = [...tasks, taskToAdd];
+    
+    // Validate dependencies
+    const validation = validateDependencies(updatedTasks);
+    if (!validation.isValid) {
+      toast({
+        title: "Invalid Dependencies",
+        description: validation.errors[0],
+        variant: "destructive"
+      });
+      return;
+    }
+    
+    // Recalculate dates based on dependencies
+    updatedTasks = recalculateTaskDates(updatedTasks);
+    onUpdateTasks(updatedTasks);
+    setIsModalOpen(false);
+    
     toast({
       title: "Task Added",
       description: `Task "${newTask.name}" has been added successfully.`,
@@ -52,10 +70,26 @@ export default function GanttChart({ tasks, onUpdateTasks }: GanttChartProps) {
   };
 
   const handleUpdateTaskFromModal = (updatedTask: Task) => {
-    const updatedTasks = tasks.map(task => 
+    let updatedTasks = tasks.map(task => 
       task.id === updatedTask.id ? updatedTask : task
     );
+    
+    // Validate dependencies
+    const validation = validateDependencies(updatedTasks);
+    if (!validation.isValid) {
+      toast({
+        title: "Invalid Dependencies",
+        description: validation.errors[0],
+        variant: "destructive"
+      });
+      return;
+    }
+    
+    // Recalculate dates based on dependencies
+    updatedTasks = recalculateTaskDates(updatedTasks);
     onUpdateTasks(updatedTasks);
+    setIsModalOpen(false);
+    
     toast({
       title: "Task Updated",
       description: `Task "${updatedTask.name}" has been updated successfully.`,
@@ -178,6 +212,7 @@ export default function GanttChart({ tasks, onUpdateTasks }: GanttChartProps) {
         onSave={handleSaveTask}
         onUpdate={handleUpdateTaskFromModal}
         editingTask={editingTask}
+        allTasks={tasks}
       />
     </main>
   );

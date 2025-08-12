@@ -3,6 +3,7 @@ import { Task } from '@/types/gantt';
 import { generateDateRange, formatDate, getTaskPosition, getTaskBarColor } from '@/utils/dateUtils';
 import { calculateEndDate, getDaysInRange, isWeekendDay } from '@/utils/workingDays';
 import { addDays, format } from 'date-fns';
+import DependencyArrow from './DependencyArrow';
 
 interface TimelineProps {
   tasks: Task[];
@@ -223,14 +224,38 @@ export default function Timeline({ tasks, startDate, numberOfDays = 10, onUpdate
           );
         })}
 
+        {/* Dependency Arrows */}
+        <svg className="absolute inset-0 pointer-events-none z-10" style={{ height: tasks.length * 48 }}>
+          {tasks.map((task, taskIndex) => 
+            task.dependencies?.map(depId => {
+              const dependentTask = tasks.find(t => t.id === depId);
+              if (!dependentTask) return null;
+              
+              const dependentTaskIndex = tasks.findIndex(t => t.id === depId);
+              if (dependentTaskIndex === -1) return null;
+              
+              return (
+                <g key={`${task.id}-${depId}`} transform={`translate(0, ${dependentTaskIndex * 48})`}>
+                  <DependencyArrow
+                    fromTask={dependentTask}
+                    toTask={task}
+                    startDate={startDate}
+                    dayWidth={dayWidth}
+                  />
+                </g>
+              );
+            })
+          ).flat().filter(Boolean)}
+        </svg>
+
         {/* Grid Lines */}
         <div className="absolute inset-0 pointer-events-none">
           <div className="flex h-full">
             {dateRange.map(({ date, isWeekend }) => (
               <div 
                 key={date} 
-                className={`min-w-[120px] border-r border-wrike-border h-full ${
-                  isWeekend ? 'bg-wrike-blue/5' : ''
+                className={`min-w-[120px] border-r border-stripe-border h-full ${
+                  isWeekend ? 'bg-stripe-blue/5' : ''
                 }`}
               />
             ))}
