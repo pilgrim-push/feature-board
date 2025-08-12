@@ -189,24 +189,22 @@ export default function GanttChart({ tasks, onUpdateTasks }: GanttChartProps) {
 
       {/* Enhanced Gantt Chart Container */}
       <div className="flex-1 overflow-auto gradient-bg">
-        <div className="min-w-max">
-          <div className="flex shadow-lg border border-stripe-border-light bg-gradient-to-br from-stripe-surface/80 to-stripe-gray-50/60 backdrop-filter backdrop-blur-sm">
-            <TaskTable
-              tasks={tasks}
-              onUpdateTask={handleUpdateTask}
-              onDeleteTask={handleDeleteTask}
-              onSelectAllTasks={handleSelectAllTasks}
-              allTasksSelected={allTasksSelected}
-              onEditTask={handleEditTask}
-            />
-            <Timeline
-              tasks={tasks}
-              startDate={getTimelineStartDate()}
-              numberOfDays={timelineDays}
-              onUpdateTask={handleUpdateTask}
-              onEditTask={handleEditTask}
-            />
-          </div>
+        <div className="flex min-w-max shadow-lg border border-stripe-border-light bg-gradient-to-br from-stripe-surface/80 to-stripe-gray-50/60 backdrop-filter backdrop-blur-sm">
+          <TaskTable
+            tasks={tasks}
+            onUpdateTask={handleUpdateTask}
+            onDeleteTask={handleDeleteTask}
+            onSelectAllTasks={handleSelectAllTasks}
+            allTasksSelected={allTasksSelected}
+            onEditTask={handleEditTask}
+          />
+          <Timeline
+            tasks={tasks}
+            startDate={getTimelineStartDate()}
+            numberOfDays={timelineDays}
+            onUpdateTask={handleUpdateTask}
+            onEditTask={handleEditTask}
+          />
         </div>
       </div>
 
