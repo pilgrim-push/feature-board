@@ -54,7 +54,7 @@ export function getTaskPosition(taskStartDate: string, timelineStartDate: string
   try {
     const taskStart = parseISO(taskStartDate);
     const timelineStart = parseISO(timelineStartDate);
-    return Math.max(0, differenceInDays(taskStart, timelineStart));
+    return differenceInDays(taskStart, timelineStart);
   } catch {
     return 0;
   }
