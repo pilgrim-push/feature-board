@@ -120,7 +120,7 @@ export default function GanttChart({ tasks, onUpdateTasks }: GanttChartProps) {
   return (
     <main className="flex-1 flex flex-col overflow-hidden">
       {/* Task Management Toolbar */}
-      <div className="bg-white border-b border-wrike-border px-6 py-3">
+      <div className="bg-stripe-surface border-b border-stripe-border px-6 py-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-6">
             <DateRangePicker
@@ -132,7 +132,7 @@ export default function GanttChart({ tasks, onUpdateTasks }: GanttChartProps) {
           <div className="flex items-center space-x-3">
             <Button 
               onClick={handleAddTask}
-              className="px-4 py-2 bg-wrike-blue text-white rounded hover:bg-wrike-blue-dark transition-colors duration-200 text-sm font-medium"
+              className="px-4 py-2 bg-stripe-blue text-white rounded-md hover:bg-stripe-blue-hover transition-colors duration-200 text-sm font-medium"
             >
               <Plus className="mr-2" size={16} />
               Add Task
@@ -140,7 +140,7 @@ export default function GanttChart({ tasks, onUpdateTasks }: GanttChartProps) {
             <Button 
               onClick={handleDeleteSelected}
               variant="outline"
-              className="px-4 py-2 border border-wrike-border text-wrike-text rounded hover:bg-wrike-error/10 hover:border-wrike-error hover:text-wrike-error transition-colors duration-200 text-sm font-medium"
+              className="px-4 py-2 border border-stripe-border text-stripe-text rounded-md hover:bg-stripe-danger/10 hover:border-stripe-danger hover:text-stripe-danger transition-colors duration-200 text-sm font-medium"
             >
               <Trash2 className="mr-2" size={16} />
               Delete Selected
@@ -150,7 +150,7 @@ export default function GanttChart({ tasks, onUpdateTasks }: GanttChartProps) {
       </div>
 
       {/* Gantt Chart Container */}
-      <div className="flex-1 overflow-auto bg-wrike-bg">
+      <div className="flex-1 overflow-auto bg-stripe-bg">
         <div className="min-w-max">
           <div className="flex">
             <TaskTable

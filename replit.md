@@ -1,6 +1,6 @@
 # Overview
 
-This is a Gantt Chart Builder application styled after Microsoft Azure's design system. It's a full-stack web application that allows users to create, manage, and visualize project timelines through an interactive Gantt chart interface. The application features project management capabilities, task creation and editing, timeline visualization, and data persistence through local storage.
+This is a Gantt Chart Builder application styled after Stripe's design system. It's a full-stack web application that allows users to create, manage, and visualize project timelines through an interactive Gantt chart interface. The application features project management capabilities, task creation and editing, timeline visualization, and data persistence through local storage.
 
 # User Preferences
 
@@ -35,10 +35,12 @@ The backend follows a minimal Express.js structure:
 - **LocalStorage hook** for persistent application state across sessions
 
 ## Component Design System
-- **Azure-inspired design language** with specific color tokens and typography (Segoe UI)
-- **Responsive layout** with sidebar navigation and main content area
-- **Modular component architecture** separating concerns (Header, Sidebar, GanttChart, TaskTable, Timeline)
+- **Stripe-inspired design language** with specific color tokens and typography (Inter font)
+- **Clean, minimalist aesthetic** with subtle shadows and rounded corners
+- **Responsive layout** with toolbar navigation and main content area
+- **Modular component architecture** separating concerns (GanttChart, TaskTable, Timeline, TaskModal, DateRangePicker)
 - **Accessible UI components** using Radix UI primitives with proper ARIA support
+- **Consistent spacing and interaction patterns** following Stripe's design principles
 
 ## Development Workflow
 - **TypeScript** configuration with path aliases for clean imports

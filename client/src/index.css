@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Segoe+UI:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -36,24 +36,36 @@
   --sidebar-accent-foreground: hsl(217 100% 54%);
   --sidebar-border: hsl(214 32% 91%);
   --sidebar-ring: hsl(217 100% 54%);
-  --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
   --font-serif: Georgia, serif;
   --font-mono: 'SF Mono', Consolas, monospace;
   --radius: 0.375rem;
   
-  /* Wrike specific colors */
-  --wrike-blue: hsl(217 100% 54%);
-  --wrike-blue-dark: hsl(217 100% 44%);
-  --wrike-bg: hsl(0 0% 100%);
-  --wrike-sidebar: hsl(210 40% 98%);
-  --wrike-card: hsl(0 0% 100%);
-  --wrike-text: hsl(222 16% 25%);
-  --wrike-text-muted: hsl(215 16% 47%);
-  --wrike-border: hsl(214 32% 91%);
-  --wrike-hover: hsl(210 40% 96%);
-  --wrike-success: hsl(142 76% 36%);
-  --wrike-warning: hsl(38 92% 50%);
-  --wrike-error: hsl(0 70% 50%);
+  /* Stripe specific colors */
+  --stripe-blue: hsl(213 93% 43%);
+  --stripe-blue-hover: hsl(213 93% 48%);
+  --stripe-blue-light: hsl(209 100% 97%);
+  --stripe-bg: hsl(0 0% 99%);
+  --stripe-surface: hsl(0 0% 100%);
+  --stripe-sidebar: hsl(210 17% 98%);
+  --stripe-card: hsl(0 0% 100%);
+  --stripe-text: hsl(215 25% 24%);
+  --stripe-text-muted: hsl(215 16% 47%);
+  --stripe-border: hsl(210 14% 89%);
+  --stripe-hover: hsl(210 17% 96%);
+  --stripe-success: hsl(142 76% 36%);
+  --stripe-warning: hsl(38 92% 50%);
+  --stripe-danger: hsl(349 89% 49%);
+  --stripe-gray-50: hsl(210 17% 98%);
+  --stripe-gray-100: hsl(210 17% 95%);
+  --stripe-gray-200: hsl(214 15% 91%);
+  --stripe-gray-300: hsl(213 13% 81%);
+  --stripe-gray-400: hsl(215 14% 68%);
+  --stripe-gray-500: hsl(215 16% 47%);
+  --stripe-gray-600: hsl(215 19% 35%);
+  --stripe-gray-700: hsl(215 25% 27%);
+  --stripe-gray-800: hsl(217 33% 17%);
+  --stripe-gray-900: hsl(222 47% 11%);
 }
 
 .dark {
@@ -101,39 +113,67 @@
   }
 }
 
-/* Custom Wrike styles */
-.wrike-blue {
-  background-color: var(--wrike-blue);
+/* Custom Stripe styles */
+.stripe-blue {
+  background-color: var(--stripe-blue);
 }
 
-.wrike-blue-dark {
-  background-color: var(--wrike-blue-dark);
+.stripe-blue-hover {
+  background-color: var(--stripe-blue-hover);
 }
 
-.wrike-bg {
-  background-color: var(--wrike-bg);
+.stripe-bg {
+  background-color: var(--stripe-bg);
 }
 
-.wrike-card {
-  background-color: var(--wrike-card);
+.stripe-surface {
+  background-color: var(--stripe-surface);
 }
 
-.wrike-sidebar {
-  background-color: var(--wrike-sidebar);
+.stripe-sidebar {
+  background-color: var(--stripe-sidebar);
 }
 
-.text-wrike-text {
-  color: var(--wrike-text);
+.stripe-card {
+  background-color: var(--stripe-card);
 }
 
-.text-wrike-muted {
-  color: var(--wrike-text-muted);
+.text-stripe-text {
+  color: var(--stripe-text);
 }
 
-.border-wrike-border {
-  border-color: var(--wrike-border);
+.text-stripe-muted {
+  color: var(--stripe-text-muted);
 }
 
-.wrike-hover {
-  background-color: var(--wrike-hover);
+.border-stripe-border {
+  border-color: var(--stripe-border);
+}
+
+.stripe-hover {
+  background-color: var(--stripe-hover);
+}
+
+.bg-stripe-gray-50 {
+  background-color: var(--stripe-gray-50);
+}
+
+.bg-stripe-gray-100 {
+  background-color: var(--stripe-gray-100);
+}
+
+.bg-stripe-gray-200 {
+  background-color: var(--stripe-gray-200);
+}
+
+.text-stripe-gray-600 {
+  color: var(--stripe-gray-600);
+}
+
+.text-stripe-gray-700 {
+  color: var(--stripe-gray-700);
+}
+
+.text-stripe-gray-900 {
+  color: var(--stripe-gray-900);
 }

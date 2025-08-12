@@ -41,7 +41,7 @@ export default function DateRangePicker({ startDate, numberOfDays, onDateRangeCh
         onClick={handlePreviousWeek}
         variant="outline"
         size="sm"
-        className="px-2 py-1 border-wrike-border text-wrike-text hover:bg-wrike-hover rounded"
+        className="px-2 py-1 border-stripe-border text-stripe-text hover:bg-stripe-hover rounded-md"
       >
         <ChevronLeft size={16} />
       </Button>
@@ -50,7 +50,7 @@ export default function DateRangePicker({ startDate, numberOfDays, onDateRangeCh
         onClick={handleToday}
         variant="outline"
         size="sm"
-        className="px-3 py-1 border-wrike-border text-wrike-text hover:bg-wrike-hover rounded text-xs font-medium"
+        className="px-3 py-1 border-stripe-border text-stripe-text hover:bg-stripe-hover rounded-md text-xs font-medium"
       >
         Today
       </Button>
@@ -59,38 +59,38 @@ export default function DateRangePicker({ startDate, numberOfDays, onDateRangeCh
         <PopoverTrigger asChild>
           <Button
             variant="outline"
-            className="px-3 py-1 border-wrike-border text-wrike-text hover:bg-wrike-hover rounded text-xs font-medium"
+            className="px-3 py-1 border-stripe-border text-stripe-text hover:bg-stripe-hover rounded-md text-xs font-medium"
           >
             <Calendar className="mr-2" size={14} />
             {format(new Date(startDate), 'MMM dd')} - {format(addDays(new Date(startDate), numberOfDays - 1), 'MMM dd')} ({numberOfDays} days)
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-80 p-4 bg-white border border-wrike-border shadow-lg">
+        <PopoverContent className="w-80 p-4 bg-stripe-surface border border-stripe-border shadow-lg rounded-md">
           <div className="space-y-4">
             <div>
-              <Label className="text-sm font-medium text-wrike-text">Start Date</Label>
+              <Label className="text-sm font-medium text-stripe-text">Start Date</Label>
               <Input
                 type="date"
                 value={tempStartDate}
                 onChange={(e) => setTempStartDate(e.target.value)}
-                className="mt-1 bg-white border-wrike-border text-wrike-text focus:border-wrike-blue focus:ring-1 focus:ring-wrike-blue/20"
+                className="mt-1 bg-stripe-surface border-stripe-border text-stripe-text focus:border-stripe-blue focus:ring-1 focus:ring-stripe-blue/20 rounded-md"
               />
             </div>
             <div>
-              <Label className="text-sm font-medium text-wrike-text">Number of Days</Label>
+              <Label className="text-sm font-medium text-stripe-text">Number of Days</Label>
               <Input
                 type="number"
                 min="1"
                 max="90"
                 value={tempNumberOfDays}
                 onChange={(e) => setTempNumberOfDays(parseInt(e.target.value) || 1)}
-                className="mt-1 bg-white border-wrike-border text-wrike-text focus:border-wrike-blue focus:ring-1 focus:ring-wrike-blue/20"
+                className="mt-1 bg-stripe-surface border-stripe-border text-stripe-text focus:border-stripe-blue focus:ring-1 focus:ring-stripe-blue/20 rounded-md"
               />
             </div>
             <div className="flex justify-end space-x-2">
               <Button
                 onClick={handleApply}
-                className="px-4 py-2 bg-wrike-blue text-white rounded hover:bg-wrike-blue-dark text-sm font-medium"
+                className="px-4 py-2 bg-stripe-blue text-white rounded-md hover:bg-stripe-blue-hover text-sm font-medium"
               >
                 Apply
               </Button>
@@ -103,7 +103,7 @@ export default function DateRangePicker({ startDate, numberOfDays, onDateRangeCh
         onClick={handleNextWeek}
         variant="outline"
         size="sm"
-        className="px-2 py-1 border-wrike-border text-wrike-text hover:bg-wrike-hover rounded"
+        className="px-2 py-1 border-stripe-border text-stripe-text hover:bg-stripe-hover rounded-md"
       >
         <ChevronRight size={16} />
       </Button>

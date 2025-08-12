@@ -24,14 +24,14 @@ export default function TaskTable({
   onEditTask 
 }: TaskTableProps) {
   return (
-    <div className="w-[800px] border-r border-wrike-border bg-white">
+    <div className="w-[800px] border-r border-stripe-border bg-stripe-surface">
       {/* Table Header */}
-      <div className="sticky top-0 bg-wrike-sidebar border-b border-wrike-border flex h-[60px] text-xs font-semibold text-wrike-text-muted uppercase tracking-wider">
-        <div className="w-12 px-3 py-2 border-r border-wrike-border flex items-center justify-center shrink-0">
+      <div className="sticky top-0 bg-stripe-gray-50 border-b border-stripe-border flex h-[60px] text-xs font-semibold text-stripe-text-muted uppercase tracking-wider">
+        <div className="w-12 px-3 py-2 border-r border-stripe-border flex items-center justify-center shrink-0">
           <Checkbox
             checked={allTasksSelected}
             onCheckedChange={onSelectAllTasks}
-            className="w-4 h-4 text-wrike-blue border-wrike-border rounded focus:ring-wrike-blue focus:ring-1"
+            className="w-4 h-4 text-stripe-blue border-stripe-border rounded focus:ring-stripe-blue focus:ring-1"
           />
         </div>
         <div className="flex-1 px-3 py-2 flex items-center">Task</div>
@@ -42,13 +42,13 @@ export default function TaskTable({
         return (
           <div 
             key={task.id} 
-            className="border-b border-wrike-border flex h-12 hover:bg-wrike-hover transition-colors duration-200 group"
+            className="border-b border-stripe-border flex h-12 hover:bg-stripe-hover transition-colors duration-200 group"
           >
-            <div className="w-12 px-3 py-2 border-r border-wrike-border flex items-center justify-center shrink-0">
+            <div className="w-12 px-3 py-2 border-r border-stripe-border flex items-center justify-center shrink-0">
               <Checkbox
                 checked={task.selected || false}
                 onCheckedChange={(checked) => onUpdateTask(task.id, 'selected', checked)}
-                className="w-4 h-4 text-wrike-blue border-wrike-border rounded focus:ring-wrike-blue focus:ring-1"
+                className="w-4 h-4 text-stripe-blue border-stripe-border rounded focus:ring-stripe-blue focus:ring-1"
               />
             </div>
             <div className="flex-1 px-3 py-2 flex items-center">
@@ -56,7 +56,7 @@ export default function TaskTable({
                 value={task.name}
                 onChange={(e) => onUpdateTask(task.id, 'name', e.target.value)}
                 onDoubleClick={() => onEditTask?.(task)}
-                className="w-full border-none bg-transparent text-wrike-text hover:bg-wrike-hover focus:bg-wrike-sidebar focus:border focus:border-wrike-blue rounded px-2 py-1 text-sm font-medium transition-all cursor-pointer"
+                className="w-full border-none bg-transparent text-stripe-text hover:bg-stripe-hover focus:bg-stripe-gray-50 focus:border focus:border-stripe-blue rounded px-2 py-1 text-sm font-medium transition-all cursor-pointer"
               />
             </div>
           </div>

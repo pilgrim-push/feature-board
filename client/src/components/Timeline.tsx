@@ -97,25 +97,25 @@ export default function Timeline({ tasks, startDate, numberOfDays = 10, onUpdate
       onMouseLeave={handleMouseUp}
     >
       {/* Timeline Header */}
-      <div className="sticky top-0 bg-wrike-sidebar border-b border-wrike-border h-[60px]">
+      <div className="sticky top-0 bg-stripe-gray-50 border-b border-stripe-border h-[60px]">
         {/* Date Range Header */}
         <div className="flex h-[30px]">
           {dateRange.map(({ date }) => (
             <div 
               key={date} 
-              className="px-4 py-2 text-center text-sm font-semibold text-wrike-text border-r border-wrike-border min-w-[120px] flex items-center justify-center"
+              className="px-4 py-2 text-center text-sm font-semibold text-stripe-text border-r border-stripe-border min-w-[120px] flex items-center justify-center"
             >
               {formatDate(date)}
             </div>
           ))}
         </div>
         {/* Day of Week Header */}
-        <div className="flex border-t border-wrike-border h-[30px]">
+        <div className="flex border-t border-stripe-border h-[30px]">
           {dateRange.map(({ date, dayOfWeek, isWeekend }) => (
             <div 
               key={date} 
-              className={`px-4 py-1 text-center text-xs text-wrike-text-muted border-r border-wrike-border min-w-[120px] flex items-center justify-center ${
-                isWeekend ? 'bg-wrike-blue/10' : ''
+              className={`px-4 py-1 text-center text-xs text-stripe-text-muted border-r border-stripe-border min-w-[120px] flex items-center justify-center ${
+                isWeekend ? 'bg-stripe-blue-light' : ''
               }`}
             >
               {dayOfWeek}
@@ -186,7 +186,7 @@ export default function Timeline({ tasks, startDate, numberOfDays = 10, onUpdate
           }
           
           return (
-            <div key={task.id} className="h-12 border-b border-wrike-border relative hover:bg-wrike-hover/30 transition-colors duration-200">
+            <div key={task.id} className="h-12 border-b border-stripe-border relative hover:bg-stripe-hover/30 transition-colors duration-200">
               {hasIntersection && workingSegments.length > 0 && (
                 <div className="absolute top-2 bottom-2">
                   {workingSegments.map((segment, segmentIndex) => {
