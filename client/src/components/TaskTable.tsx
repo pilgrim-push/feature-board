@@ -26,15 +26,15 @@ export default function TaskTable({
   return (
     <div className="w-[800px] border-r border-wrike-border bg-white">
       {/* Table Header */}
-      <div className="sticky top-0 bg-wrike-sidebar border-b border-wrike-border grid grid-cols-2 h-[60px] text-xs font-semibold text-wrike-text-muted uppercase tracking-wider">
-        <div className="col-span-1 px-3 py-2 border-r border-wrike-border flex items-center justify-center">
+      <div className="sticky top-0 bg-wrike-sidebar border-b border-wrike-border flex h-[60px] text-xs font-semibold text-wrike-text-muted uppercase tracking-wider">
+        <div className="w-12 px-3 py-2 border-r border-wrike-border flex items-center justify-center shrink-0">
           <Checkbox
             checked={allTasksSelected}
             onCheckedChange={onSelectAllTasks}
             className="w-4 h-4 text-wrike-blue border-wrike-border rounded focus:ring-wrike-blue focus:ring-1"
           />
         </div>
-        <div className="col-span-1 px-3 py-2 flex items-center">Task</div>
+        <div className="flex-1 px-3 py-2 flex items-center">Task</div>
       </div>
 
       {/* Task Rows */}
@@ -42,16 +42,16 @@ export default function TaskTable({
         return (
           <div 
             key={task.id} 
-            className="border-b border-wrike-border grid grid-cols-2 h-12 hover:bg-wrike-hover transition-colors duration-200 group"
+            className="border-b border-wrike-border flex h-12 hover:bg-wrike-hover transition-colors duration-200 group"
           >
-            <div className="col-span-1 px-3 py-2 border-r border-wrike-border flex items-center justify-center">
+            <div className="w-12 px-3 py-2 border-r border-wrike-border flex items-center justify-center shrink-0">
               <Checkbox
                 checked={task.selected || false}
                 onCheckedChange={(checked) => onUpdateTask(task.id, 'selected', checked)}
                 className="w-4 h-4 text-wrike-blue border-wrike-border rounded focus:ring-wrike-blue focus:ring-1"
               />
             </div>
-            <div className="col-span-1 px-3 py-2 flex items-center">
+            <div className="flex-1 px-3 py-2 flex items-center">
               <Input
                 value={task.name}
                 onChange={(e) => onUpdateTask(task.id, 'name', e.target.value)}
