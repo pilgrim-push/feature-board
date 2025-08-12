@@ -87,7 +87,7 @@ export default function Timeline({ tasks, startDate, numberOfDays = 10 }: Timeli
           
           return (
             <div key={task.id} className="h-12 border-b border-wrike-border relative hover:bg-wrike-hover/30 transition-colors duration-200">
-              {position >= 0 && position < numberOfDays && (
+              {workingSegments.length > 0 && (
                 <div className="absolute top-2 bottom-2">
                   {workingSegments.map((segment, segmentIndex) => {
                     const segmentLeftOffset = segment.start * dayWidth + 12;
