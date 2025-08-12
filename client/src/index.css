@@ -122,6 +122,22 @@
   background-color: var(--stripe-blue-hover);
 }
 
+/* Task priority colors */
+.task-priority-high {
+  background: linear-gradient(135deg, hsl(349 89% 49%) 0%, hsl(349 89% 54%) 100%);
+  color: white;
+}
+
+.task-priority-medium {
+  background: linear-gradient(135deg, hsl(213 93% 43%) 0%, hsl(213 93% 48%) 100%);
+  color: white;
+}
+
+.task-priority-low {
+  background: linear-gradient(135deg, hsl(142 76% 36%) 0%, hsl(142 76% 41%) 100%);
+  color: white;
+}
+
 .stripe-bg {
   background-color: var(--stripe-bg);
 }

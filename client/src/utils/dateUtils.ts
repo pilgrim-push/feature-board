@@ -63,12 +63,12 @@ export function getTaskPosition(taskStartDate: string, timelineStartDate: string
 export function getTaskBarColor(priority: string): string {
   switch (priority) {
     case 'high':
-      return 'bg-wrike-error';
+      return 'task-priority-high';
     case 'medium':
-      return 'bg-wrike-blue';
+      return 'task-priority-medium';
     case 'low':
-      return 'bg-wrike-success';
+      return 'task-priority-low';
     default:
-      return 'bg-wrike-blue';
+      return 'task-priority-medium';
   }
 }
