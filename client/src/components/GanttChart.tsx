@@ -168,7 +168,8 @@ export default function GanttChart({ tasks, onUpdateTasks }: GanttChartProps) {
           <div className="flex items-center space-x-3">
             <Button 
               onClick={handleAddTask}
-              className="px-6 py-2.5 bg-gradient-to-r from-stripe-blue to-stripe-purple hover:from-stripe-blue-hover hover:to-stripe-purple text-white rounded-lg shadow-lg hover-lift transition-all duration-200 text-sm font-medium"
+              className="px-6 py-3 bg-stripe-blue hover:bg-stripe-blue-hover text-white rounded-lg shadow-lg transition-colors duration-200 text-sm font-medium flex items-center"
+              style={{ minHeight: '44px' }}
             >
               <Plus className="mr-2" size={16} />
               Add Task
@@ -176,7 +177,8 @@ export default function GanttChart({ tasks, onUpdateTasks }: GanttChartProps) {
             <Button 
               onClick={handleDeleteSelected}
               variant="outline"
-              className="px-4 py-2.5 border border-stripe-border-light text-stripe-text rounded-lg hover:bg-gradient-to-r hover:from-stripe-danger hover:to-red-500 hover:text-white hover-lift transition-all duration-200 text-sm font-medium glass-surface"
+              className="px-4 py-3 border border-stripe-border-light text-stripe-text rounded-lg hover:bg-stripe-danger hover:text-white transition-colors duration-200 text-sm font-medium"
+              style={{ minHeight: '44px' }}
             >
               <Trash2 className="mr-2" size={16} />
               Delete Selected
