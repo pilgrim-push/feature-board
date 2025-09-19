@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Plus, Eye, EyeOff, Calendar, MoreHorizontal } from 'lucide-react';
+import { Plus, Eye, EyeOff, Calendar, MoreHorizontal, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
@@ -61,6 +61,56 @@ export default function FeatureBoard({ columns = [], onUpdateColumns }: FeatureB
 
   const toggleParkingVisibility = () => {
     setShowParking(!showParking);
+  };
+
+  const moveColumnLeft = (columnId: number) => {
+    const nonParkingColumns = currentColumns
+      .filter(col => !col.isParking)
+      .sort((a, b) => a.order - b.order);
+    
+    const currentIndex = nonParkingColumns.findIndex(col => col.id === columnId);
+    if (currentIndex <= 0) return; // Can't move leftmost column further left
+    
+    const currentColumn = nonParkingColumns[currentIndex];
+    const leftColumn = nonParkingColumns[currentIndex - 1];
+    
+    // Swap order values
+    const updatedColumns = currentColumns.map(col => {
+      if (col.id === currentColumn.id) {
+        return { ...col, order: leftColumn.order };
+      }
+      if (col.id === leftColumn.id) {
+        return { ...col, order: currentColumn.order };
+      }
+      return col;
+    });
+    
+    onUpdateColumns(updatedColumns);
+  };
+
+  const moveColumnRight = (columnId: number) => {
+    const nonParkingColumns = currentColumns
+      .filter(col => !col.isParking)
+      .sort((a, b) => a.order - b.order);
+    
+    const currentIndex = nonParkingColumns.findIndex(col => col.id === columnId);
+    if (currentIndex >= nonParkingColumns.length - 1) return; // Can't move rightmost column further right
+    
+    const currentColumn = nonParkingColumns[currentIndex];
+    const rightColumn = nonParkingColumns[currentIndex + 1];
+    
+    // Swap order values
+    const updatedColumns = currentColumns.map(col => {
+      if (col.id === currentColumn.id) {
+        return { ...col, order: rightColumn.order };
+      }
+      if (col.id === rightColumn.id) {
+        return { ...col, order: currentColumn.order };
+      }
+      return col;
+    });
+    
+    onUpdateColumns(updatedColumns);
   };
 
   return (
@@ -172,14 +222,53 @@ export default function FeatureBoard({ columns = [], onUpdateColumns }: FeatureB
                   </div>
                 )}
               </div>
-              <Button
-                variant="ghost"
-                size="sm"
-                className="h-8 w-8 p-0"
-                data-testid={`column-menu-${column.id}`}
-              >
-                <MoreHorizontal size={16} />
-              </Button>
+              
+              <div className="flex items-center space-x-1">
+                {/* Reordering Arrows - Only show for non-parking columns */}
+                {!column.isParking && (
+                  <>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="h-8 w-8 p-0"
+                      onClick={() => moveColumnLeft(column.id)}
+                      disabled={(() => {
+                        const nonParkingColumns = currentColumns
+                          .filter(col => !col.isParking)
+                          .sort((a, b) => a.order - b.order);
+                        return nonParkingColumns.findIndex(col => col.id === column.id) === 0;
+                      })()}
+                      data-testid={`button-move-left-${column.id}`}
+                    >
+                      <ChevronLeft size={16} />
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="h-8 w-8 p-0"
+                      onClick={() => moveColumnRight(column.id)}
+                      disabled={(() => {
+                        const nonParkingColumns = currentColumns
+                          .filter(col => !col.isParking)
+                          .sort((a, b) => a.order - b.order);
+                        return nonParkingColumns.findIndex(col => col.id === column.id) === nonParkingColumns.length - 1;
+                      })()}
+                      data-testid={`button-move-right-${column.id}`}
+                    >
+                      <ChevronRight size={16} />
+                    </Button>
+                  </>
+                )}
+                
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="h-8 w-8 p-0"
+                  data-testid={`column-menu-${column.id}`}
+                >
+                  <MoreHorizontal size={16} />
+                </Button>
+              </div>
             </div>
 
             {/* Column Content - Placeholder for future feature cards */}
