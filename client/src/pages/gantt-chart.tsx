@@ -4,7 +4,7 @@ import { useLocalStorage } from '@/hooks/useLocalStorage';
 import { useToast } from '@/hooks/use-toast';
 import Header from '@/components/Header';
 import Sidebar from '@/components/Sidebar';
-import GanttChart from '@/components/GanttChart';
+import TabNavigation from '@/components/TabNavigation';
 
 export default function GanttChartPage() {
   const { state, saveState } = useLocalStorage();
@@ -82,7 +82,7 @@ export default function GanttChartPage() {
         />
         
         <div className="flex-1 bg-background overflow-hidden">
-          <GanttChart
+          <TabNavigation
             tasks={state.tasks}
             onUpdateTasks={handleUpdateTasks}
           />
