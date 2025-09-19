@@ -1,13 +1,16 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { FeatureColumn } from '@/types/gantt';
 import GanttChart from './GanttChart';
 import FeatureBoard from './FeatureBoard';
 
 interface TabNavigationProps {
   tasks: any[];
   onUpdateTasks: (tasks: any[]) => void;
+  featureColumns: FeatureColumn[];
+  onUpdateFeatureColumns: (columns: FeatureColumn[]) => void;
 }
 
-export default function TabNavigation({ tasks, onUpdateTasks }: TabNavigationProps) {
+export default function TabNavigation({ tasks, onUpdateTasks, featureColumns, onUpdateFeatureColumns }: TabNavigationProps) {
   return (
     <div className="h-full bg-background">
       <Tabs defaultValue="gantt-project" className="h-full flex flex-col">
@@ -38,7 +41,10 @@ export default function TabNavigation({ tasks, onUpdateTasks }: TabNavigationPro
         </TabsContent>
         
         <TabsContent value="feature-board" className="flex-1 overflow-hidden m-0">
-          <FeatureBoard />
+          <FeatureBoard 
+            columns={featureColumns}
+            onUpdateColumns={onUpdateFeatureColumns}
+          />
         </TabsContent>
       </Tabs>
     </div>

@@ -65,6 +65,10 @@ export default function GanttChartPage() {
     saveState({ ...state, tasks });
   };
 
+  const handleUpdateFeatureColumns = (featureColumns: any[]) => {
+    saveState({ ...state, featureColumns });
+  };
+
   return (
     <div className="h-screen overflow-hidden bg-background font-sans text-foreground text-sm">
       <div className="animated-gradient h-1 absolute top-0 left-0 right-0 z-50"></div>
@@ -85,6 +89,8 @@ export default function GanttChartPage() {
           <TabNavigation
             tasks={state.tasks}
             onUpdateTasks={handleUpdateTasks}
+            featureColumns={state.featureColumns || []}
+            onUpdateFeatureColumns={handleUpdateFeatureColumns}
           />
         </div>
       </div>

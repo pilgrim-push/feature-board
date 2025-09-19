@@ -10,6 +10,7 @@ const defaultState: AppState = {
     { id: 3, name: 'Gantt 3', active: false }
   ],
   tasks: [],
+  featureColumns: [],
   user: {
     name: 'Name Surname'
   }
@@ -20,9 +21,6 @@ export function useLocalStorage() {
 
   useEffect(() => {
     try {
-      // Очищаем старые данные при обновлении логики рабочих дней
-      localStorage.removeItem(STORAGE_KEY);
-      
       const saved = localStorage.getItem(STORAGE_KEY);
       if (saved) {
         const parsedState = JSON.parse(saved);

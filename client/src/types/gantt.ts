@@ -18,6 +18,7 @@ export interface Project {
 export interface AppState {
   projects: Project[];
   tasks: Task[];
+  featureColumns: FeatureColumn[];
   user: {
     name: string;
   };
@@ -37,4 +38,13 @@ export interface TaskDependency {
   predecessorId: number;
   successorId: number;
   type: 'finish-to-start' | 'start-to-start' | 'finish-to-finish' | 'start-to-finish';
+}
+
+export interface FeatureColumn {
+  id: number;
+  name: string;
+  completionDate?: string; // YYYY-MM-DD format
+  isHidden: boolean;
+  order: number;
+  isParking: boolean; // Special flag for parking column
 }
