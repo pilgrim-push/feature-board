@@ -91,34 +91,34 @@ export default function Timeline({ tasks, startDate, numberOfDays = 10, onUpdate
 
   return (
     <div 
-      className="bg-white select-none"
+      className="bg-background select-none"
       style={{ width: `${numberOfDays * 120}px` }}
       ref={timelineRef}
       onMouseMove={handleMouseMove}
       onMouseUp={handleMouseUp}
       onMouseLeave={handleMouseUp}
     >
-      {/* Enhanced Timeline Header with gradient */}
-      <div className="sticky top-0 gradient-surface border-b border-stripe-border-light h-[60px] backdrop-filter backdrop-blur-sm shadow-sm">
+      {/* Timeline Header */}
+      <div className="sticky top-0 bg-card border-b border-border h-[60px] shadow-sm">
         {/* Date Range Header */}
         <div className="flex h-[30px]" style={{ width: `${numberOfDays * 120}px` }}>
           {dateRange.map(({ date }) => (
             <div 
               key={date} 
-              className="px-4 py-2 text-center text-sm font-semibold text-stripe-text border-r border-stripe-border-light flex items-center justify-center hover:bg-gradient-to-br hover:from-stripe-blue-light hover:to-stripe-purple-light/30 transition-all duration-200"
+              className="px-4 py-2 text-center text-sm font-medium text-foreground border-r border-border flex items-center justify-center hover:bg-accent transition-all duration-200"
               style={{ width: '120px' }}
             >
               {formatDate(date)}
             </div>
           ))}
         </div>
-        {/* Day of Week Header with enhanced styling */}
-        <div className="flex border-t border-stripe-border-light h-[30px]" style={{ width: `${numberOfDays * 120}px` }}>
+        {/* Day of Week Header */}
+        <div className="flex border-t border-border h-[30px]" style={{ width: `${numberOfDays * 120}px` }}>
           {dateRange.map(({ date, dayOfWeek, isWeekend }) => (
             <div 
               key={date} 
-              className={`px-4 py-1 text-center text-xs text-stripe-text-muted border-r border-stripe-border-light flex items-center justify-center transition-all duration-200 ${
-                isWeekend ? 'bg-gradient-to-br from-stripe-blue-light to-stripe-purple-light/50' : 'hover:bg-stripe-hover'
+              className={`px-4 py-1 text-center text-xs text-muted-foreground border-r border-border flex items-center justify-center transition-all duration-200 ${
+                isWeekend ? 'bg-muted/50' : 'hover:bg-accent/50'
               }`}
               style={{ width: '120px' }}
             >
@@ -190,7 +190,7 @@ export default function Timeline({ tasks, startDate, numberOfDays = 10, onUpdate
           }
           
           return (
-            <div key={task.id} className="h-12 border-b border-stripe-border-light relative hover:bg-gradient-to-r hover:from-stripe-hover hover:to-stripe-blue-light/20 transition-all duration-200">
+            <div key={task.id} className="h-12 border-b border-border relative hover:bg-accent/30 transition-all duration-200">
               {hasIntersection && workingSegments.length > 0 && (
                 <div className="absolute top-2 bottom-2">
                   {workingSegments.map((segment, segmentIndex) => {
@@ -251,14 +251,14 @@ export default function Timeline({ tasks, startDate, numberOfDays = 10, onUpdate
           ).flat().filter(Boolean)}
         </svg>
 
-        {/* Enhanced Grid Lines with gradient weekends */}
+        {/* Grid Lines */}
         <div className="absolute inset-0 pointer-events-none">
           <div className="flex h-full" style={{ width: `${numberOfDays * 120}px` }}>
             {dateRange.map(({ date, isWeekend }) => (
               <div 
                 key={date} 
-                className={`border-r border-stripe-border-light h-full transition-all duration-300 ${
-                  isWeekend ? 'bg-gradient-to-b from-stripe-blue-light/30 to-stripe-purple-light/20' : ''
+                className={`border-r border-border h-full transition-all duration-300 ${
+                  isWeekend ? 'bg-muted/30' : ''
                 }`}
                 style={{ width: '120px' }}
               />

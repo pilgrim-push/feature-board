@@ -66,26 +66,22 @@ export default function GanttChartPage() {
   };
 
   return (
-    <div className="h-screen overflow-hidden gradient-bg font-sans text-stripe-text text-sm">
+    <div className="h-screen overflow-hidden bg-background font-sans text-foreground text-sm">
       <div className="animated-gradient h-1 absolute top-0 left-0 right-0 z-50"></div>
-      <div className="glass-surface">
-        <Header 
-          onSaveProject={handleSaveProject}
-          onExportChart={handleExportChart}
-        />
-      </div>
+      <Header 
+        onSaveProject={handleSaveProject}
+        onExportChart={handleExportChart}
+      />
       
       <div className="flex h-full">
-        <div className="gradient-surface border-r border-stripe-border-light">
-          <Sidebar
-            userName={state.user.name}
-            projects={state.projects}
-            onToggleProject={handleToggleProject}
-            onAddProject={handleAddProject}
-          />
-        </div>
+        <Sidebar
+          userName={state.user.name}
+          projects={state.projects}
+          onToggleProject={handleToggleProject}
+          onAddProject={handleAddProject}
+        />
         
-        <div className="flex-1 glass-surface overflow-hidden">
+        <div className="flex-1 bg-background overflow-hidden">
           <GanttChart
             tasks={state.tasks}
             onUpdateTasks={handleUpdateTasks}

@@ -4,75 +4,76 @@
 @tailwind utilities;
 
 :root {
-  --background: hsl(0 0% 100%);
-  --foreground: hsl(222 16% 25%);
-  --card: hsl(0 0% 100%);
-  --card-foreground: hsl(222 16% 25%);
-  --popover: hsl(0 0% 100%);
-  --popover-foreground: hsl(222 16% 25%);
-  --primary: hsl(217 100% 54%);
+  /* Dark theme colors inspired by the provided screenshot */
+  --background: hsl(210 20% 17%);
+  --foreground: hsl(210 15% 85%);
+  --card: hsl(210 20% 22%);
+  --card-foreground: hsl(210 15% 85%);
+  --popover: hsl(210 20% 20%);
+  --popover-foreground: hsl(210 15% 85%);
+  --primary: hsl(210 100% 60%);
   --primary-foreground: hsl(0 0% 100%);
-  --secondary: hsl(210 40% 98%);
-  --secondary-foreground: hsl(222 16% 25%);
-  --muted: hsl(210 40% 98%);
-  --muted-foreground: hsl(215 16% 47%);
-  --accent: hsl(210 40% 98%);
-  --accent-foreground: hsl(222 16% 25%);
+  --secondary: hsl(210 20% 25%);
+  --secondary-foreground: hsl(210 15% 85%);
+  --muted: hsl(210 20% 18%);
+  --muted-foreground: hsl(210 10% 65%);
+  --accent: hsl(210 20% 25%);
+  --accent-foreground: hsl(210 100% 60%);
   --destructive: hsl(0 70% 50%);
   --destructive-foreground: hsl(0 0% 100%);
-  --border: hsl(214 32% 91%);
-  --input: hsl(0 0% 100%);
-  --ring: hsl(217 100% 54%);
-  --chart-1: hsl(217 100% 54%);
+  --border: hsl(210 15% 30%);
+  --input: hsl(210 20% 22%);
+  --ring: hsl(210 100% 60%);
+  --chart-1: hsl(210 100% 60%);
   --chart-2: hsl(142 76% 36%);
   --chart-3: hsl(38 92% 50%);
   --chart-4: hsl(0 70% 50%);
   --chart-5: hsl(271 81% 56%);
-  --sidebar: hsl(210 40% 98%);
-  --sidebar-foreground: hsl(222 16% 25%);
-  --sidebar-primary: hsl(217 100% 54%);
+  --sidebar: hsl(210 25% 15%);
+  --sidebar-foreground: hsl(210 15% 85%);
+  --sidebar-primary: hsl(210 100% 60%);
   --sidebar-primary-foreground: hsl(0 0% 100%);
-  --sidebar-accent: hsl(210 40% 98%);
-  --sidebar-accent-foreground: hsl(217 100% 54%);
-  --sidebar-border: hsl(214 32% 91%);
-  --sidebar-ring: hsl(217 100% 54%);
+  --sidebar-accent: hsl(210 20% 25%);
+  --sidebar-accent-foreground: hsl(210 100% 60%);
+  --sidebar-border: hsl(210 15% 25%);
+  --sidebar-ring: hsl(210 100% 60%);
   --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
   --font-serif: Georgia, serif;
   --font-mono: 'SF Mono', Consolas, monospace;
   --radius: 0.375rem;
   
-  /* Enhanced Stripe-inspired colors with gradients */
-  --stripe-blue: hsl(213 93% 43%);
-  --stripe-blue-hover: hsl(213 93% 48%);
-  --stripe-blue-light: hsl(209 100% 97%);
-  --stripe-purple: hsl(273 81% 56%);
-  --stripe-purple-light: hsl(273 81% 96%);
-  --stripe-green: hsl(142 76% 36%);
-  --stripe-green-light: hsl(142 76% 95%);
-  --stripe-orange: hsl(38 92% 50%);
-  --stripe-orange-light: hsl(38 92% 95%);
-  --stripe-bg: linear-gradient(135deg, hsl(210 40% 98%) 0%, hsl(209 100% 99%) 100%);
-  --stripe-surface: hsl(0 0% 100%);
-  --stripe-sidebar: linear-gradient(180deg, hsl(210 17% 98%) 0%, hsl(209 100% 97%) 100%);
-  --stripe-card: hsl(0 0% 100%);
-  --stripe-text: hsl(215 25% 24%);
-  --stripe-text-muted: hsl(215 16% 47%);
-  --stripe-border: hsl(210 14% 89%);
-  --stripe-border-light: hsl(210 14% 93%);
-  --stripe-hover: linear-gradient(135deg, hsl(210 17% 96%) 0%, hsl(209 100% 98%) 100%);
-  --stripe-success: hsl(142 76% 36%);
-  --stripe-warning: hsl(38 92% 50%);
-  --stripe-danger: hsl(349 89% 49%);
-  --stripe-gray-50: hsl(210 17% 98%);
-  --stripe-gray-100: hsl(210 17% 95%);
-  --stripe-gray-200: hsl(214 15% 91%);
-  --stripe-gray-300: hsl(213 13% 81%);
-  --stripe-gray-400: hsl(215 14% 68%);
-  --stripe-gray-500: hsl(215 16% 47%);
-  --stripe-gray-600: hsl(215 19% 35%);
-  --stripe-gray-700: hsl(215 25% 27%);
-  --stripe-gray-800: hsl(217 33% 17%);
-  --stripe-gray-900: hsl(222 47% 11%);
+  /* Enhanced dark theme colors inspired by the screenshot */
+  --stripe-blue: hsl(210 100% 60%);
+  --stripe-blue-hover: hsl(210 100% 65%);
+  --stripe-blue-light: hsl(210 30% 25%);
+  --stripe-purple: hsl(250 60% 65%);
+  --stripe-purple-light: hsl(250 30% 25%);
+  --stripe-green: hsl(142 76% 50%);
+  --stripe-green-light: hsl(142 30% 25%);
+  --stripe-orange: hsl(38 92% 60%);
+  --stripe-orange-light: hsl(38 30% 25%);
+  --stripe-bg: linear-gradient(135deg, hsl(210 20% 17%) 0%, hsl(210 25% 19%) 100%);
+  --stripe-surface: hsl(210 20% 22%);
+  --stripe-sidebar: linear-gradient(180deg, hsl(210 25% 15%) 0%, hsl(210 20% 17%) 100%);
+  --stripe-card: hsl(210 20% 22%);
+  --stripe-text: hsl(210 15% 85%);
+  --stripe-text-muted: hsl(210 10% 65%);
+  --stripe-border: hsl(210 15% 30%);
+  --stripe-border-light: hsl(210 15% 25%);
+  --stripe-hover: linear-gradient(135deg, hsl(210 20% 25%) 0%, hsl(210 25% 27%) 100%);
+  --stripe-success: hsl(142 76% 50%);
+  --stripe-warning: hsl(38 92% 60%);
+  --stripe-danger: hsl(349 89% 55%);
+  --stripe-gray-50: hsl(210 15% 75%);
+  --stripe-gray-100: hsl(210 15% 70%);
+  --stripe-gray-200: hsl(210 15% 65%);
+  --stripe-gray-300: hsl(210 15% 55%);
+  --stripe-gray-400: hsl(210 15% 45%);
+  --stripe-gray-500: hsl(210 15% 40%);
+  --stripe-gray-600: hsl(210 15% 35%);
+  --stripe-gray-700: hsl(210 20% 25%);
+  --stripe-gray-800: hsl(210 25% 20%);
+  --stripe-gray-900: hsl(210 25% 15%);
 }
 
 .dark {
@@ -151,27 +152,27 @@
   border: 1px solid hsla(142 76% 36% / 0.3);
 }
 
-/* Modern glassmorphism effects */
+/* Modern dark glassmorphism effects */
 .glass-card {
-  background: hsla(0 0% 100% / 0.8);
+  background: hsla(210 20% 22% / 0.8);
   backdrop-filter: blur(12px);
-  border: 1px solid hsla(0 0% 100% / 0.2);
-  box-shadow: 0 8px 32px hsla(0 0% 0% / 0.1);
+  border: 1px solid hsla(210 15% 30% / 0.3);
+  box-shadow: 0 8px 32px hsla(0 0% 0% / 0.3);
 }
 
 .glass-surface {
-  background: hsla(0 0% 100% / 0.95);
+  background: hsla(210 20% 22% / 0.95);
   backdrop-filter: blur(8px);
-  border: 1px solid hsla(210 14% 89% / 0.5);
+  border: 1px solid hsla(210 15% 25% / 0.5);
 }
 
-/* Enhanced gradient backgrounds */
+/* Enhanced dark gradient backgrounds */
 .gradient-bg {
-  background: linear-gradient(135deg, hsl(210 40% 98%) 0%, hsl(209 100% 99%) 50%, hsl(213 93% 98%) 100%);
+  background: linear-gradient(135deg, hsl(210 20% 17%) 0%, hsl(210 25% 19%) 50%, hsl(210 30% 21%) 100%);
 }
 
 .gradient-surface {
-  background: linear-gradient(180deg, hsl(0 0% 100%) 0%, hsl(210 17% 99%) 100%);
+  background: linear-gradient(180deg, hsl(210 25% 15%) 0%, hsl(210 20% 17%) 100%);
 }
 
 .gradient-border {
@@ -186,7 +187,7 @@
 }
 
 .animated-gradient {
-  background: linear-gradient(-45deg, hsl(213 93% 43%), hsl(273 81% 56%), hsl(142 76% 36%), hsl(38 92% 50%));
+  background: linear-gradient(-45deg, hsl(210 100% 60%), hsl(250 60% 65%), hsl(142 76% 50%), hsl(38 92% 60%));
   background-size: 400% 400%;
   animation: gradient-shift 8s ease infinite;
 }
