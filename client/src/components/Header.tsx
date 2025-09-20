@@ -32,15 +32,6 @@ export default function Header({ onExportChart }: HeaderProps) {
           >
             ЭКСПОРТ
           </Button>
-          <Button 
-            variant="ghost"
-            size="sm"
-            className="text-sidebar-foreground hover:bg-accent text-xs font-medium px-3 py-1.5 h-7"
-            data-testid="button-help"
-          >
-            <HelpCircle className="mr-1" size={14} />
-            ПОМОЩЬ
-          </Button>
         </div>
       </div>
     </header>
