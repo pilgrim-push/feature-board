@@ -15,7 +15,7 @@ interface TabNavigationProps {
 export default function TabNavigation({ tasks, onUpdateTasks, featureColumns, featureCards, onUpdateFeatureColumns, onUpdateFeatureCards }: TabNavigationProps) {
   return (
     <div className="h-full bg-background">
-      <Tabs defaultValue="gantt-project" className="h-full flex flex-col">
+      <Tabs defaultValue="feature-board" className="h-full flex flex-col">
         <div className="border-b border-border bg-card px-6">
           <TabsList className="bg-transparent h-12 p-0 space-x-8">
             <TabsTrigger 

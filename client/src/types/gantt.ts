@@ -9,20 +9,10 @@ export interface Task {
   dependencies?: number[]; // IDs of tasks that must be completed before this task can start
 }
 
-export interface Project {
-  id: number;
-  name: string;
-  active: boolean;
-}
-
 export interface AppState {
-  projects: Project[];
   tasks: Task[];
   featureColumns: FeatureColumn[];
   featureCards: FeatureCard[];
-  user: {
-    name: string;
-  };
 }
 
 export interface NewTask {
