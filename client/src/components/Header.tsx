@@ -2,11 +2,10 @@ import { ChartGantt, HelpCircle, Star } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 interface HeaderProps {
-  onSaveProject: () => void;
   onExportChart: () => void;
 }
 
-export default function Header({ onSaveProject, onExportChart }: HeaderProps) {
+export default function Header({ onExportChart }: HeaderProps) {
   return (
     <header className="bg-sidebar border-b border-stripe-border px-6 py-3 shadow-lg">
       <div className="flex items-center justify-between">
@@ -24,15 +23,6 @@ export default function Header({ onSaveProject, onExportChart }: HeaderProps) {
 
         {/* Right side - Actions and Help */}
         <div className="flex items-center space-x-3">
-          <Button 
-            onClick={onSaveProject}
-            variant="outline"
-            size="sm"
-            className="border-stripe-orange text-stripe-orange hover:bg-stripe-orange hover:text-white text-xs font-bold uppercase tracking-wide px-3 py-1.5 h-7"
-            data-testid="button-save"
-          >
-            СОХРАНИТЬ
-          </Button>
           <Button 
             onClick={onExportChart}
             variant="outline"
