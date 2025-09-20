@@ -351,7 +351,7 @@ export default function FeatureBoard({ columns = [], cards = [], onUpdateColumns
     if (cards.length === 0) {
       onUpdateCards(defaultCards);
     }
-  }, []);
+  }, [columns.length, cards.length, onUpdateColumns, onUpdateCards]);
   const visibleColumns = currentColumns
     .filter(col => col.isParking ? showParking : !col.isHidden)
     .sort((a, b) => a.order - b.order);
