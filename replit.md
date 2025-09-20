@@ -3,6 +3,16 @@
 This is a Gantt Chart Builder application with comprehensive Feature Board capabilities, styled after Stripe's design system. It's a full-stack web application that allows users to create, manage, and visualize project timelines through an interactive Gantt chart interface. The application features complete project management capabilities including task creation and editing, timeline visualization, Feature Board with full CRUD operations (Create, Read, Update, Delete), drag-and-drop functionality, and persistent data storage.
 
 ## Recent Changes
+**September 20, 2025** - Enhanced Feature Board with advanced card fields:
+- **Deadline field**: Calendar picker with DD/MM/YY format display on cards
+- **Status field**: Visual status indicators with icons (аналитика, в разработке, бэклог, отложена)
+- **User Stories system**: Full CRUD management with UserStoriesManager component
+- **Enhanced card creation**: Modal with deadline calendar and status selection
+- **Enhanced card editing**: All new fields integrated with existing edit functionality
+- **Data persistence**: All new fields save to localStorage with backward compatibility
+- **Comprehensive testing**: End-to-end validation of all new features
+- **Architectural review**: Code quality and integration validated
+
 **December 20, 2025** - Completed full card editing functionality:
 - Click-to-edit interface for feature cards
 - Modal-based editing with pre-filled forms
