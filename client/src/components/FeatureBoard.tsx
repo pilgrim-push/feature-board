@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { DragDropContext, Droppable, DropResult } from 'react-beautiful-dnd';
 import { Plus, Eye, EyeOff, Calendar, MoreHorizontal, ChevronLeft, ChevronRight, Edit, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -7,6 +7,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Label } from '@/components/ui/label';
+import { useToast } from '@/hooks/use-toast';
 import { FeatureColumn, FeatureCard } from '@/types/gantt';
 import FeatureCardComponent from './FeatureCard';
 
@@ -26,6 +27,38 @@ export default function FeatureBoard({ columns = [], cards = [], onUpdateColumns
   const [editColumnName, setEditColumnName] = useState('');
   const [editColumnDate, setEditColumnDate] = useState('');
   const [deletingColumn, setDeletingColumn] = useState<FeatureColumn | null>(null);
+  const { toast } = useToast();
+  const deletedCardsRef = useRef<Map<number, FeatureCard>>(new Map());
+
+  // Normalize cards to remove duplicates and fix ordering
+  const normalizeCards = (cards: FeatureCard[]): FeatureCard[] => {
+    // Remove duplicates, keeping last occurrence
+    const uniqueCards = cards.reduce((acc, card) => {
+      acc.set(card.id, card);
+      return acc;
+    }, new Map<number, FeatureCard>());
+    
+    // Group by column and normalize order within each column
+    const cardsByColumn = new Map<number, FeatureCard[]>();
+    Array.from(uniqueCards.values()).forEach(card => {
+      if (!cardsByColumn.has(card.columnId)) {
+        cardsByColumn.set(card.columnId, []);
+      }
+      cardsByColumn.get(card.columnId)!.push(card);
+    });
+    
+    // Normalize order within each column
+    const normalizedCards: FeatureCard[] = [];
+    cardsByColumn.forEach((columnCards, columnId) => {
+      columnCards
+        .sort((a, b) => a.order - b.order)
+        .forEach((card, index) => {
+          normalizedCards.push({ ...card, order: index });
+        });
+    });
+    
+    return normalizedCards;
+  };
 
   // Default columns if none exist
   const defaultColumns: FeatureColumn[] = [
@@ -182,31 +215,83 @@ export default function FeatureBoard({ columns = [], cards = [], onUpdateColumns
     const sourceColumnId = parseInt(source.droppableId.replace('column-', ''));
     const destColumnId = parseInt(destination.droppableId.replace('column-', ''));
     
-    const updatedCards = [...currentCards];
-    const cardIndex = updatedCards.findIndex(card => card.id === cardId);
+    // Remove all occurrences of the dragged card to prevent duplicates
+    let updatedCards = currentCards.filter(card => card.id !== cardId);
     
-    if (cardIndex === -1) return;
+    // Find the original card data
+    const originalCard = currentCards.find(card => card.id === cardId);
+    if (!originalCard) return;
     
-    // Update card's column and position
-    updatedCards[cardIndex] = {
-      ...updatedCards[cardIndex],
-      columnId: destColumnId,
-      order: destination.index
-    };
+    // Create updated card with new column
+    const movedCard = { ...originalCard, columnId: destColumnId, order: destination.index };
     
-    // Reorder cards within destination column
-    const destColumnCards = updatedCards
-      .filter(card => card.columnId === destColumnId)
-      .sort((a, b) => a.order - b.order);
+    // Add the moved card back
+    updatedCards.push(movedCard);
     
-    destColumnCards.forEach((card, index) => {
-      const cardIdx = updatedCards.findIndex(c => c.id === card.id);
-      if (cardIdx !== -1) {
-        updatedCards[cardIdx].order = index;
-      }
+    // Normalize all cards to fix duplicates and ordering
+    const normalizedCards = normalizeCards(updatedCards);
+    onUpdateCards(normalizedCards);
+  };
+
+  // Handle card deletion with undo functionality
+  const handleDeleteCard = (cardId: number) => {
+    const cardToDelete = currentCards.find(card => card.id === cardId);
+    if (!cardToDelete) return;
+
+    // Store deleted card for potential undo
+    deletedCardsRef.current.set(cardId, cardToDelete);
+
+    // Remove the card from the list and normalize
+    const updatedCards = currentCards.filter(card => card.id !== cardId);
+    const normalizedCards = normalizeCards(updatedCards);
+    onUpdateCards(normalizedCards);
+    
+    // Show toast with undo functionality
+    toast({
+      title: "Карточка удалена",
+      description: `"${cardToDelete.title}" была удалена`,
+      duration: 10000, // 10 seconds to allow undo
+      action: (
+        <Button
+          variant="outline" 
+          size="sm"
+          onClick={() => handleUndoDeleteCard(cardId)}
+          data-testid="button-undo-delete"
+        >
+          Отменить
+        </Button>
+      ),
     });
     
-    onUpdateCards(updatedCards);
+    // Clean up after toast duration
+    setTimeout(() => {
+      deletedCardsRef.current.delete(cardId);
+    }, 11000);
+  };
+
+  // Handle undo card deletion
+  const handleUndoDeleteCard = (cardId: number) => {
+    const cardToRestore = deletedCardsRef.current.get(cardId);
+    if (!cardToRestore) {
+      console.warn('Deleted card not found:', cardId);
+      return;
+    }
+    
+    // Remove any existing duplicates and add restored card
+    const cleanedCards = currentCards.filter(card => card.id !== cardId);
+    const updatedCards = [...cleanedCards, cardToRestore];
+    
+    // Normalize cards to fix ordering and any remaining duplicates
+    const normalizedCards = normalizeCards(updatedCards);
+    onUpdateCards(normalizedCards);
+    
+    // Remove from deleted cards tracking
+    deletedCardsRef.current.delete(cardId);
+    
+    toast({
+      title: "Удаление отменено",
+      description: `"${cardToRestore.title}" восстановлена`,
+    });
   };
 
   // Get cards for a specific column
@@ -468,7 +553,8 @@ export default function FeatureBoard({ columns = [], cards = [], onUpdateColumns
                         <FeatureCardComponent 
                           key={card.id} 
                           card={card} 
-                          index={index} 
+                          index={index}
+                          onDelete={handleDeleteCard}
                         />
                       ))
                     ) : (

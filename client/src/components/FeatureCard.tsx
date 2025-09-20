@@ -1,10 +1,11 @@
 import { Draggable } from 'react-beautiful-dnd';
-import { Sparkles, BarChart3, Bug, ArrowUp, Code } from 'lucide-react';
+import { Sparkles, BarChart3, Bug, ArrowUp, Code, X } from 'lucide-react';
 import { FeatureCard as FeatureCardType, FeatureCardType as CardType } from '@/types/gantt';
 
 interface FeatureCardProps {
   card: FeatureCardType;
   index: number;
+  onDelete?: (cardId: number) => void;
 }
 
 // Generate consistent color for tag based on tag name
@@ -48,9 +49,16 @@ const getTypeConfig = (type: CardType) => {
   }
 };
 
-export default function FeatureCard({ card, index }: FeatureCardProps) {
+export default function FeatureCard({ card, index, onDelete }: FeatureCardProps) {
   const typeConfig = getTypeConfig(card.type);
   const Icon = typeConfig.icon;
+  
+  const handleDeleteClick = (e: React.MouseEvent) => {
+    e.stopPropagation(); // Prevent drag from starting
+    if (onDelete) {
+      onDelete(card.id);
+    }
+  };
 
   return (
     <Draggable draggableId={`card-${card.id}`} index={index}>
@@ -60,13 +68,13 @@ export default function FeatureCard({ card, index }: FeatureCardProps) {
           {...provided.draggableProps}
           {...provided.dragHandleProps}
           className={`
-            bg-card border border-border rounded-lg p-4 mb-3 shadow-sm
+            bg-card border border-border rounded-lg p-4 mb-3 shadow-sm group
             hover:shadow-md transition-shadow duration-200 cursor-grab
             ${snapshot.isDragging ? 'shadow-lg rotate-2 bg-accent' : ''}
           `}
           data-testid={`feature-card-${card.id}`}
         >
-          {/* Card Header - Type and Title */}
+          {/* Card Header - Type and Delete Button */}
           <div className="flex items-start justify-between mb-2">
             <div className="flex items-center space-x-2 mb-2">
               <div className={`p-1.5 rounded-md ${typeConfig.bgColor}`}>
@@ -76,6 +84,16 @@ export default function FeatureCard({ card, index }: FeatureCardProps) {
                 {typeConfig.label}
               </span>
             </div>
+            {onDelete && (
+              <button
+                onClick={handleDeleteClick}
+                className="opacity-0 group-hover:opacity-100 p-1 rounded-md hover:bg-red-100 transition-all duration-200 text-red-600 hover:text-red-700"
+                data-testid={`button-delete-${card.id}`}
+                title="Удалить карточку"
+              >
+                <X size={14} />
+              </button>
+            )}
           </div>
 
           {/* Title */}
