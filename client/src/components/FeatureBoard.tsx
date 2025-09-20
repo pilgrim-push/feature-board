@@ -797,7 +797,7 @@ export default function FeatureBoard({ columns = [], cards = [], onUpdateColumns
             {/* Card Type */}
             <div>
               <Label htmlFor="card-type">Тип *</Label>
-              <Select value={cardType} onValueChange={setCardType}>
+              <Select value={cardType} onValueChange={(value) => setCardType(value as FeatureCardType | '')}>
                 <SelectTrigger data-testid="select-card-type">
                   <SelectValue placeholder="Выберите тип карточки" />
                 </SelectTrigger>
