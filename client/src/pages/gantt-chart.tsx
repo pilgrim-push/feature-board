@@ -3,7 +3,6 @@ import { AppState, NewTask, Project } from '@/types/gantt';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
 import { useToast } from '@/hooks/use-toast';
 import Header from '@/components/Header';
-import Sidebar from '@/components/Sidebar';
 import TabNavigation from '@/components/TabNavigation';
 
 export default function GanttChartPage() {
@@ -33,33 +32,6 @@ export default function GanttChartPage() {
     });
   };
 
-  const handleToggleProject = (id: number) => {
-    const updatedProjects = state.projects.map(project => 
-      project.id === id 
-        ? { ...project, active: !project.active }
-        : project
-    );
-    saveState({ ...state, projects: updatedProjects });
-  };
-
-  const handleAddProject = () => {
-    const projectName = prompt('Enter project name:');
-    if (projectName?.trim()) {
-      const newId = Math.max(0, ...state.projects.map(p => p.id)) + 1;
-      const newProject: Project = {
-        id: newId,
-        name: projectName.trim(),
-        active: true
-      };
-      const updatedProjects = [...state.projects, newProject];
-      saveState({ ...state, projects: updatedProjects });
-      
-      toast({
-        title: "Project Added",
-        description: `Project "${projectName}" has been added successfully.`,
-      });
-    }
-  };
 
   const handleUpdateTasks = (tasks: any[]) => {
     saveState({ ...state, tasks });
@@ -77,22 +49,13 @@ export default function GanttChartPage() {
         onExportChart={handleExportChart}
       />
       
-      <div className="flex h-full">
-        <Sidebar
-          userName={state.user.name}
-          projects={state.projects}
-          onToggleProject={handleToggleProject}
-          onAddProject={handleAddProject}
+      <div className="h-full bg-background overflow-hidden">
+        <TabNavigation
+          tasks={state.tasks}
+          onUpdateTasks={handleUpdateTasks}
+          featureColumns={state.featureColumns || []}
+          onUpdateFeatureColumns={handleUpdateFeatureColumns}
         />
-        
-        <div className="flex-1 bg-background overflow-hidden">
-          <TabNavigation
-            tasks={state.tasks}
-            onUpdateTasks={handleUpdateTasks}
-            featureColumns={state.featureColumns || []}
-            onUpdateFeatureColumns={handleUpdateFeatureColumns}
-          />
-        </div>
       </div>
     </div>
   );

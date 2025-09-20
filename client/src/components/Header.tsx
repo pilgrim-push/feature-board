@@ -1,6 +1,5 @@
-import { Search, ChartGantt, HelpCircle, Star } from 'lucide-react';
+import { ChartGantt, HelpCircle, Star } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 
 interface HeaderProps {
   onSaveProject: () => void;
@@ -22,16 +21,6 @@ export default function Header({ onSaveProject, onExportChart }: HeaderProps) {
           </div>
         </div>
 
-        {/* Center - Search */}
-        <div className="flex-1 max-w-md mx-8">
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" size={16} />
-            <Input
-              placeholder="Поиск проекта..."
-              className="pl-10 bg-input border-border text-foreground placeholder:text-muted-foreground text-sm h-9"
-            />
-          </div>
-        </div>
 
         {/* Right side - Actions and Help */}
         <div className="flex items-center space-x-3">
