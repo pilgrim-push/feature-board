@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { DragDropContext, Droppable, DropResult } from 'react-beautiful-dnd';
-import { Plus, Eye, EyeOff, Calendar, MoreHorizontal, ChevronLeft, ChevronRight, Edit, Trash2 } from 'lucide-react';
+import { Plus, Eye, EyeOff, Calendar as CalendarIcon, MoreHorizontal, ChevronLeft, ChevronRight, Edit, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogTrigger } from '@/components/ui/dialog';
@@ -8,10 +8,15 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Textarea } from '@/components/ui/textarea';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Calendar } from '@/components/ui/calendar';
 import { Label } from '@/components/ui/label';
+import { format } from 'date-fns';
+import { ru } from 'date-fns/locale';
 import { useToast } from '@/hooks/use-toast';
-import { FeatureColumn, FeatureCard, FeatureCardType } from '@/types/gantt';
+import { FeatureColumn, FeatureCard, FeatureCardType, FeatureCardStatus, UserStory } from '@/types/gantt';
 import FeatureCardComponent from './FeatureCard';
+import UserStoriesManager from './UserStoriesManager';
 
 interface FeatureBoardProps {
   columns: FeatureColumn[];
@@ -36,6 +41,9 @@ export default function FeatureBoard({ columns = [], cards = [], onUpdateColumns
   const [cardDescription, setCardDescription] = useState('');
   const [cardTags, setCardTags] = useState('');
   const [cardColumnId, setCardColumnId] = useState<number | null>(null);
+  const [cardDeadline, setCardDeadline] = useState<Date | undefined>(undefined);
+  const [cardStatus, setCardStatus] = useState<FeatureCardStatus>('backlog');
+  const [cardUserStories, setCardUserStories] = useState<UserStory[]>([]);
   const { toast } = useToast();
   const deletedCardsRef = useRef<Map<number, FeatureCard>>(new Map());
 
@@ -78,6 +86,14 @@ export default function FeatureBoard({ columns = [], cards = [], onUpdateColumns
     return color;
   };
 
+  // Format date to DD/MM/YY
+  const formatDateToDisplay = (date: Date): string => {
+    const day = date.getDate().toString().padStart(2, '0');
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const year = date.getFullYear().toString().slice(-2);
+    return `${day}/${month}/${year}`;
+  };
+
   // Reset form when modal closes
   const resetCardForm = () => {
     setCardTitle('');
@@ -85,6 +101,9 @@ export default function FeatureBoard({ columns = [], cards = [], onUpdateColumns
     setCardDescription('');
     setCardTags('');
     setCardColumnId(null);
+    setCardDeadline(undefined);
+    setCardStatus('backlog');
+    setCardUserStories([]);
   };
 
   // Handle edit card
@@ -95,6 +114,17 @@ export default function FeatureBoard({ columns = [], cards = [], onUpdateColumns
     setCardDescription(card.description);
     setCardTags(card.tags.join(', '));
     setCardColumnId(card.columnId);
+    setCardStatus(card.status || 'backlog');
+    setCardUserStories(card.userStories || []);
+    
+    // Parse deadline string back to Date if it exists
+    if (card.deadline) {
+      const [day, month, year] = card.deadline.split('/');
+      const fullYear = parseInt(`20${year}`);
+      setCardDeadline(new Date(fullYear, parseInt(month) - 1, parseInt(day)));
+    } else {
+      setCardDeadline(undefined);
+    }
   };
 
   // Handle save card changes
@@ -131,7 +161,10 @@ export default function FeatureBoard({ columns = [], cards = [], onUpdateColumns
       tags: parsedTags,
       columnId: cardColumnId,
       // Keep original order if staying in same column, otherwise put at end
-      order: cardColumnId === editingCard.columnId ? editingCard.order : currentCards.filter(c => c.columnId === cardColumnId).length
+      order: cardColumnId === editingCard.columnId ? editingCard.order : currentCards.filter(c => c.columnId === cardColumnId).length,
+      deadline: cardDeadline ? formatDateToDisplay(cardDeadline) : undefined,
+      status: cardStatus,
+      userStories: cardUserStories
     };
 
     // Update cards list and normalize
@@ -188,7 +221,10 @@ export default function FeatureBoard({ columns = [], cards = [], onUpdateColumns
       description: cardDescription.trim(),
       tags: parsedTags,
       columnId: creatingCardForColumn,
-      order: newOrder
+      order: newOrder,
+      deadline: cardDeadline ? formatDateToDisplay(cardDeadline) : undefined,
+      status: cardStatus,
+      userStories: []
     };
 
     // Add card to the list and normalize
@@ -254,7 +290,9 @@ export default function FeatureBoard({ columns = [], cards = [], onUpdateColumns
       description: 'Реализация системы входа и регистрации пользователей с поддержкой OAuth',
       tags: ['frontend', 'backend', 'security'],
       columnId: 1,
-      order: 1
+      order: 1,
+      status: 'analytics',
+      userStories: []
     },
     {
       id: 2,
@@ -263,7 +301,9 @@ export default function FeatureBoard({ columns = [], cards = [], onUpdateColumns
       description: 'Внедрение трекинга пользовательских действий для улучшения UX',
       tags: ['analytics', 'ux'],
       columnId: 1,
-      order: 2
+      order: 2,
+      status: 'development',
+      userStories: []
     },
     {
       id: 3,
@@ -272,7 +312,9 @@ export default function FeatureBoard({ columns = [], cards = [], onUpdateColumns
       description: 'Устранение проблем с калькуляцией общей стоимости товаров',
       tags: ['bugfix', 'critical'],
       columnId: 2,
-      order: 1
+      order: 1,
+      status: 'backlog',
+      userStories: []
     },
     {
       id: 4,
@@ -281,7 +323,9 @@ export default function FeatureBoard({ columns = [], cards = [], onUpdateColumns
       description: 'Ускорение загрузки страниц и оптимизация запросов к базе данных',
       tags: ['performance', 'backend'],
       columnId: 3,
-      order: 1
+      order: 1,
+      status: 'postponed',
+      userStories: []
     },
     {
       id: 5,
@@ -290,7 +334,9 @@ export default function FeatureBoard({ columns = [], cards = [], onUpdateColumns
       description: 'Разработка адаптивного дизайна для мобильных устройств',
       tags: ['mobile', 'responsive', 'css'],
       columnId: 4,
-      order: 1
+      order: 1,
+      status: 'analytics',
+      userStories: []
     }
   ];
 
@@ -630,7 +676,7 @@ export default function FeatureBoard({ columns = [], cards = [], onUpdateColumns
                 </h3>
                 {column.completionDate && (
                   <div className="flex items-center text-sm text-muted-foreground">
-                    <Calendar size={14} className="mr-1" />
+                    <CalendarIcon size={14} className="mr-1" />
                     <span data-testid={`column-date-${column.id}`}>
                       {new Date(column.completionDate).toLocaleDateString('ru-RU')}
                     </span>
@@ -892,6 +938,49 @@ export default function FeatureBoard({ columns = [], cards = [], onUpdateColumns
               />
             </div>
 
+            {/* Card Status */}
+            <div>
+              <Label htmlFor="card-status">Статус *</Label>
+              <Select value={cardStatus} onValueChange={(value) => setCardStatus(value as FeatureCardStatus)}>
+                <SelectTrigger data-testid="select-card-status">
+                  <SelectValue placeholder="Выберите статус карточки" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="analytics">Аналитика</SelectItem>
+                  <SelectItem value="development">В разработке</SelectItem>
+                  <SelectItem value="backlog">Бэклог</SelectItem>
+                  <SelectItem value="postponed">Отложена</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* Card Deadline */}
+            <div>
+              <Label htmlFor="card-deadline">Срок</Label>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant="outline"
+                    className={`w-full justify-start text-left font-normal ${
+                      !cardDeadline && "text-muted-foreground"
+                    }`}
+                    data-testid="button-card-deadline"
+                  >
+                    <CalendarIcon className="mr-2 h-4 w-4" />
+                    {cardDeadline ? formatDateToDisplay(cardDeadline) : "Выбрать дату"}
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0">
+                  <Calendar
+                    mode="single"
+                    selected={cardDeadline}
+                    onSelect={setCardDeadline}
+                    initialFocus
+                  />
+                </PopoverContent>
+              </Popover>
+            </div>
+
             {/* Card Tags */}
             <div>
               <Label htmlFor="card-tags">Теги</Label>
@@ -998,6 +1087,49 @@ export default function FeatureBoard({ columns = [], cards = [], onUpdateColumns
               </Select>
             </div>
 
+            {/* Card Status */}
+            <div>
+              <Label htmlFor="edit-card-status">Статус *</Label>
+              <Select value={cardStatus} onValueChange={(value) => setCardStatus(value as FeatureCardStatus)}>
+                <SelectTrigger data-testid="select-edit-card-status">
+                  <SelectValue placeholder="Выберите статус карточки" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="analytics">Аналитика</SelectItem>
+                  <SelectItem value="development">В разработке</SelectItem>
+                  <SelectItem value="backlog">Бэклог</SelectItem>
+                  <SelectItem value="postponed">Отложена</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* Card Deadline */}
+            <div>
+              <Label htmlFor="edit-card-deadline">Срок</Label>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant="outline"
+                    className={`w-full justify-start text-left font-normal ${
+                      !cardDeadline && "text-muted-foreground"
+                    }`}
+                    data-testid="button-edit-card-deadline"
+                  >
+                    <CalendarIcon className="mr-2 h-4 w-4" />
+                    {cardDeadline ? formatDateToDisplay(cardDeadline) : "Выбрать дату"}
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0">
+                  <Calendar
+                    mode="single"
+                    selected={cardDeadline}
+                    onSelect={setCardDeadline}
+                    initialFocus
+                  />
+                </PopoverContent>
+              </Popover>
+            </div>
+
             {/* Card Description */}
             <div>
               <Label htmlFor="edit-card-description">Описание</Label>
@@ -1024,6 +1156,14 @@ export default function FeatureBoard({ columns = [], cards = [], onUpdateColumns
               <p className="text-xs text-muted-foreground mt-1">
                 Одинаковые теги будут иметь одинаковые цвета
               </p>
+            </div>
+
+            {/* User Stories Management */}
+            <div>
+              <UserStoriesManager
+                userStories={cardUserStories}
+                onChange={setCardUserStories}
+              />
             </div>
 
             {/* Action Buttons */}

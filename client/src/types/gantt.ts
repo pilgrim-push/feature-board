@@ -53,6 +53,16 @@ export interface FeatureColumn {
 
 export type FeatureCardType = 'new' | 'analytics' | 'bugfix' | 'improvement' | 'development';
 
+export type FeatureCardStatus = 'analytics' | 'development' | 'backlog' | 'postponed';
+
+export interface UserStory {
+  id: number;
+  title: string;
+  story: string;
+  additionalRequirements: string;
+  developmentDeadline?: string; // DD/MM/YY format
+}
+
 export interface FeatureCard {
   id: number;
   title: string;
@@ -61,4 +71,7 @@ export interface FeatureCard {
   tags: string[];
   columnId: number;
   order: number;
+  deadline?: string; // DD/MM/YY format
+  status: FeatureCardStatus;
+  userStories: UserStory[];
 }
