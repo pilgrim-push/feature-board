@@ -3,12 +3,14 @@ import { DragDropContext, Droppable, DropResult } from 'react-beautiful-dnd';
 import { Plus, Eye, EyeOff, Calendar, MoreHorizontal, ChevronLeft, ChevronRight, Edit, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogTrigger } from '@/components/ui/dialog';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Textarea } from '@/components/ui/textarea';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
-import { FeatureColumn, FeatureCard } from '@/types/gantt';
+import { FeatureColumn, FeatureCard, FeatureCardType } from '@/types/gantt';
 import FeatureCardComponent from './FeatureCard';
 
 interface FeatureBoardProps {
@@ -27,8 +29,115 @@ export default function FeatureBoard({ columns = [], cards = [], onUpdateColumns
   const [editColumnName, setEditColumnName] = useState('');
   const [editColumnDate, setEditColumnDate] = useState('');
   const [deletingColumn, setDeletingColumn] = useState<FeatureColumn | null>(null);
+  const [creatingCardForColumn, setCreatingCardForColumn] = useState<number | null>(null);
+  const [cardTitle, setCardTitle] = useState('');
+  const [cardType, setCardType] = useState<'new' | 'analytics' | 'bugfix' | 'improvement' | 'development' | ''>('');
+  const [cardDescription, setCardDescription] = useState('');
+  const [cardTags, setCardTags] = useState('');
   const { toast } = useToast();
   const deletedCardsRef = useRef<Map<number, FeatureCard>>(new Map());
+
+  // Tag colors management
+  const [tagColors, setTagColors] = useState<Record<string, string>>(() => {
+    const saved = localStorage.getItem('feature-board-tag-colors');
+    return saved ? JSON.parse(saved) : {};
+  });
+
+  // Update localStorage when tag colors change
+  useEffect(() => {
+    localStorage.setItem('feature-board-tag-colors', JSON.stringify(tagColors));
+  }, [tagColors]);
+
+  // Generate color for a tag (will be saved to localStorage via useEffect)
+  const getOrCreateTagColor = (tag: string): string => {
+    if (tagColors[tag]) {
+      return tagColors[tag];
+    }
+    
+    // Generate a consistent color based on tag name
+    const colors = [
+      'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300 border-blue-200',
+      'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300 border-green-200', 
+      'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300 border-yellow-200',
+      'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300 border-purple-200',
+      'bg-pink-100 text-pink-800 dark:bg-pink-900 dark:text-pink-300 border-pink-200',
+      'bg-indigo-100 text-indigo-800 dark:bg-indigo-900 dark:text-indigo-300 border-indigo-200',
+      'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300 border-red-200',
+      'bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-300 border-orange-200',
+    ];
+    
+    // Use tag name hash to consistently pick a color
+    let hash = 0;
+    for (let i = 0; i < tag.length; i++) {
+      hash = ((hash << 5) - hash + tag.charCodeAt(i)) & 0xffffffff;
+    }
+    const color = colors[Math.abs(hash) % colors.length];
+    
+    return color;
+  };
+
+  // Reset form when modal closes
+  const resetCardForm = () => {
+    setCardTitle('');
+    setCardType('');
+    setCardDescription('');
+    setCardTags('');
+  };
+
+  // Handle create card
+  const handleCreateCard = () => {
+    if (!cardTitle.trim() || !cardType || creatingCardForColumn === null) {
+      return;
+    }
+
+    // Parse tags from comma-separated string
+    const parsedTags = cardTags
+      .split(',')
+      .map(tag => tag.trim())
+      .filter(tag => tag.length > 0);
+
+    // Generate and save colors for new tags
+    const newTagColors = { ...tagColors };
+    let hasNewColors = false;
+    parsedTags.forEach(tag => {
+      if (!newTagColors[tag]) {
+        newTagColors[tag] = getOrCreateTagColor(tag);
+        hasNewColors = true;
+      }
+    });
+    if (hasNewColors) {
+      setTagColors(newTagColors);
+    }
+
+    // Get current cards in the target column for ordering
+    const columnCards = currentCards.filter(card => card.columnId === creatingCardForColumn);
+    const newOrder = columnCards.length;
+
+    // Create new card
+    const newCard: FeatureCard = {
+      id: Date.now(), // Simple ID generation
+      title: cardTitle.trim(),
+      type: cardType as FeatureCardType,
+      description: cardDescription.trim(),
+      tags: parsedTags,
+      columnId: creatingCardForColumn,
+      order: newOrder
+    };
+
+    // Add card to the list and normalize
+    const updatedCards = [...currentCards, newCard];
+    const normalizedCards = normalizeCards(updatedCards);
+    onUpdateCards(normalizedCards);
+
+    // Reset form and close modal
+    resetCardForm();
+    setCreatingCardForColumn(null);
+
+    toast({
+      title: "Карточка создана",
+      description: `"${newCard.title}" добавлена в колонку`,
+    });
+  };
 
   // Normalize cards to remove duplicates and fix ordering
   const normalizeCards = (cards: FeatureCard[]): FeatureCard[] => {
@@ -555,6 +664,7 @@ export default function FeatureBoard({ columns = [], cards = [], onUpdateColumns
                           card={card} 
                           index={index}
                           onDelete={handleDeleteCard}
+                          getTagColor={getOrCreateTagColor}
                         />
                       ))
                     ) : (
@@ -569,6 +679,17 @@ export default function FeatureBoard({ columns = [], cards = [], onUpdateColumns
                 );
               }}
             </Droppable>
+            
+            {/* Add Card Button */}
+            <Button
+              variant="outline"
+              className="w-full mt-2 border-dashed border-2 hover:bg-accent/50 transition-colors"
+              onClick={() => setCreatingCardForColumn(column.id)}
+              data-testid={`button-add-card-${column.id}`}
+            >
+              <Plus size={16} className="mr-2" />
+              Добавить карточку
+            </Button>
           </div>
         ))}
       </div>
@@ -642,6 +763,105 @@ export default function FeatureBoard({ columns = [], cards = [], onUpdateColumns
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      {/* Create Card Dialog */}
+      <Dialog 
+        open={!!creatingCardForColumn} 
+        onOpenChange={(open) => {
+          if (!open) {
+            resetCardForm();
+            setCreatingCardForColumn(null);
+          }
+        }}
+      >
+        <DialogContent className="sm:max-w-[500px]">
+          <DialogHeader>
+            <DialogTitle>Создать новую карточку</DialogTitle>
+            <DialogDescription>
+              Заполните информацию о новой карточке функции
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4">
+            {/* Card Title */}
+            <div>
+              <Label htmlFor="card-title">Название *</Label>
+              <Input
+                id="card-title"
+                value={cardTitle}
+                onChange={(e) => setCardTitle(e.target.value)}
+                placeholder="Введите название карточки"
+                data-testid="input-card-title"
+              />
+            </div>
+
+            {/* Card Type */}
+            <div>
+              <Label htmlFor="card-type">Тип *</Label>
+              <Select value={cardType} onValueChange={setCardType}>
+                <SelectTrigger data-testid="select-card-type">
+                  <SelectValue placeholder="Выберите тип карточки" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="new">Новая</SelectItem>
+                  <SelectItem value="analytics">Аналитика</SelectItem>
+                  <SelectItem value="bugfix">Баг-фикс</SelectItem>
+                  <SelectItem value="improvement">Улучшение</SelectItem>
+                  <SelectItem value="development">Разработка</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* Card Description */}
+            <div>
+              <Label htmlFor="card-description">Описание</Label>
+              <Textarea
+                id="card-description"
+                value={cardDescription}
+                onChange={(e) => setCardDescription(e.target.value)}
+                placeholder="Введите описание карточки"
+                rows={3}
+                data-testid="textarea-card-description"
+              />
+            </div>
+
+            {/* Card Tags */}
+            <div>
+              <Label htmlFor="card-tags">Теги</Label>
+              <Input
+                id="card-tags"
+                value={cardTags}
+                onChange={(e) => setCardTags(e.target.value)}
+                placeholder="Введите теги через запятую: фронт, бэк, дизайн"
+                data-testid="input-card-tags"
+              />
+              <p className="text-xs text-muted-foreground mt-1">
+                Одинаковые теги будут иметь одинаковые цвета
+              </p>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="flex justify-end space-x-2">
+              <Button 
+                variant="outline" 
+                onClick={() => {
+                  resetCardForm();
+                  setCreatingCardForColumn(null);
+                }}
+                data-testid="button-cancel-create-card"
+              >
+                Отмена
+              </Button>
+              <Button 
+                onClick={handleCreateCard}
+                disabled={!cardTitle.trim() || !cardType}
+                data-testid="button-create-card"
+              >
+                Создать
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
       </div>
     </DragDropContext>
   );

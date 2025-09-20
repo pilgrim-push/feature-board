@@ -6,10 +6,11 @@ interface FeatureCardProps {
   card: FeatureCardType;
   index: number;
   onDelete?: (cardId: number) => void;
+  getTagColor?: (tag: string) => string;
 }
 
-// Generate consistent color for tag based on tag name
-const getTagColor = (tag: string): string => {
+// Generate consistent color for tag based on tag name (fallback)
+const defaultGetTagColor = (tag: string): string => {
   const colors = [
     'bg-blue-100 text-blue-800 border-blue-200',
     'bg-green-100 text-green-800 border-green-200',
@@ -49,7 +50,7 @@ const getTypeConfig = (type: CardType) => {
   }
 };
 
-export default function FeatureCard({ card, index, onDelete }: FeatureCardProps) {
+export default function FeatureCard({ card, index, onDelete, getTagColor }: FeatureCardProps) {
   const typeConfig = getTypeConfig(card.type);
   const Icon = typeConfig.icon;
   
@@ -116,7 +117,7 @@ export default function FeatureCard({ card, index, onDelete }: FeatureCardProps)
                   key={tagIndex}
                   className={`
                     px-2 py-1 rounded-full text-xs font-medium border
-                    ${getTagColor(tag)}
+                    ${getTagColor ? getTagColor(tag) : defaultGetTagColor(tag)}
                   `}
                   data-testid={`tag-${tag}`}
                 >
