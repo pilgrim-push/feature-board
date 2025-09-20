@@ -22,13 +22,6 @@ export default function GanttChartPage() {
   const [importData, setImportData] = useState<AppState | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const handleSaveProject = () => {
-    toast({
-      title: "Project Saved",
-      description: "Your project has been saved successfully to local storage.",
-    });
-  };
-
   const handleExportChart = () => {
     const dataStr = JSON.stringify(state, null, 2);
     const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
