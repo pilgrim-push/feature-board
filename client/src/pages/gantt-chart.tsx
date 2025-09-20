@@ -41,7 +41,7 @@ export default function GanttChartPage() {
 
     toast({
       title: "Диаграмма экспортирована",
-      description: "Данные диаграммы Ганта успешно экспортированы.",
+      description: "Данные диаграммы Гантта успешно экспортированы.",
     });
   };
 
@@ -116,7 +116,6 @@ export default function GanttChartPage() {
     setShowImportConfirm(false);
     setImportData(null);
   };
-
 
   const handleUpdateTasks = (tasks: any[]) => {
     saveState({ ...state, tasks });
