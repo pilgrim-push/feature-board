@@ -1,0 +1,99 @@
+{
+  "tasks": [],
+  "featureColumns": [],
+  "featureCards": [
+    {
+      "id": 1,
+      "title": "Пользовательская аутентификация",
+      "type": "new",
+      "description": "Реализация системы входа и регистрации пользователей с поддержкой OAuth",
+      "tags": [
+        "frontend",
+        "backend",
+        "security"
+      ],
+      "columnId": 1,
+      "order": 0,
+      "status": "analytics",
+      "userStories": []
+    },
+    {
+      "id": 2,
+      "title": "Аналитика клиентского поведения",
+      "type": "analytics",
+      "description": "Внедрение трекинга пользовательских действий для улучшения UX",
+      "tags": [
+        "analytics",
+        "ux"
+      ],
+      "columnId": 1,
+      "order": 1,
+      "status": "development",
+      "userStories": []
+    },
+    {
+      "id": 3,
+      "title": "Исправление багов корзины",
+      "type": "bugfix",
+      "description": "Устранение проблем с калькуляцией общей стоимости товаров",
+      "tags": [
+        "bugfix",
+        "critical"
+      ],
+      "columnId": 2,
+      "order": 0,
+      "status": "backlog",
+      "userStories": []
+    },
+    {
+      "id": 1758374171175,
+      "title": "Export test",
+      "type": "analytics",
+      "description": "",
+      "tags": [
+        "frontend",
+        "backebd"
+      ],
+      "columnId": 2,
+      "order": 1,
+      "status": "backlog",
+      "userStories": [
+        {
+          "title": "Te",
+          "story": "sfsdf",
+          "additionalRequirements": "",
+          "id": 1758374183203
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "title": "Оптимизация производительности",
+      "type": "improvement",
+      "description": "Ускорение загрузки страниц и оптимизация запросов к базе данных",
+      "tags": [
+        "performance",
+        "backend"
+      ],
+      "columnId": 3,
+      "order": 0,
+      "status": "postponed",
+      "userStories": []
+    },
+    {
+      "id": 5,
+      "title": "Мобильная адаптация",
+      "type": "development",
+      "description": "Разработка адаптивного дизайна для мобильных устройств",
+      "tags": [
+        "mobile",
+        "responsive",
+        "css"
+      ],
+      "columnId": 4,
+      "order": 0,
+      "status": "analytics",
+      "userStories": []
+    }
+  ]
+}
