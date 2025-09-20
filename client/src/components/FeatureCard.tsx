@@ -6,6 +6,7 @@ interface FeatureCardProps {
   card: FeatureCardType;
   index: number;
   onDelete?: (cardId: number) => void;
+  onEdit?: (card: FeatureCardType) => void;
   getTagColor?: (tag: string) => string;
 }
 
@@ -50,14 +51,21 @@ const getTypeConfig = (type: CardType) => {
   }
 };
 
-export default function FeatureCard({ card, index, onDelete, getTagColor }: FeatureCardProps) {
+export default function FeatureCard({ card, index, onDelete, onEdit, getTagColor }: FeatureCardProps) {
   const typeConfig = getTypeConfig(card.type);
   const Icon = typeConfig.icon;
   
   const handleDeleteClick = (e: React.MouseEvent) => {
-    e.stopPropagation(); // Prevent drag from starting
+    e.stopPropagation(); // Prevent card click and drag from starting
     if (onDelete) {
       onDelete(card.id);
+    }
+  };
+
+  const handleCardClick = (e: React.MouseEvent) => {
+    e.stopPropagation(); // Prevent drag from starting
+    if (onEdit) {
+      onEdit(card);
     }
   };
 
@@ -68,10 +76,11 @@ export default function FeatureCard({ card, index, onDelete, getTagColor }: Feat
           ref={provided.innerRef}
           {...provided.draggableProps}
           {...provided.dragHandleProps}
+          onClick={handleCardClick}
           className={`
             bg-card border border-border rounded-lg p-4 mb-3 shadow-sm group
-            hover:shadow-md transition-shadow duration-200 cursor-grab
-            ${snapshot.isDragging ? 'shadow-lg rotate-2 bg-accent' : ''}
+            hover:shadow-md transition-shadow duration-200 cursor-pointer
+            ${snapshot.isDragging ? 'shadow-lg rotate-2 bg-accent cursor-grab' : 'hover:bg-accent/5'}
           `}
           data-testid={`feature-card-${card.id}`}
         >

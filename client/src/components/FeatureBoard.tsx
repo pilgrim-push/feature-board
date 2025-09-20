@@ -30,10 +30,12 @@ export default function FeatureBoard({ columns = [], cards = [], onUpdateColumns
   const [editColumnDate, setEditColumnDate] = useState('');
   const [deletingColumn, setDeletingColumn] = useState<FeatureColumn | null>(null);
   const [creatingCardForColumn, setCreatingCardForColumn] = useState<number | null>(null);
+  const [editingCard, setEditingCard] = useState<FeatureCard | null>(null);
   const [cardTitle, setCardTitle] = useState('');
   const [cardType, setCardType] = useState<'new' | 'analytics' | 'bugfix' | 'improvement' | 'development' | ''>('');
   const [cardDescription, setCardDescription] = useState('');
   const [cardTags, setCardTags] = useState('');
+  const [cardColumnId, setCardColumnId] = useState<number | null>(null);
   const { toast } = useToast();
   const deletedCardsRef = useRef<Map<number, FeatureCard>>(new Map());
 
@@ -82,6 +84,71 @@ export default function FeatureBoard({ columns = [], cards = [], onUpdateColumns
     setCardType('');
     setCardDescription('');
     setCardTags('');
+    setCardColumnId(null);
+  };
+
+  // Handle edit card
+  const handleEditCard = (card: FeatureCard) => {
+    setEditingCard(card);
+    setCardTitle(card.title);
+    setCardType(card.type);
+    setCardDescription(card.description);
+    setCardTags(card.tags.join(', '));
+    setCardColumnId(card.columnId);
+  };
+
+  // Handle save card changes
+  const handleSaveCardChanges = () => {
+    if (!editingCard || !cardTitle.trim() || !cardType || cardColumnId === null) {
+      return;
+    }
+
+    // Parse tags from comma-separated string
+    const parsedTags = cardTags
+      .split(',')
+      .map(tag => tag.trim())
+      .filter(tag => tag.length > 0);
+
+    // Generate and save colors for new tags
+    const newTagColors = { ...tagColors };
+    let hasNewColors = false;
+    parsedTags.forEach(tag => {
+      if (!newTagColors[tag]) {
+        newTagColors[tag] = getOrCreateTagColor(tag);
+        hasNewColors = true;
+      }
+    });
+    if (hasNewColors) {
+      setTagColors(newTagColors);
+    }
+
+    // Update the card
+    const updatedCard: FeatureCard = {
+      ...editingCard,
+      title: cardTitle.trim(),
+      type: cardType as FeatureCardType,
+      description: cardDescription.trim(),
+      tags: parsedTags,
+      columnId: cardColumnId,
+      // Keep original order if staying in same column, otherwise put at end
+      order: cardColumnId === editingCard.columnId ? editingCard.order : currentCards.filter(c => c.columnId === cardColumnId).length
+    };
+
+    // Update cards list and normalize
+    const updatedCards = currentCards.map(card => 
+      card.id === editingCard.id ? updatedCard : card
+    );
+    const normalizedCards = normalizeCards(updatedCards);
+    onUpdateCards(normalizedCards);
+
+    // Reset form and close modal
+    resetCardForm();
+    setEditingCard(null);
+
+    toast({
+      title: "Карточка обновлена",
+      description: `"${updatedCard.title}" успешно изменена`,
+    });
   };
 
   // Handle create card
@@ -664,6 +731,7 @@ export default function FeatureBoard({ columns = [], cards = [], onUpdateColumns
                           card={card} 
                           index={index}
                           onDelete={handleDeleteCard}
+                          onEdit={handleEditCard}
                           getTagColor={getOrCreateTagColor}
                         />
                       ))
@@ -857,6 +925,125 @@ export default function FeatureBoard({ columns = [], cards = [], onUpdateColumns
                 data-testid="button-create-card"
               >
                 Создать
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Edit Card Dialog */}
+      <Dialog 
+        open={!!editingCard} 
+        onOpenChange={(open) => {
+          if (!open) {
+            resetCardForm();
+            setEditingCard(null);
+          }
+        }}
+      >
+        <DialogContent className="sm:max-w-[500px]">
+          <DialogHeader>
+            <DialogTitle>Редактировать карточку</DialogTitle>
+            <DialogDescription>
+              Измените информацию о карточке функции
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4">
+            {/* Card Title */}
+            <div>
+              <Label htmlFor="edit-card-title">Название *</Label>
+              <Input
+                id="edit-card-title"
+                value={cardTitle}
+                onChange={(e) => setCardTitle(e.target.value)}
+                placeholder="Введите название карточки"
+                data-testid="input-edit-card-title"
+              />
+            </div>
+
+            {/* Card Type */}
+            <div>
+              <Label htmlFor="edit-card-type">Тип *</Label>
+              <Select value={cardType} onValueChange={(value) => setCardType(value as FeatureCardType | '')}>
+                <SelectTrigger data-testid="select-edit-card-type">
+                  <SelectValue placeholder="Выберите тип карточки" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="new">Новая</SelectItem>
+                  <SelectItem value="analytics">Аналитика</SelectItem>
+                  <SelectItem value="bugfix">Баг-фикс</SelectItem>
+                  <SelectItem value="improvement">Улучшение</SelectItem>
+                  <SelectItem value="development">Разработка</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* Card Column */}
+            <div>
+              <Label htmlFor="edit-card-column">Колонка *</Label>
+              <Select 
+                value={cardColumnId?.toString() || ''} 
+                onValueChange={(value) => setCardColumnId(parseInt(value))}
+              >
+                <SelectTrigger data-testid="select-edit-card-column">
+                  <SelectValue placeholder="Выберите колонку" />
+                </SelectTrigger>
+                <SelectContent>
+                  {currentColumns.filter(col => !col.isParking).map(column => (
+                    <SelectItem key={column.id} value={column.id.toString()}>
+                      {column.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* Card Description */}
+            <div>
+              <Label htmlFor="edit-card-description">Описание</Label>
+              <Textarea
+                id="edit-card-description"
+                value={cardDescription}
+                onChange={(e) => setCardDescription(e.target.value)}
+                placeholder="Введите описание карточки"
+                rows={3}
+                data-testid="textarea-edit-card-description"
+              />
+            </div>
+
+            {/* Card Tags */}
+            <div>
+              <Label htmlFor="edit-card-tags">Теги</Label>
+              <Input
+                id="edit-card-tags"
+                value={cardTags}
+                onChange={(e) => setCardTags(e.target.value)}
+                placeholder="Введите теги через запятую: фронт, бэк, дизайн"
+                data-testid="input-edit-card-tags"
+              />
+              <p className="text-xs text-muted-foreground mt-1">
+                Одинаковые теги будут иметь одинаковые цвета
+              </p>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="flex justify-end space-x-2">
+              <Button 
+                variant="outline" 
+                onClick={() => {
+                  resetCardForm();
+                  setEditingCard(null);
+                }}
+                data-testid="button-cancel-edit-card"
+              >
+                Отмена
+              </Button>
+              <Button 
+                onClick={handleSaveCardChanges}
+                disabled={!cardTitle.trim() || !cardType || !cardColumnId}
+                data-testid="button-save-card"
+              >
+                Сохранить
               </Button>
             </div>
           </div>
