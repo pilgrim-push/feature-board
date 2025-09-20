@@ -3,6 +3,16 @@
 This is a Gantt Chart Builder application with comprehensive Feature Board capabilities, styled after Stripe's design system. It's a full-stack web application that allows users to create, manage, and visualize project timelines through an interactive Gantt chart interface. The application features complete project management capabilities including task creation and editing, timeline visualization, Feature Board with full CRUD operations (Create, Read, Update, Delete), drag-and-drop functionality, and persistent data storage.
 
 ## Recent Changes
+**September 20, 2025** - Added comprehensive Import/Export functionality:
+- **Export feature**: Complete application state export to JSON format with timestamp naming
+- **Import feature**: JSON file import with structural validation and error handling
+- **Confirmation dialog**: Import requires explicit confirmation showing file contents summary
+- **Data replacement**: Import completely replaces current data (tasks, columns, feature cards)
+- **Error handling**: Robust validation with user-friendly error messages for invalid files
+- **UI integration**: Import/Export buttons in header with intuitive icons and localized text
+- **Comprehensive testing**: End-to-end validation of import/export flow with edge cases
+- **Architectural review**: Code quality and production readiness validated
+
 **September 20, 2025** - Enhanced Feature Board with advanced card fields:
 - **Deadline field**: Calendar picker with DD/MM/YY format display on cards
 - **Status field**: Visual status indicators with icons (аналитика, в разработке, бэклог, отложена)
