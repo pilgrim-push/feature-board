@@ -16,8 +16,8 @@ export default function Header({ onSaveProject, onExportChart }: HeaderProps) {
           <div className="flex items-center space-x-2 text-sidebar-foreground">
             <ChartGantt className="text-stripe-blue" size={20} />
             <span className="text-sm font-medium">
-              <span className="text-sidebar-foreground">Gantt</span> 
-              <span className="text-muted-foreground ml-1">Projects</span>
+              <span className="text-sidebar-foreground">Product</span> 
+              <span className="text-muted-foreground ml-1">Plans</span>
             </span>
           </div>
         </div>
