@@ -21,14 +21,14 @@ export default function TabNavigation({ tasks, onUpdateTasks, featureColumns, on
               className="bg-transparent border-b-2 border-transparent data-[state=active]:border-stripe-blue data-[state=active]:bg-transparent rounded-none px-0 pb-3 text-sm font-medium data-[state=active]:shadow-none"
               data-testid="tab-gantt-project"
             >
-              Gantt Project
+              Диаграмма Ганта
             </TabsTrigger>
             <TabsTrigger 
               value="feature-board" 
               className="bg-transparent border-b-2 border-transparent data-[state=active]:border-stripe-blue data-[state=active]:bg-transparent rounded-none px-0 pb-3 text-sm font-medium data-[state=active]:shadow-none"
               data-testid="tab-feature-board"
             >
-              Feature board
+              Доска функций
             </TabsTrigger>
           </TabsList>
         </div>

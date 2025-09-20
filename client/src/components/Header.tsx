@@ -16,8 +16,8 @@ export default function Header({ onSaveProject, onExportChart }: HeaderProps) {
           <div className="flex items-center space-x-2 text-sidebar-foreground">
             <ChartGantt className="text-stripe-blue" size={20} />
             <span className="text-sm font-medium">
-              <span className="text-sidebar-foreground">Product</span> 
-              <span className="text-muted-foreground ml-1">Plans</span>
+              <span className="text-sidebar-foreground">Планер</span> 
+              <span className="text-muted-foreground ml-1">Продуктов</span>
             </span>
           </div>
         </div>
@@ -27,7 +27,7 @@ export default function Header({ onSaveProject, onExportChart }: HeaderProps) {
           <div className="relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" size={16} />
             <Input
-              placeholder="Search project..."
+              placeholder="Поиск проекта..."
               className="pl-10 bg-input border-border text-foreground placeholder:text-muted-foreground text-sm h-9"
             />
           </div>
@@ -42,7 +42,7 @@ export default function Header({ onSaveProject, onExportChart }: HeaderProps) {
             className="border-stripe-orange text-stripe-orange hover:bg-stripe-orange hover:text-white text-xs font-bold uppercase tracking-wide px-3 py-1.5 h-7"
             data-testid="button-save"
           >
-            SAVE
+            СОХРАНИТЬ
           </Button>
           <Button 
             onClick={onExportChart}
@@ -51,7 +51,7 @@ export default function Header({ onSaveProject, onExportChart }: HeaderProps) {
             className="border-border text-sidebar-foreground hover:bg-accent text-xs font-medium px-3 py-1.5 h-7"
             data-testid="button-export"
           >
-            EXPORT
+            ЭКСПОРТ
           </Button>
           <Button 
             variant="ghost"
@@ -60,7 +60,7 @@ export default function Header({ onSaveProject, onExportChart }: HeaderProps) {
             data-testid="button-help"
           >
             <HelpCircle className="mr-1" size={14} />
-            HELP
+            ПОМОЩЬ
           </Button>
         </div>
       </div>

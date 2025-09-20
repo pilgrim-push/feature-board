@@ -172,7 +172,7 @@ export default function GanttChart({ tasks, onUpdateTasks }: GanttChartProps) {
               style={{ minHeight: '44px' }}
             >
               <Plus className="mr-2" size={16} />
-              Add Task
+              Добавить задачу
             </Button>
             <Button 
               onClick={handleDeleteSelected}
@@ -181,7 +181,7 @@ export default function GanttChart({ tasks, onUpdateTasks }: GanttChartProps) {
               style={{ minHeight: '44px' }}
             >
               <Trash2 className="mr-2" size={16} />
-              Delete Selected
+              Удалить выбранные
             </Button>
           </div>
         </div>

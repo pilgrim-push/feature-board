@@ -157,7 +157,7 @@ export default function FeatureBoard({ columns = [], onUpdateColumns }: FeatureB
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center space-x-4">
-          <h2 className="text-2xl font-semibold text-foreground">Features board</h2>
+          <h2 className="text-2xl font-semibold text-foreground">Доска функций</h2>
           
           {/* Toggle Parking Column */}
           {hasParkingColumn && (
@@ -184,7 +184,7 @@ export default function FeatureBoard({ columns = [], onUpdateColumns }: FeatureB
               data-testid="button-add-column"
             >
               <Plus size={16} />
-              <span>Add column</span>
+              <span>Добавить колонку</span>
             </Button>
           </DialogTrigger>
           <DialogContent>

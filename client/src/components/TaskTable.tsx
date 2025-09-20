@@ -34,7 +34,7 @@ export default function TaskTable({
             className="w-4 h-4 text-stripe-blue border-stripe-border-light rounded focus:ring-stripe-blue focus:ring-1 hover-lift"
           />
         </div>
-        <div className="flex-1 px-3 py-2 flex items-center">Tasks & Dependencies</div>
+        <div className="flex-1 px-3 py-2 flex items-center">Задачи & Зависимости</div>
       </div>
 
       {/* Task Rows */}
