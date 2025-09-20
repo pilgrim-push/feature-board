@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { DragDropContext, Droppable, DropResult } from 'react-beautiful-dnd';
 import { Plus, Eye, EyeOff, Calendar, MoreHorizontal, ChevronLeft, ChevronRight, Edit, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -6,14 +7,17 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Label } from '@/components/ui/label';
-import { FeatureColumn } from '@/types/gantt';
+import { FeatureColumn, FeatureCard } from '@/types/gantt';
+import FeatureCardComponent from './FeatureCard';
 
 interface FeatureBoardProps {
   columns: FeatureColumn[];
+  cards: FeatureCard[];
   onUpdateColumns: (columns: FeatureColumn[]) => void;
+  onUpdateCards: (cards: FeatureCard[]) => void;
 }
 
-export default function FeatureBoard({ columns = [], onUpdateColumns }: FeatureBoardProps) {
+export default function FeatureBoard({ columns = [], cards = [], onUpdateColumns, onUpdateCards }: FeatureBoardProps) {
   const [showParking, setShowParking] = useState(false);
   const [isCreatingColumn, setIsCreatingColumn] = useState(false);
   const [newColumnName, setNewColumnName] = useState('');
@@ -25,14 +29,74 @@ export default function FeatureBoard({ columns = [], onUpdateColumns }: FeatureB
 
   // Default columns if none exist
   const defaultColumns: FeatureColumn[] = [
-    { id: 1, name: 'Marketplace 1.0', completionDate: '2025-01-15', isHidden: false, order: 1, isParking: false },
-    { id: 2, name: 'Android 4.5 release', completionDate: '2025-02-28', isHidden: false, order: 2, isParking: false },
-    { id: 3, name: 'Smart watch', completionDate: '2025-03-15', isHidden: false, order: 3, isParking: false },
-    { id: 4, name: 'iOS 5.5', completionDate: '2025-04-01', isHidden: false, order: 4, isParking: false },
-    { id: 999, name: 'Парковка', completionDate: undefined, isHidden: true, order: 999, isParking: true }
+    { id: 1, name: 'Marketplace 1.0', completionDate: '2025-01-15', isHidden: false, order: 1, isParking: false, cards: [] },
+    { id: 2, name: 'Android 4.5 release', completionDate: '2025-02-28', isHidden: false, order: 2, isParking: false, cards: [] },
+    { id: 3, name: 'Smart watch', completionDate: '2025-03-15', isHidden: false, order: 3, isParking: false, cards: [] },
+    { id: 4, name: 'iOS 5.5', completionDate: '2025-04-01', isHidden: false, order: 4, isParking: false, cards: [] },
+    { id: 999, name: 'Парковка', completionDate: undefined, isHidden: true, order: 999, isParking: true, cards: [] }
+  ];
+
+  // Default cards if none exist
+  const defaultCards: FeatureCard[] = [
+    {
+      id: 1,
+      title: 'Пользовательская аутентификация',
+      type: 'new',
+      description: 'Реализация системы входа и регистрации пользователей с поддержкой OAuth',
+      tags: ['frontend', 'backend', 'security'],
+      columnId: 1,
+      order: 1
+    },
+    {
+      id: 2,
+      title: 'Аналитика клиентского поведения',
+      type: 'analytics',
+      description: 'Внедрение трекинга пользовательских действий для улучшения UX',
+      tags: ['analytics', 'ux'],
+      columnId: 1,
+      order: 2
+    },
+    {
+      id: 3,
+      title: 'Исправление багов корзины',
+      type: 'bugfix',
+      description: 'Устранение проблем с калькуляцией общей стоимости товаров',
+      tags: ['bugfix', 'critical'],
+      columnId: 2,
+      order: 1
+    },
+    {
+      id: 4,
+      title: 'Оптимизация производительности',
+      type: 'improvement',
+      description: 'Ускорение загрузки страниц и оптимизация запросов к базе данных',
+      tags: ['performance', 'backend'],
+      columnId: 3,
+      order: 1
+    },
+    {
+      id: 5,
+      title: 'Мобильная адаптация',
+      type: 'development',
+      description: 'Разработка адаптивного дизайна для мобильных устройств',
+      tags: ['mobile', 'responsive', 'css'],
+      columnId: 4,
+      order: 1
+    }
   ];
 
   const currentColumns = columns.length > 0 ? columns : defaultColumns;
+  const currentCards = cards.length > 0 ? cards : defaultCards;
+  
+  // Initialize with default data if none exists
+  useEffect(() => {
+    if (columns.length === 0) {
+      onUpdateColumns(defaultColumns);
+    }
+    if (cards.length === 0) {
+      onUpdateCards(defaultCards);
+    }
+  }, []);
   const visibleColumns = currentColumns
     .filter(col => col.isParking ? showParking : !col.isHidden)
     .sort((a, b) => a.order - b.order);
@@ -49,7 +113,8 @@ export default function FeatureBoard({ columns = [], onUpdateColumns }: FeatureB
       completionDate: newColumnDate || undefined,
       isHidden: false,
       order: Math.max(0, ...currentColumns.filter(c => !c.isParking).map(c => c.order)) + 1,
-      isParking: false
+      isParking: false,
+      cards: []
     };
 
     const updatedColumns = [...currentColumns, newColumn];
@@ -100,6 +165,55 @@ export default function FeatureBoard({ columns = [], onUpdateColumns }: FeatureB
     const updatedColumns = currentColumns.filter(col => col.id !== deletingColumn.id);
     onUpdateColumns(updatedColumns);
     setDeletingColumn(null);
+  };
+
+  // Handle drag and drop
+  const handleDragEnd = (result: DropResult) => {
+    const { destination, source, draggableId } = result;
+    
+    if (!destination) return;
+    
+    // If dropped in same position
+    if (destination.droppableId === source.droppableId && destination.index === source.index) {
+      return;
+    }
+    
+    const cardId = parseInt(draggableId.replace('card-', ''));
+    const sourceColumnId = parseInt(source.droppableId.replace('column-', ''));
+    const destColumnId = parseInt(destination.droppableId.replace('column-', ''));
+    
+    const updatedCards = [...currentCards];
+    const cardIndex = updatedCards.findIndex(card => card.id === cardId);
+    
+    if (cardIndex === -1) return;
+    
+    // Update card's column and position
+    updatedCards[cardIndex] = {
+      ...updatedCards[cardIndex],
+      columnId: destColumnId,
+      order: destination.index
+    };
+    
+    // Reorder cards within destination column
+    const destColumnCards = updatedCards
+      .filter(card => card.columnId === destColumnId)
+      .sort((a, b) => a.order - b.order);
+    
+    destColumnCards.forEach((card, index) => {
+      const cardIdx = updatedCards.findIndex(c => c.id === card.id);
+      if (cardIdx !== -1) {
+        updatedCards[cardIdx].order = index;
+      }
+    });
+    
+    onUpdateCards(updatedCards);
+  };
+
+  // Get cards for a specific column
+  const getColumnCards = (columnId: number): FeatureCard[] => {
+    return currentCards
+      .filter(card => card.columnId === columnId)
+      .sort((a, b) => a.order - b.order);
   };
 
   const moveColumnLeft = (columnId: number) => {
@@ -153,7 +267,8 @@ export default function FeatureBoard({ columns = [], onUpdateColumns }: FeatureB
   };
 
   return (
-    <div className="h-full bg-background p-6">
+    <DragDropContext onDragEnd={handleDragEnd}>
+      <div className="h-full bg-background p-6">
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center space-x-4">
@@ -335,12 +450,39 @@ export default function FeatureBoard({ columns = [], onUpdateColumns }: FeatureB
               </div>
             </div>
 
-            {/* Column Content - Placeholder for future feature cards */}
-            <div className="min-h-96 bg-muted/20 rounded-lg border-2 border-dashed border-muted-foreground/20 flex items-center justify-center">
-              <p className="text-muted-foreground text-sm">
-                Карточки фич будут добавлены позже
-              </p>
-            </div>
+            {/* Column Content - Feature Cards */}
+            <Droppable droppableId={`column-${column.id}`}>
+              {(provided, snapshot) => {
+                const columnCards = getColumnCards(column.id);
+                return (
+                  <div
+                    ref={provided.innerRef}
+                    {...provided.droppableProps}
+                    className={`
+                      min-h-96 rounded-lg p-2 transition-colors duration-200
+                      ${snapshot.isDraggingOver ? 'bg-accent/50' : 'bg-muted/10'}
+                    `}
+                  >
+                    {columnCards.length > 0 ? (
+                      columnCards.map((card, index) => (
+                        <FeatureCardComponent 
+                          key={card.id} 
+                          card={card} 
+                          index={index} 
+                        />
+                      ))
+                    ) : (
+                      <div className="flex items-center justify-center h-32 border-2 border-dashed border-muted-foreground/20 rounded-lg">
+                        <p className="text-muted-foreground text-sm">
+                          Перетащите карточки сюда
+                        </p>
+                      </div>
+                    )}
+                    {provided.placeholder}
+                  </div>
+                );
+              }}
+            </Droppable>
           </div>
         ))}
       </div>
@@ -414,6 +556,7 @@ export default function FeatureBoard({ columns = [], onUpdateColumns }: FeatureB
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-    </div>
+      </div>
+    </DragDropContext>
   );
 }

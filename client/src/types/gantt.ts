@@ -19,6 +19,7 @@ export interface AppState {
   projects: Project[];
   tasks: Task[];
   featureColumns: FeatureColumn[];
+  featureCards: FeatureCard[];
   user: {
     name: string;
   };
@@ -47,4 +48,17 @@ export interface FeatureColumn {
   isHidden: boolean;
   order: number;
   isParking: boolean; // Special flag for parking column
+  cards: FeatureCard[]; // Cards within this column
+}
+
+export type FeatureCardType = 'new' | 'analytics' | 'bugfix' | 'improvement' | 'development';
+
+export interface FeatureCard {
+  id: number;
+  title: string;
+  type: FeatureCardType;
+  description: string;
+  tags: string[];
+  columnId: number;
+  order: number;
 }

@@ -11,6 +11,7 @@ const defaultState: AppState = {
   ],
   tasks: [],
   featureColumns: [],
+  featureCards: [],
   user: {
     name: 'Name Surname'
   }

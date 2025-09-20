@@ -41,6 +41,10 @@ export default function GanttChartPage() {
     saveState({ ...state, featureColumns });
   };
 
+  const handleUpdateFeatureCards = (featureCards: any[]) => {
+    saveState({ ...state, featureCards });
+  };
+
   return (
     <div className="h-screen overflow-hidden bg-background font-sans text-foreground text-sm">
       <div className="animated-gradient h-1 absolute top-0 left-0 right-0 z-50"></div>
@@ -54,7 +58,9 @@ export default function GanttChartPage() {
           tasks={state.tasks}
           onUpdateTasks={handleUpdateTasks}
           featureColumns={state.featureColumns || []}
+          featureCards={state.featureCards || []}
           onUpdateFeatureColumns={handleUpdateFeatureColumns}
+          onUpdateFeatureCards={handleUpdateFeatureCards}
         />
       </div>
     </div>
