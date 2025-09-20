@@ -1,8 +1,10 @@
 import { useState } from 'react';
-import { Plus, Eye, EyeOff, Calendar, MoreHorizontal, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Plus, Eye, EyeOff, Calendar, MoreHorizontal, ChevronLeft, ChevronRight, Edit, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Label } from '@/components/ui/label';
 import { FeatureColumn } from '@/types/gantt';
 
@@ -16,6 +18,10 @@ export default function FeatureBoard({ columns = [], onUpdateColumns }: FeatureB
   const [isCreatingColumn, setIsCreatingColumn] = useState(false);
   const [newColumnName, setNewColumnName] = useState('');
   const [newColumnDate, setNewColumnDate] = useState('');
+  const [editingColumn, setEditingColumn] = useState<FeatureColumn | null>(null);
+  const [editColumnName, setEditColumnName] = useState('');
+  const [editColumnDate, setEditColumnDate] = useState('');
+  const [deletingColumn, setDeletingColumn] = useState<FeatureColumn | null>(null);
 
   // Default columns if none exist
   const defaultColumns: FeatureColumn[] = [
@@ -61,6 +67,39 @@ export default function FeatureBoard({ columns = [], onUpdateColumns }: FeatureB
 
   const toggleParkingVisibility = () => {
     setShowParking(!showParking);
+  };
+
+  const handleEditColumn = (column: FeatureColumn) => {
+    setEditingColumn(column);
+    setEditColumnName(column.name);
+    setEditColumnDate(column.completionDate || '');
+  };
+
+  const handleSaveEdit = () => {
+    if (!editingColumn || !editColumnName.trim()) return;
+    
+    const updatedColumns = currentColumns.map(col => 
+      col.id === editingColumn.id 
+        ? { ...col, name: editColumnName.trim(), completionDate: editColumnDate || undefined }
+        : col
+    );
+    
+    onUpdateColumns(updatedColumns);
+    setEditingColumn(null);
+    setEditColumnName('');
+    setEditColumnDate('');
+  };
+
+  const handleDeleteColumn = (column: FeatureColumn) => {
+    setDeletingColumn(column);
+  };
+
+  const confirmDeleteColumn = () => {
+    if (!deletingColumn) return;
+    
+    const updatedColumns = currentColumns.filter(col => col.id !== deletingColumn.id);
+    onUpdateColumns(updatedColumns);
+    setDeletingColumn(null);
   };
 
   const moveColumnLeft = (columnId: number) => {
@@ -260,14 +299,39 @@ export default function FeatureBoard({ columns = [], onUpdateColumns }: FeatureB
                   </>
                 )}
                 
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="h-8 w-8 p-0"
-                  data-testid={`column-menu-${column.id}`}
-                >
-                  <MoreHorizontal size={16} />
-                </Button>
+                {/* Menu Button - Only show for non-parking columns */}
+                {!column.isParking && (
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="h-8 w-8 p-0"
+                        data-testid={`column-menu-${column.id}`}
+                      >
+                        <MoreHorizontal size={16} />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      <DropdownMenuItem
+                        onClick={() => handleEditColumn(column)}
+                        className="flex items-center space-x-2"
+                        data-testid={`menu-edit-${column.id}`}
+                      >
+                        <Edit size={16} />
+                        <span>Редактировать</span>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem
+                        onClick={() => handleDeleteColumn(column)}
+                        className="flex items-center space-x-2 text-destructive focus:text-destructive"
+                        data-testid={`menu-delete-${column.id}`}
+                      >
+                        <Trash2 size={16} />
+                        <span>Удалить</span>
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                )}
               </div>
             </div>
 
@@ -280,6 +344,76 @@ export default function FeatureBoard({ columns = [], onUpdateColumns }: FeatureB
           </div>
         ))}
       </div>
+
+      {/* Edit Column Dialog */}
+      <Dialog open={!!editingColumn} onOpenChange={(open) => !open && setEditingColumn(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Редактировать колонку</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div>
+              <Label htmlFor="edit-column-name">Название колонки</Label>
+              <Input
+                id="edit-column-name"
+                value={editColumnName}
+                onChange={(e) => setEditColumnName(e.target.value)}
+                placeholder="Введите название колонки"
+                data-testid="input-edit-column-name"
+              />
+            </div>
+            <div>
+              <Label htmlFor="edit-column-date">Дата завершения (необязательно)</Label>
+              <Input
+                id="edit-column-date"
+                type="date"
+                value={editColumnDate}
+                onChange={(e) => setEditColumnDate(e.target.value)}
+                data-testid="input-edit-column-date"
+              />
+            </div>
+            <div className="flex justify-end space-x-2">
+              <Button 
+                variant="outline" 
+                onClick={() => setEditingColumn(null)}
+                data-testid="button-cancel-edit"
+              >
+                Отмена
+              </Button>
+              <Button 
+                onClick={handleSaveEdit}
+                disabled={!editColumnName.trim()}
+                data-testid="button-save-edit"
+              >
+                Сохранить
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Delete Confirmation Dialog */}
+      <AlertDialog open={!!deletingColumn} onOpenChange={(open) => !open && setDeletingColumn(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Подтвердите удаление</AlertDialogTitle>
+            <AlertDialogDescription>
+              Вы уверены, что хотите удалить колонку "{deletingColumn?.name}"?
+              Это действие нельзя отменить.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel data-testid="button-cancel-delete">Отмена</AlertDialogCancel>
+            <AlertDialogAction 
+              onClick={confirmDeleteColumn}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+              data-testid="button-confirm-delete"
+            >
+              Удалить
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }
