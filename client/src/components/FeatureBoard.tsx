@@ -907,14 +907,14 @@ export default function FeatureBoard({ columns = [], cards = [], onUpdateColumns
           }
         }}
       >
-        <DialogContent className="sm:max-w-[500px]">
+        <DialogContent className="sm:max-w-[500px] max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>Создать новую карточку</DialogTitle>
             <DialogDescription>
               Заполните информацию о новой карточке функции
             </DialogDescription>
           </DialogHeader>
-          <div className="space-y-4">
+          <div className="space-y-4 py-4">
             {/* Card Title */}
             <div>
               <Label htmlFor="card-title">Название *</Label>
@@ -1096,14 +1096,14 @@ export default function FeatureBoard({ columns = [], cards = [], onUpdateColumns
           }
         }}
       >
-        <DialogContent className="sm:max-w-[500px]">
+        <DialogContent className="sm:max-w-[500px] max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>Редактировать карточку</DialogTitle>
             <DialogDescription>
               Измените информацию о карточке функции
             </DialogDescription>
           </DialogHeader>
-          <div className="space-y-4">
+          <div className="space-y-4 py-4">
             {/* Card Title */}
             <div>
               <Label htmlFor="edit-card-title">Название *</Label>
