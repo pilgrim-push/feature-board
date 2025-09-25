@@ -25,6 +25,7 @@ export default function UserStoriesManager({ userStories, onChange }: UserStorie
   const [developmentDeadline, setDevelopmentDeadline] = useState<Date | undefined>(undefined);
   const [cardStartDate, setCardStartDate] = useState<Date | undefined>(undefined);
   const [cardDuration, setCardDuration] = useState<number>(0);
+  const [externalLink, setExternalLink] = useState('');
 
   // Format date to DD/MM/YY
   const formatDateToDisplay = (date: Date): string => {
@@ -77,7 +78,8 @@ export default function UserStoriesManager({ userStories, onChange }: UserStorie
       additionalRequirements: additionalRequirements.trim(),
       developmentDeadline: developmentDeadline ? formatDateToDisplay(developmentDeadline) : undefined,
       startDate: cardStartDate ? formatDateToDisplay(cardStartDate) : undefined,
-      duration: cardDuration
+      duration: cardDuration,
+      externalLink: externalLink
     };
 
     if (editingStory) {
@@ -207,6 +209,21 @@ export default function UserStoriesManager({ userStories, onChange }: UserStorie
                   <strong>Продолжительность:</strong> {story.duration}
                 </p>
               )}
+
+              {/* External link */}
+              {story.externalLink && (
+              <p>
+                <a
+                  href={story.externalLink.startsWith('http') ? story.externalLink : `https://${story.externalLink}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="font-semibold text-foreground text-sm mb-2 leading-tight hover:underline"
+                >
+                  {story.externalLink}
+                </a>
+                </p>
+              )}
+              
             </div>
           ))}
         </div>
@@ -337,6 +354,18 @@ export default function UserStoriesManager({ userStories, onChange }: UserStorie
                 data-testid="input-story-title"
                 />
               </div>
+
+            {/* External Link */}
+            <div>
+              <Label htmlFor="story-external-link">Внешняя ссылка</Label>
+              <Input
+                id="story-external-link"
+                value={externalLink}
+                onChange={(e) => setExternalLink(e.target.value)}
+                placeholder="Введите ссылку на внешнюю задачу"
+                data-testid="input-story-external-link"
+              />
+            </div>
 
             {/* Action Buttons */}
             <div className="flex justify-end space-x-2">

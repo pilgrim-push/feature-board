@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { DragDropContext, Droppable, DropResult } from 'react-beautiful-dnd';
-import { Plus, Eye, EyeOff, Calendar as CalendarIcon, MoreHorizontal, ChevronLeft, ChevronRight, Edit, Trash2 } from 'lucide-react';
+import { Plus, Eye, EyeOff, Calendar as CalendarIcon, MoreHorizontal, ChevronLeft, ChevronRight, Edit, Trash2, ExternalLink } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogTrigger } from '@/components/ui/dialog';
@@ -38,6 +38,7 @@ export default function FeatureBoard({ columns = [], cards = [], onUpdateColumns
   const [cardType, setCardType] = useState<'new' | 'analytics' | 'bugfix' | 'improvement' | 'development' | ''>('');
   const [cardDescription, setCardDescription] = useState('');
   const [cardTags, setCardTags] = useState('');
+  const [externalLink, setExternalLink] = useState('');
   const [cardColumnId, setCardColumnId] = useState<number | null>(null);
   const [cardDeadline, setCardDeadline] = useState<Date | undefined>(undefined);
   const [cardStartDate, setCardStartDate] = useState<Date | undefined>(undefined);
@@ -114,11 +115,12 @@ export default function FeatureBoard({ columns = [], cards = [], onUpdateColumns
     setCardTitle(card.title);
     setCardType(card.type);
     setCardDescription(card.description);
+    setExternalLink(card.externalLink || '')
     setCardTags(card.tags.join(', '));
     setCardColumnId(card.columnId);
     setCardStatus(card.status || 'backlog');
     setCardUserStories(card.userStories || []);
-    
+    setCardDuration(card.duration || 0);
     // Parse deadline string back to Date if it exists
     if (card.deadline) {
       const [day, month, year] = card.deadline.split('/');
@@ -174,6 +176,7 @@ export default function FeatureBoard({ columns = [], cards = [], onUpdateColumns
       order: cardColumnId === editingCard.columnId ? editingCard.order : currentCards.filter(c => c.columnId === cardColumnId).length,
       deadline: cardDeadline ? formatDateToDisplay(cardDeadline) : undefined,
       startDate: cardStartDate ? formatDateToDisplay(cardStartDate) : undefined,
+      externalLink: externalLink,
       duration: cardDuration,
       status: cardStatus,
       userStories: cardUserStories
@@ -233,7 +236,8 @@ export default function FeatureBoard({ columns = [], cards = [], onUpdateColumns
       description: cardDescription.trim(),
       tags: parsedTags,
       columnId: creatingCardForColumn,
-      order: newOrder,
+      order: newOrder, 
+      externalLink: externalLink,
       startDate: cardStartDate ? formatDateToDisplay(cardStartDate) : undefined,
       deadline: cardDeadline ? formatDateToDisplay(cardDeadline) : undefined,
       duration: cardDuration,
@@ -305,6 +309,7 @@ export default function FeatureBoard({ columns = [], cards = [], onUpdateColumns
       tags: ['frontend', 'backend', 'security'],
       duration: 5,
       columnId: 1,
+      externalLink: 'https://example.com',
       order: 1,
       status: 'analytics',
       userStories: []
@@ -317,6 +322,7 @@ export default function FeatureBoard({ columns = [], cards = [], onUpdateColumns
       tags: ['analytics', 'ux'],
       duration: 5,
       columnId: 1,
+      externalLink: 'https://example.com',
       order: 2,
       status: 'development',
       userStories: []
@@ -329,6 +335,7 @@ export default function FeatureBoard({ columns = [], cards = [], onUpdateColumns
       tags: ['bugfix', 'critical'],
       duration: 5,
       columnId: 2,
+      externalLink: 'https://example.com',
       order: 1,
       status: 'backlog',
       userStories: []
@@ -341,6 +348,7 @@ export default function FeatureBoard({ columns = [], cards = [], onUpdateColumns
       tags: ['performance', 'backend'],
       duration: 5,
       columnId: 3,
+      externalLink: 'https://example.com',
       order: 1,
       status: 'postponed',
       userStories: []
@@ -353,6 +361,7 @@ export default function FeatureBoard({ columns = [], cards = [], onUpdateColumns
       tags: ['mobile', 'responsive', 'css'],
       duration: 5,
       columnId: 4,
+      externalLink: 'https://example.com',
       order: 1,
       status: 'analytics',
       userStories: []
@@ -1062,6 +1071,19 @@ export default function FeatureBoard({ columns = [], cards = [], onUpdateColumns
               </p>
             </div>
 
+            {/* Card External Link */}
+            <div>
+              <Label htmlFor="card-description">Ссылка</Label>
+              <Textarea
+                id="card-description"
+                value={externalLink}
+                onChange={(e) => setExternalLink(e.target.value)}
+                placeholder="Введите ссылку на задачу"
+                rows={1}
+                data-testid="textarea-card-description"
+              />
+            </div>
+
             {/* Action Buttons */}
             <div className="flex justify-end space-x-2">
               <Button 
@@ -1269,6 +1291,19 @@ export default function FeatureBoard({ columns = [], cards = [], onUpdateColumns
               <p className="text-xs text-muted-foreground mt-1">
                 Одинаковые теги будут иметь одинаковые цвета
               </p>
+            </div>
+
+            {/* Card External Link */}
+            <div>
+              <Label htmlFor="card-description">Ссылка</Label>
+              <Textarea
+                id="card-description"
+                value={externalLink}
+                onChange={(e) => setExternalLink(e.target.value)}
+                placeholder="Введите ссылку на задачу"
+                rows={1}
+                data-testid="textarea-card-description"
+              />
             </div>
 
             {/* User Stories Management */}

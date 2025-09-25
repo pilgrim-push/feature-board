@@ -175,8 +175,8 @@ export default function FeatureCard({ card, index, onDelete, onEdit, getTagColor
           )}
 
           {/* Duration */}
-          <h4 className="font-semibold text-foreground text-sm mb-2 leading-tight">
-            {card.duration}
+          <h4 className="flex items-center space-x-1 mb-2">
+            Продолжительность: {card.duration}
           </h4>
 
           {/* Description */}
@@ -208,6 +208,18 @@ export default function FeatureCard({ card, index, onDelete, onEdit, getTagColor
                 )}
               </div>
             </div>
+          )}
+
+          {/* External Link */}
+          {card.externalLink && (
+            <a
+              href={card.externalLink.startsWith('http') ? card.externalLink : `https://${card.externalLink}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-semibold text-foreground text-sm mb-2 leading-tight hover:underline"
+            >
+              {card.externalLink}
+            </a>
           )}
 
           {/* Tags */}

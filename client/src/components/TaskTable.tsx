@@ -1,8 +1,5 @@
-import { Edit, Trash2 } from 'lucide-react';
 import { Task } from '@/types/gantt';
-import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
 
 
@@ -58,6 +55,18 @@ export default function TaskTable({
                 onDoubleClick={() => onEditTask?.(task)}
                 className="w-full border-none bg-transparent text-stripe-text hover:bg-stripe-hover focus:bg-stripe-gray-50 focus:border focus:border-stripe-blue rounded px-2 py-1 text-sm font-medium transition-all cursor-pointer"
               />
+              <div>
+                {task.externalLink && (
+                  <a
+                    href={task.externalLink.startsWith('http') ? task.externalLink : `https://${task.externalLink}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="ml-2 text-blue-600 hover:underline"
+                  >
+                    {task.externalLink}
+                  </a>
+                )}
+              </div>
               {task.dependencies && task.dependencies.length > 0 && (
                 <div className="ml-2 flex gap-1 flex-wrap">
                   {task.dependencies.map(depId => {

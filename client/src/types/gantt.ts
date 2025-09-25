@@ -5,6 +5,7 @@ export interface Task {
   duration: number;
   priority: 'low' | 'medium' | 'high';
   description?: string;
+  externalLink: string;
   selected?: boolean;
   dependencies?: number[]; // IDs of tasks that must be completed before this task can start
 }
@@ -19,6 +20,7 @@ export interface NewTask {
   name: string;
   startDate: string;
   duration: number;
+  externalLink: string;
   priority: 'low' | 'medium' | 'high';
   description?: string;
   dependencies?: number[];
@@ -51,6 +53,7 @@ export interface UserStory {
   story: string;
   startDate?: string; // DD/MM/YY format
   duration: number;
+  externalLink: string;
   additionalRequirements: string;
   developmentDeadline?: string; // DD/MM/YY format
 }
@@ -65,6 +68,7 @@ export interface FeatureCard {
   tags: string[];
   columnId: number;
   order: number;
+  externalLink?: string;
   deadline?: string; // DD/MM/YY format
   status: FeatureCardStatus;
   userStories: UserStory[];

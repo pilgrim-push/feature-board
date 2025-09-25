@@ -7,7 +7,6 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import { Checkbox } from '@/components/ui/checkbox';
-import { calculateEndDate, formatDateForInput } from '@/utils/workingDays';
 import { getAvailablePredecessors } from '@/utils/dependencies';
 
 interface TaskModalProps {
@@ -24,6 +23,7 @@ export default function TaskModal({ isOpen, onClose, onSave, onUpdate, editingTa
     name: '',
     startDate: new Date().toISOString().split('T')[0],
     duration: 1,
+    externalLink: '',
     priority: 'medium',
     description: '',
     dependencies: []
@@ -39,6 +39,7 @@ export default function TaskModal({ isOpen, onClose, onSave, onUpdate, editingTa
         startDate: editingTask.startDate,
         duration: editingTask.duration,
         priority: editingTask.priority,
+        externalLink: editingTask.externalLink || '',
         description: editingTask.description || '',
         dependencies: editingTask.dependencies || []
       });
@@ -48,6 +49,7 @@ export default function TaskModal({ isOpen, onClose, onSave, onUpdate, editingTa
         startDate: new Date().toISOString().split('T')[0],
         duration: 1,
         priority: 'medium',
+        externalLink: '',
         description: '',
         dependencies: []
       });
@@ -71,6 +73,7 @@ export default function TaskModal({ isOpen, onClose, onSave, onUpdate, editingTa
       setTask({
         name: '',
         startDate: new Date().toISOString().split('T')[0],
+        externalLink: '',
         duration: 1,
         priority: 'medium',
         description: '',
@@ -84,6 +87,7 @@ export default function TaskModal({ isOpen, onClose, onSave, onUpdate, editingTa
     setTask({
       name: '',
       startDate: new Date().toISOString().split('T')[0],
+      externalLink: '',
       duration: 1,
       priority: 'medium',
       description: '',
@@ -164,6 +168,17 @@ export default function TaskModal({ isOpen, onClose, onSave, onUpdate, editingTa
                 <SelectItem value="high" className="text-stripe-text hover:bg-stripe-hover">High</SelectItem>
               </SelectContent>
             </Select>
+          </div>
+
+          <div>
+            <Label className="block text-sm font-medium text-stripe-text mb-1">External Link</Label>
+            <Textarea
+              value={task.externalLink}
+              onChange={(e) => setTask({ ...task, externalLink: e.target.value })}
+              rows={1}
+              placeholder="Optional task external link"
+              className="w-full border border-stripe-border rounded-md px-3 py-2 text-sm focus:border-stripe-blue focus:ring-1 focus:ring-stripe-blue/20"
+            />
           </div>
           
           <div>
