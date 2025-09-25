@@ -49,6 +49,8 @@ export interface UserStory {
   id: number;
   title: string;
   story: string;
+  startDate?: string; // DD/MM/YY format
+  duration: number;
   additionalRequirements: string;
   developmentDeadline?: string; // DD/MM/YY format
 }
@@ -58,6 +60,8 @@ export interface FeatureCard {
   title: string;
   type: FeatureCardType;
   description: string;
+  startDate?: string;
+  duration: number;
   tags: string[];
   columnId: number;
   order: number;

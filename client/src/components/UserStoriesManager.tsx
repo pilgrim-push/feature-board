@@ -23,6 +23,8 @@ export default function UserStoriesManager({ userStories, onChange }: UserStorie
   const [storyText, setStoryText] = useState('');
   const [additionalRequirements, setAdditionalRequirements] = useState('');
   const [developmentDeadline, setDevelopmentDeadline] = useState<Date | undefined>(undefined);
+  const [cardStartDate, setCardStartDate] = useState<Date | undefined>(undefined);
+  const [cardDuration, setCardDuration] = useState<number>(0);
 
   // Format date to DD/MM/YY
   const formatDateToDisplay = (date: Date): string => {
@@ -74,6 +76,8 @@ export default function UserStoriesManager({ userStories, onChange }: UserStorie
       story: storyText.trim(),
       additionalRequirements: additionalRequirements.trim(),
       developmentDeadline: developmentDeadline ? formatDateToDisplay(developmentDeadline) : undefined,
+      startDate: cardStartDate ? formatDateToDisplay(cardStartDate) : undefined,
+      duration: cardDuration
     };
 
     if (editingStory) {
@@ -186,6 +190,23 @@ export default function UserStoriesManager({ userStories, onChange }: UserStorie
                   </span>
                 </div>
               )}
+
+              {/* Start date */}
+              {story.startDate && (
+                <div className="flex items-center space-x-1">
+                  <CalendarIcon size={12} className="text-muted-foreground" />
+                  <span className="text-xs text-muted-foreground">
+                    Начало разработки: {story.startDate}
+                  </span>
+                </div>
+              )}
+
+              {/* Duration */}
+              {story.duration && (
+                <p className="text-xs text-muted-foreground">
+                  <strong>Продолжительность:</strong> {story.duration}
+                </p>
+              )}
             </div>
           ))}
         </div>
@@ -277,6 +298,45 @@ export default function UserStoriesManager({ userStories, onChange }: UserStorie
                 </PopoverContent>
               </Popover>
             </div>
+
+            {/* Start date */}
+            <div>
+              <Label htmlFor="development-deadline">Начало разработки</Label>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant="outline"
+                    className={`w-full justify-start text-left font-normal ${
+                      !cardStartDate && "text-muted-foreground"
+                    }`}
+                    data-testid="button-development-deadline"
+                  >
+                    <CalendarIcon className="mr-2 h-4 w-4" />
+                    {cardStartDate ? formatDateToDisplay(cardStartDate) : "Выбрать дату"}
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0">
+                  <Calendar
+                    mode="single"
+                    selected={cardStartDate}
+                    onSelect={setCardStartDate}
+                    initialFocus
+                  />
+                </PopoverContent>
+              </Popover>
+            </div>
+
+            {/* Duration */}
+            <div>
+              <Label htmlFor="story-title">Продолжительность</Label>
+              <Input
+                id="story-title"
+                value={cardDuration}
+                onChange={(e) => setCardDuration(Number(e.target.value))}
+                placeholder="Введите продолжительность"
+                data-testid="input-story-title"
+                />
+              </div>
 
             {/* Action Buttons */}
             <div className="flex justify-end space-x-2">

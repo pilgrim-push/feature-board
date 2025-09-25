@@ -6,13 +6,11 @@ import { Input } from '@/components/ui/input';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogTrigger } from '@/components/ui/dialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Calendar } from '@/components/ui/calendar';
 import { Label } from '@/components/ui/label';
-import { format } from 'date-fns';
-import { ru } from 'date-fns/locale';
 import { useToast } from '@/hooks/use-toast';
 import { FeatureColumn, FeatureCard, FeatureCardType, FeatureCardStatus, UserStory } from '@/types/gantt';
 import FeatureCardComponent from './FeatureCard';
@@ -42,6 +40,8 @@ export default function FeatureBoard({ columns = [], cards = [], onUpdateColumns
   const [cardTags, setCardTags] = useState('');
   const [cardColumnId, setCardColumnId] = useState<number | null>(null);
   const [cardDeadline, setCardDeadline] = useState<Date | undefined>(undefined);
+  const [cardStartDate, setCardStartDate] = useState<Date | undefined>(undefined);
+  const [cardDuration, setCardDuration] = useState<number>(0);
   const [cardStatus, setCardStatus] = useState<FeatureCardStatus>('backlog');
   const [cardUserStories, setCardUserStories] = useState<UserStory[]>([]);
   const { toast } = useToast();
@@ -102,6 +102,8 @@ export default function FeatureBoard({ columns = [], cards = [], onUpdateColumns
     setCardTags('');
     setCardColumnId(null);
     setCardDeadline(undefined);
+    setCardStartDate(undefined);
+    setCardDuration(0);
     setCardStatus('backlog');
     setCardUserStories([]);
   };
@@ -125,6 +127,14 @@ export default function FeatureBoard({ columns = [], cards = [], onUpdateColumns
     } else {
       setCardDeadline(undefined);
     }
+     // Parse startdate string back to Date if it exists
+      if (card.startDate) {
+        const [day, month, year] = card.startDate.split('/');
+        const fullYear = parseInt(`20${year}`);
+        setCardStartDate(new Date(fullYear, parseInt(month) - 1, parseInt(day)));
+      } else {
+        setCardStartDate(undefined);
+      }
   };
 
   // Handle save card changes
@@ -163,6 +173,8 @@ export default function FeatureBoard({ columns = [], cards = [], onUpdateColumns
       // Keep original order if staying in same column, otherwise put at end
       order: cardColumnId === editingCard.columnId ? editingCard.order : currentCards.filter(c => c.columnId === cardColumnId).length,
       deadline: cardDeadline ? formatDateToDisplay(cardDeadline) : undefined,
+      startDate: cardStartDate ? formatDateToDisplay(cardStartDate) : undefined,
+      duration: cardDuration,
       status: cardStatus,
       userStories: cardUserStories
     };
@@ -222,7 +234,9 @@ export default function FeatureBoard({ columns = [], cards = [], onUpdateColumns
       tags: parsedTags,
       columnId: creatingCardForColumn,
       order: newOrder,
+      startDate: cardStartDate ? formatDateToDisplay(cardStartDate) : undefined,
       deadline: cardDeadline ? formatDateToDisplay(cardDeadline) : undefined,
+      duration: cardDuration,
       status: cardStatus,
       userStories: []
     };
@@ -289,6 +303,7 @@ export default function FeatureBoard({ columns = [], cards = [], onUpdateColumns
       type: 'new',
       description: 'Реализация системы входа и регистрации пользователей с поддержкой OAuth',
       tags: ['frontend', 'backend', 'security'],
+      duration: 5,
       columnId: 1,
       order: 1,
       status: 'analytics',
@@ -300,6 +315,7 @@ export default function FeatureBoard({ columns = [], cards = [], onUpdateColumns
       type: 'analytics',
       description: 'Внедрение трекинга пользовательских действий для улучшения UX',
       tags: ['analytics', 'ux'],
+      duration: 5,
       columnId: 1,
       order: 2,
       status: 'development',
@@ -311,6 +327,7 @@ export default function FeatureBoard({ columns = [], cards = [], onUpdateColumns
       type: 'bugfix',
       description: 'Устранение проблем с калькуляцией общей стоимости товаров',
       tags: ['bugfix', 'critical'],
+      duration: 5,
       columnId: 2,
       order: 1,
       status: 'backlog',
@@ -322,6 +339,7 @@ export default function FeatureBoard({ columns = [], cards = [], onUpdateColumns
       type: 'improvement',
       description: 'Ускорение загрузки страниц и оптимизация запросов к базе данных',
       tags: ['performance', 'backend'],
+      duration: 5,
       columnId: 3,
       order: 1,
       status: 'postponed',
@@ -333,6 +351,7 @@ export default function FeatureBoard({ columns = [], cards = [], onUpdateColumns
       type: 'development',
       description: 'Разработка адаптивного дизайна для мобильных устройств',
       tags: ['mobile', 'responsive', 'css'],
+      duration: 5,
       columnId: 4,
       order: 1,
       status: 'analytics',
@@ -981,6 +1000,53 @@ export default function FeatureBoard({ columns = [], cards = [], onUpdateColumns
               </Popover>
             </div>
 
+            {/* Card StartDate */}
+            <div>
+              <Label htmlFor="card-startdate">Дата начала</Label>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant="outline"
+                    className={`w-full justify-start text-left font-normal ${
+                      !cardStartDate && "text-muted-foreground"
+                    }`}
+                    data-testid="button-card-deadline"
+                  >
+                    <CalendarIcon className="mr-2 h-4 w-4" />
+                    {cardStartDate ? formatDateToDisplay(cardStartDate) : "Выбрать дату"}
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0">
+                  <Calendar
+                    mode="single"
+                    selected={cardStartDate}
+                    onSelect={setCardStartDate}
+                    initialFocus
+                  />
+                </PopoverContent>
+              </Popover>
+            </div>
+
+            {/* Card Duration */}
+            <div>
+              <Label htmlFor="card-duration">Продолжительность</Label>
+              <Input
+                id="card-duration"
+                type="number" // ← важно!
+                value={cardDuration ?? ''} // ← null → пустая строка для input
+                onChange={(e) => {
+                  const val = e.target.value;
+                  if (val === '') {
+                    setCardDuration(0);
+                  } else {
+                    setCardDuration(Number(val));
+                  }
+                }}
+                placeholder="Введите продолжительность работ"
+                data-testid="input-card-duration"
+              />
+            </div>
+
             {/* Card Tags */}
             <div>
               <Label htmlFor="card-tags">Теги</Label>
@@ -1130,6 +1196,53 @@ export default function FeatureBoard({ columns = [], cards = [], onUpdateColumns
               </Popover>
             </div>
 
+             {/* Card StartDate */}
+              <div>
+                <Label htmlFor="card-startdate">Дата начала</Label>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button
+                      variant="outline"
+                      className={`w-full justify-start text-left font-normal ${
+                        !cardStartDate && "text-muted-foreground"
+                      }`}
+                      data-testid="button-card-deadline"
+                    >
+                      <CalendarIcon className="mr-2 h-4 w-4" />
+                      {cardStartDate ? formatDateToDisplay(cardStartDate) : "Выбрать дату"}
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0">
+                    <Calendar
+                      mode="single"
+                      selected={cardStartDate}
+                      onSelect={setCardStartDate}
+                      initialFocus
+                    />
+                  </PopoverContent>
+                </Popover>
+              </div>
+
+              {/* Card Duration */}
+              <div>
+                <Label htmlFor="card-duration">Продолжительность</Label>
+                <Input
+                  id="card-duration"
+                  type="number" // ← важно!
+                  value={cardDuration ?? ''} // ← null → пустая строка для input
+                  onChange={(e) => {
+                    const val = e.target.value;
+                    if (val === '') {
+                      setCardDuration(0);
+                    } else {
+                      setCardDuration(Number(val));
+                    }
+                  }}
+                  placeholder="Введите продолжительность работ"
+                  data-testid="input-card-duration"
+                />
+              </div>
+
             {/* Card Description */}
             <div>
               <Label htmlFor="edit-card-description">Описание</Label>
@@ -1142,7 +1255,7 @@ export default function FeatureBoard({ columns = [], cards = [], onUpdateColumns
                 data-testid="textarea-edit-card-description"
               />
             </div>
-
+            
             {/* Card Tags */}
             <div>
               <Label htmlFor="edit-card-tags">Теги</Label>

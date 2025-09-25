@@ -1,5 +1,5 @@
 import { Draggable } from 'react-beautiful-dnd';
-import { Sparkles, BarChart3, Bug, ArrowUp, Code, X, Calendar, Clock, PlayCircle, PauseCircle, Archive, Users } from 'lucide-react';
+import { Sparkles, BarChart3, Bug, ArrowUp, Code, X, Calendar, PlayCircle, PauseCircle, Archive, Users } from 'lucide-react';
 import { FeatureCard as FeatureCardType, FeatureCardType as CardType, FeatureCardStatus } from '@/types/gantt';
 
 interface FeatureCardProps {
@@ -77,6 +77,11 @@ export default function FeatureCard({ card, index, onDelete, onEdit, getTagColor
   const formatDeadline = (deadline?: string) => {
     if (!deadline) return null;
     return deadline; // Already in DD/MM/YY format
+  };
+
+  const formatStartdate = (startDate?: string) => {
+    if (!startDate) return null;
+    return startDate; // Already in DD/MM/YY format
   };
   
   const handleDeleteClick = (e: React.MouseEvent) => {
@@ -158,6 +163,21 @@ export default function FeatureCard({ card, index, onDelete, onEdit, getTagColor
               </span>
             </div>
           )}
+
+          {/* StartDate */}
+          {formatStartdate(card.startDate) && (
+            <div className="flex items-center space-x-1 mb-2">
+              <Calendar size={12} className="text-muted-foreground" />
+              <span className="text-xs text-muted-foreground font-medium">
+                Срок: {formatStartdate(card.startDate)}
+              </span>
+            </div>
+          )}
+
+          {/* Duration */}
+          <h4 className="font-semibold text-foreground text-sm mb-2 leading-tight">
+            {card.duration}
+          </h4>
 
           {/* Description */}
           {card.description && (
