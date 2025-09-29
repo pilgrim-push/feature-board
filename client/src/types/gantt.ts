@@ -55,6 +55,7 @@ export interface UserStory {
   duration: number;
   externalLink: string;
   additionalRequirements: string;
+  invest: string;
   developmentDeadline?: string; // DD/MM/YY format
 }
 

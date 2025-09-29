@@ -22,7 +22,6 @@ export default function DependencyArrow({ fromTask, toTask, startDate, dayWidth 
   const toX = differenceInDays(toStartDate, timelineStart) * dayWidth; // Начало задачи
   
   // Вертикальные позиции (на основе индекса задач в списке)
-  const taskHeight = 56; // Высота строки задачи
   const fromY = 28; // Центр строки предшествующей задачи
   const toY = 28; // Центр строки следующей задачи
   

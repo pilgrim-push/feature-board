@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { DragDropContext, Droppable, DropResult } from 'react-beautiful-dnd';
-import { Plus, Eye, EyeOff, Calendar as CalendarIcon, MoreHorizontal, ChevronLeft, ChevronRight, Edit, Trash2, ExternalLink } from 'lucide-react';
+import { Plus, Eye, EyeOff, Calendar as CalendarIcon, MoreHorizontal, ChevronLeft, ChevronRight, Edit, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogTrigger } from '@/components/ui/dialog';
@@ -279,7 +279,7 @@ export default function FeatureBoard({ columns = [], cards = [], onUpdateColumns
     
     // Normalize order within each column
     const normalizedCards: FeatureCard[] = [];
-    cardsByColumn.forEach((columnCards, columnId) => {
+    cardsByColumn.forEach((columnCards) => {
       columnCards
         .sort((a, b) => a.order - b.order)
         .forEach((card, index) => {

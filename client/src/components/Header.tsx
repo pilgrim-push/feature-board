@@ -1,4 +1,4 @@
-import { ChartGantt, HelpCircle, Star, Upload } from 'lucide-react';
+import { ChartGantt, Upload } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 interface HeaderProps {

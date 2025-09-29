@@ -26,6 +26,7 @@ export default function UserStoriesManager({ userStories, onChange }: UserStorie
   const [cardStartDate, setCardStartDate] = useState<Date | undefined>(undefined);
   const [cardDuration, setCardDuration] = useState<number>(0);
   const [externalLink, setExternalLink] = useState('');
+  const [invest, setInvest] = useState('');
 
   // Format date to DD/MM/YY
   const formatDateToDisplay = (date: Date): string => {
@@ -79,7 +80,8 @@ export default function UserStoriesManager({ userStories, onChange }: UserStorie
       developmentDeadline: developmentDeadline ? formatDateToDisplay(developmentDeadline) : undefined,
       startDate: cardStartDate ? formatDateToDisplay(cardStartDate) : undefined,
       duration: cardDuration,
-      externalLink: externalLink
+      externalLink: externalLink,
+      invest: invest
     };
 
     if (editingStory) {
@@ -183,6 +185,13 @@ export default function UserStoriesManager({ userStories, onChange }: UserStorie
                 </p>
               )}
 
+              {/* INVEST */}
+              {story.invest && (
+                <p className="text-xs text-muted-foreground">
+                  <strong>INVEST:</strong> {story.invest}
+                </p>
+              )}
+
               {/* Development Deadline */}
               {story.developmentDeadline && (
                 <div className="flex items-center space-x-1">
@@ -235,7 +244,7 @@ export default function UserStoriesManager({ userStories, onChange }: UserStorie
 
       {/* Create/Edit Story Dialog */}
       <Dialog open={isModalOpen} onOpenChange={(open) => !open && handleCancel()}>
-        <DialogContent className="sm:max-w-[600px]">
+        <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>
               {editingStory ? 'Редактировать историю' : 'Создать пользовательскую историю'}
@@ -247,7 +256,7 @@ export default function UserStoriesManager({ userStories, onChange }: UserStorie
               }
             </DialogDescription>
           </DialogHeader>
-          <div className="space-y-4">
+          <div className="space-y-4 py-4">
             {/* Story Title */}
             <div>
               <Label htmlFor="story-title">Название *</Label>
@@ -286,6 +295,24 @@ export default function UserStoriesManager({ userStories, onChange }: UserStorie
                 placeholder="Дополнительные требования и критерии приемки"
                 rows={2}
                 data-testid="textarea-additional-requirements"
+              />
+            </div>
+
+            {/* INVEST */}
+            <div>
+              <Label htmlFor="invest">INVEST</Label>
+              <Textarea
+                id="invest"
+                value={invest}
+                onChange={(e) => setInvest(e.target.value)}
+                placeholder="I - independent, независимость. Поставляем без влияния других историй;
+                N - negotiable, обсуждаемость. Сами решим как ее лучше сделать;
+                V - valuable, ценность. Сделав ее нанесем ценность бизнесу;
+                E - estimable, оцениваемость. Сможем дать оценку по сложности/срокам;
+                S - small, компактность. Сделаем за одну итерацию;
+                T - testable, проверяемость. Понимаем как проверить или оттестировать."
+                rows={6}
+                data-testid="textarea-invest"
               />
             </div>
 
