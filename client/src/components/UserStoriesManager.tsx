@@ -11,10 +11,11 @@ import { UserStory } from '@/types/gantt';
 
 interface UserStoriesManagerProps {
   userStories: UserStory[];
+  allUserStories: UserStory[]; 
   onChange: (stories: UserStory[]) => void;
 }
 
-export default function UserStoriesManager({ userStories, onChange }: UserStoriesManagerProps) {
+export default function UserStoriesManager({ userStories, allUserStories, onChange }: UserStoriesManagerProps) {
   const [isCreating, setIsCreating] = useState(false);
   const [editingStory, setEditingStory] = useState<UserStory | null>(null);
   
@@ -27,6 +28,7 @@ export default function UserStoriesManager({ userStories, onChange }: UserStorie
   const [cardDuration, setCardDuration] = useState<number>(0);
   const [externalLink, setExternalLink] = useState('');
   const [invest, setInvest] = useState('');
+  const [dependencies, setDependencies] = useState<number[]>([]);
 
   // Format date to DD/MM/YY
   const formatDateToDisplay = (date: Date): string => {
@@ -42,6 +44,11 @@ export default function UserStoriesManager({ userStories, onChange }: UserStorie
     setStoryText('');
     setAdditionalRequirements('');
     setDevelopmentDeadline(undefined);
+    setCardStartDate(undefined);
+    setCardDuration(0);
+    setExternalLink('');
+    setInvest('');
+    setDependencies([]);
   };
 
   // Handle create new story
@@ -56,6 +63,10 @@ export default function UserStoriesManager({ userStories, onChange }: UserStorie
     setStoryTitle(story.title);
     setStoryText(story.story);
     setAdditionalRequirements(story.additionalRequirements);
+    setDependencies(story.dependencies || []);
+    setCardDuration(story.duration);
+    setExternalLink(story.externalLink);
+    setInvest(story.invest);
     
     // Parse deadline string back to Date if it exists
     if (story.developmentDeadline) {
@@ -65,6 +76,15 @@ export default function UserStoriesManager({ userStories, onChange }: UserStorie
     } else {
       setDevelopmentDeadline(undefined);
     }
+
+    // Parse start date string back to Date if it exists
+    if (story.startDate) {
+      const [day, month, year] = story.startDate.split('/');
+      const fullYear = parseInt(`20${year}`);
+      setCardStartDate(new Date(fullYear, parseInt(month) - 1, parseInt(day)));
+    } else {
+        setCardStartDate(undefined);
+    } 
   };
 
   // Handle save story
@@ -81,7 +101,8 @@ export default function UserStoriesManager({ userStories, onChange }: UserStorie
       startDate: cardStartDate ? formatDateToDisplay(cardStartDate) : undefined,
       duration: cardDuration,
       externalLink: externalLink,
-      invest: invest
+      invest: invest,
+      dependencies: dependencies.length > 0 ? dependencies : undefined
     };
 
     if (editingStory) {
@@ -190,6 +211,29 @@ export default function UserStoriesManager({ userStories, onChange }: UserStorie
                 <p className="text-xs text-muted-foreground">
                   <strong>INVEST:</strong> {story.invest}
                 </p>
+              )}
+
+              {/* Dependencies */}
+              {story.dependencies && story.dependencies.length > 0 && (
+                <div className="text-xs text-muted-foreground">
+                  <strong>Зависит от:</strong>{' '}
+                  {story.dependencies.map((depId, index) => {
+                    const dep = allUserStories.find(s => s.id === depId);
+                    const content = dep ? (
+                      <span key={depId} className="underline text-foreground">
+                        {dep.title}
+                      </span>
+                    ) : (
+                      <span key={depId} className="line-through text-red-500">[удалено: {depId}]</span>
+                    );
+                    return (
+                      <React.Fragment key={depId}>
+                        {content}
+                        {index < story.dependencies!.length - 1 && ', '}
+                      </React.Fragment>
+                    );
+                  })}
+                </div>
               )}
 
               {/* Development Deadline */}
@@ -314,6 +358,38 @@ export default function UserStoriesManager({ userStories, onChange }: UserStorie
                 rows={6}
                 data-testid="textarea-invest"
               />
+            </div>
+
+            {/* Dependencies */}
+            <div>
+              <Label>Зависимости</Label>
+              <div className="space-y-1 mt-1 max-h-32 overflow-y-auto border rounded p-2">
+                {allUserStories
+                  .filter(story => (editingStory ? story.id !== editingStory.id : true))
+                  .map(story => (
+                    <div key={story.id} className="flex items-center">
+                      <input
+                        type="checkbox"
+                        id={`dep-${story.id}`}
+                        checked={dependencies.includes(story.id)}
+                        onChange={(e) => {
+                          if (e.target.checked) {
+                            setDependencies(prev => [...prev, story.id]);
+                          } else {
+                            setDependencies(prev => prev.filter(id => id !== story.id));
+                          }
+                        }}
+                        className="mr-2"
+                      />
+                      <label htmlFor={`dep-${story.id}`} className="text-sm truncate">
+                        {story.title} {story.id === editingStory?.id ? '(текущая)' : ''}
+                      </label>
+                    </div>
+                  ))}
+                {allUserStories.length === 0 && (
+                  <p className="text-xs text-muted-foreground">Нет историй в системе</p>
+                )}
+              </div>
             </div>
 
             {/* Development Deadline */}

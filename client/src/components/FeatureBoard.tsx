@@ -48,6 +48,17 @@ export default function FeatureBoard({ columns = [], cards = [], onUpdateColumns
   const { toast } = useToast();
   const deletedCardsRef = useRef<Map<number, FeatureCard>>(new Map());
 
+  const getAllUserStories = (): UserStory[] => {
+    // Берём все карточки из currentCards, но заменяем userStories для редактируемой карточки
+    const cardsWithUpdatedStories = currentCards.map(card => {
+      if (editingCard && card.id === editingCard.id) {
+        return { ...card, userStories: cardUserStories };
+      }
+      return card;
+    });
+    return cardsWithUpdatedStories.flatMap(card => card.userStories);
+  };
+  
   // Tag colors management
   const [tagColors, setTagColors] = useState<Record<string, string>>(() => {
     const saved = localStorage.getItem('feature-board-tag-colors');
@@ -1308,10 +1319,11 @@ export default function FeatureBoard({ columns = [], cards = [], onUpdateColumns
 
             {/* User Stories Management */}
             <div>
-              <UserStoriesManager
-                userStories={cardUserStories}
-                onChange={setCardUserStories}
-              />
+            <UserStoriesManager
+              userStories={cardUserStories}
+              allUserStories={getAllUserStories()}
+              onChange={setCardUserStories}
+            />
             </div>
 
             {/* Action Buttons */}

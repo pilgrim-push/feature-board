@@ -57,6 +57,7 @@ export interface UserStory {
   additionalRequirements: string;
   invest: string;
   developmentDeadline?: string; // DD/MM/YY format
+  dependencies?: number[];
 }
 
 export interface FeatureCard {
